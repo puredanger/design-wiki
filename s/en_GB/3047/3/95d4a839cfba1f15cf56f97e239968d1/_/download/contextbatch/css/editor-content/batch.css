@@ -1,0 +1,138 @@
+.editor-inline-macro[data-macro-name='status']{background:transparent;border:0;}
+/* if you remove this, please come see jared for your beating */
+body.wiki-content {
+    height: auto;
+}
+
+body.fullsize {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    border: 0;
+    padding: 10px 0;
+    margin: 0 10px;
+}
+
+.wysiwyg-macro {
+    background-color: #f0f0f0;
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    border: 1px solid #ddd;
+}
+
+.wiki-content .wysiwyg-macro {
+    margin: 10px 1px;
+    width: 100%;
+    padding: 24px 2px 2px 2px;
+}
+
+.wiki-content .wysiwyg-macro-body {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    margin: 0;
+    padding: 10px;
+}
+
+/* allows the placeholders inside table cells to have a minimum width and not look squashed */
+.wiki-content td .wysiwyg-macro-body {
+    min-width: 200px;
+}
+
+.wiki-content .wysiwyg-macro-body pre {
+    margin: 0;
+    white-space: pre-wrap;
+}
+
+.editor-inline-macro {
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    min-height: 26px; /* This closely coincides with the height of the images rendered by DefaultPlaceholderImageFactory */
+    vertical-align: text-bottom;
+    margin: 0 2px; /* So that the caret won't disappear behind the placeholder in FireFox. */
+}
+
+.editor-inline-macro.with-chrome {
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    height: auto;
+    padding: 24px 2px 2px 2px;
+}
+
+.wysiwyg-unknown-macro {
+    border: 1px solid #ddd;
+    vertical-align: text-bottom;
+}
+
+.confluenceTh > .editor-inline-macro,
+.confluenceTh > .wysiwyg-unknown-macro,
+.confluenceTd > .editor-inline-macro,
+.confluenceTd > .wysiwyg-unknown-macro {
+    vertical-align: inherit; /* to prevent the misalignment of other content in table cells. */
+}
+
+/* Default base style. Inclusive of default macro icon to fall back to if a specific icon has not been configured for a macro */
+.macro-placeholder-icon {
+    background-image: url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/placeholder.png");
+    background-repeat: no-repeat;
+    background-position: 0 3px;
+}
+
+.image-hotswap {
+    background-image: url("../../../../../../4.0/_/images/icons/wait.gif");
+    background-repeat: no-repeat;
+    background-position: 4px 50%;
+}
+
+table.layout, table.layout td.layout-cell {
+    border: 1px dotted #ccc;
+}
+
+/* override the bottom margin declared in wiki-content.css. Firstly because cursor targets space out tables enough so additional margin is not necessary.
+secondly because there is a bug in FF, where if you have a table followed by a paragraph, it (a) thinks the paragraph has a top margin (which it doesn't) and
+(b) that the table's bottom-margin and the paragraph's top-margin should not collapse - producing a large space */
+table.confluenceTable {
+    margin-bottom: 0;
+}
+
+/* no sanity in our selectors makes it hard to validate this will always be applied so make it important to stop regressions*/
+.wiki-content table tbody td.mceSelected, .wiki-content table tbody th.mceSelected {
+    background-color: #e0f0ff !important;
+}
+
+.wiki-content .confluence-embedded-image {
+    cursor: default;
+}
+
+/* IE9 collapses the border of macros that render inside a table. */
+.wiki-content table.wysiwyg-macro {
+    border-collapse: separate;
+}
+
+/* EOL styling */
+.wiki-content.show-eol-markup p:after,
+.wiki-content.show-eol-markup h1:after,
+.wiki-content.show-eol-markup h2:after,
+.wiki-content.show-eol-markup h3:after,
+.wiki-content.show-eol-markup h4:after,
+.wiki-content.show-eol-markup h5:after,
+.wiki-content.show-eol-markup h6:after,
+.wiki-content.show-eol-markup li:after {
+    content: " \00B6";
+    color: #777;
+}
+
+/* For IE, which doesn't support table padding */
+/* THESE ARE BROWSER HACKS FOR IE7, DO NOT REMOVE THE ASTERISKS. */
+.wiki-content table.wysiwyg-macro {
+    *border: 5px solid #f0f0f0;
+    *background-color: #fff;
+    *background-repeat: no-repeat;
+    *padding: 0px;
+}
+
+.wiki-content td.wysiwyg-macro-body {
+    *background-color: transparent;
+    *border: 0;
+    *padding: 30px 6px 6px 6px;
+}
+#autocomplete-dropdown .autocomplete-macros .icon{padding:0;}#autocomplete-dropdown .autocomplete-macros li.autocomplete-blank .icon{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/blank.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-placeholder .icon{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/placeholder.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-content-by-user .icon,.macro-placeholder-icon-content-by-user{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/content-by-user.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-children .icon,.macro-placeholder-icon-children{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/children.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-search .icon,.macro-placeholder-icon-search{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/search.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-index .icon,.macro-placeholder-icon-index{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/pageindex.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-blog-posts .icon,.macro-placeholder-icon-blog-posts{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/blog-posts.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-excerpt .icon,.macro-placeholder-icon-excerpt{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/excerpt.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-excerpt-include .icon,.macro-placeholder-icon-excerpt-include{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/excerpt-include.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-include .icon,.macro-placeholder-icon-include{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/include.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-gallery .icon,.macro-placeholder-icon-gallery{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/gallery.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-change-history .icon,.macro-placeholder-icon-change-history{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/change-history.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-popular-labels .icon,.macro-placeholder-icon-popular-labels{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/popular-labels.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-contentbylabel .icon,.macro-placeholder-icon-contentbylabel{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/contentbylabel.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-favpages .icon,.macro-placeholder-icon-favpages{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/favpages.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-related-labels .icon,.macro-placeholder-icon-related-labels{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/related-labels.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-recently-updated .icon,.macro-placeholder-icon-recently-updated{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/recently-updated.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-navmap .icon,.macro-placeholder-icon-navmap{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/navmap.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-listlabels .icon,.macro-placeholder-icon-listlabels{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/listlabels.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-anchor .icon,.macro-placeholder-icon-anchor{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/anchor.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-quote .icon,.macro-placeholder-icon-quote{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/quote.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-noformat .icon,.macro-placeholder-icon-noformat{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/noformat.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-panel .icon,.macro-placeholder-icon-panel{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/panel.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-color .icon,.macro-placeholder-icon-color{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/colour.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-cheese .icon,.macro-placeholder-icon-cheese{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/cheese.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-jiraissues .icon,.macro-placeholder-icon-jiraissues{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/jiraissues.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-jiraportlet .icon,.macro-placeholder-icon-jiraportlet{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/jiraportlet.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-note .icon,.macro-placeholder-icon-note{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/note.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-warning .icon,.macro-placeholder-icon-warning{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/warning.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-info .icon,.macro-placeholder-icon-info{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/info.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-tip .icon,.macro-placeholder-icon-tip{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/tip.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-pagetree .icon,.macro-placeholder-icon-pagetree{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/pagetree.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-pagetreesearch .icon,.macro-placeholder-icon-pagetreesearch{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/pagetreesearch.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-web-widget,#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-widget .icon,.macro-placeholder-icon-widget{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/widgetconnector.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-section .icon,.macro-placeholder-icon-section{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/section.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-column .icon,.macro-placeholder-icon-column{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/column.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-livesearch .icon,.macro-placeholder-icon-livesearch{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/livesearch.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-code .icon,.macro-placeholder-icon-code{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/code.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-html .icon,.macro-placeholder-icon-html{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/html.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-rss .icon,.macro-placeholder-icon-rss{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/rssfeed.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-bookmarks .icon,.macro-placeholder-icon-bookmarks{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/bookmarks.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-toc .icon,.macro-placeholder-icon-toc{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/toc.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-spaces .icon,.macro-placeholder-icon-spaces{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/spaces.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-space-details .icon,.macro-placeholder-icon-space-details{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/space-details.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-network .icon,.macro-placeholder-icon-network{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/network.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-profile .icon,.macro-placeholder-icon-profile{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/profile.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-status-list .icon,.macro-placeholder-icon-status-list{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/status-list.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-chart .icon,.macro-placeholder-icon-chart{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/chart.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-viewdoc .icon,.macro-placeholder-icon-viewdoc{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/viewdoc.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-viewpdf .icon,.macro-placeholder-icon-viewpdf{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/viewpdf.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-viewdppt .icon,.macro-placeholder-icon-viewdppt{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/viewppt.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-viewxls .icon,.macro-placeholder-icon-viewxls{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/viewxls.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-contributors .icon,.macro-placeholder-icon-contributors{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/contributors.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-contributors-summary .icon,.macro-placeholder-icon-contributors-summary{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/contributors-summary.png");}#autocomplete-dropdown .autocomplete-macros li.autocomplete-macro-multimedia .icon,.macro-placeholder-icon-multimedia{background-image:url("../../../../../../4.0/_/images/icons/macrobrowser/dropdown/multimedia.png");}

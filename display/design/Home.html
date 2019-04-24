@@ -1,0 +1,1753 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home - Clojure Design - Clojure Development</title>
+
+        
+
+                        
+    
+
+            <meta http-equiv="X-UA-Compatible" content="IE=EDGE">
+<meta charset="UTF-8">
+<!-- Deprecated since 3.4. To be removed in a future version of Confluence; use AJS.Confluence.getContextPath() -->
+<meta id="confluence-context-path" name="confluence-context-path" content="">
+<meta id="confluence-base-url" name="confluence-base-url" content="https://dev.clojure.org">
+
+<meta id="atlassian-token" name="atlassian-token" content="30041c830a95ce9c95d0b58cb377def6b96aa6d2">
+
+<meta id="confluence-space-key" name="confluence-space-key" content="design">
+<script type="text/javascript">
+    // Deprecated global variables. To be removed in a future version of Confluence.
+    var contextPath = '';
+</script>
+
+    
+
+<!-- include system css resources -->
+
+
+    <link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/55/_/download/superbatch/css/batch.css" media="all">
+<!--[if lt IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/_/download/superbatch/css/batch.css?conditionalComment=lt+IE+9" media="all">
+<![endif]-->
+<!--[if IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/_/download/superbatch/css/batch.css?conditionalComment=IE+9" media="all">
+<![endif]-->
+<!--[if lte IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/_/download/superbatch/css/batch.css?conditionalComment=lte+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/55/_/download/superbatch/css/batch-media=print.css" media="print">
+<!--[if lt IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/_/download/contextbatch/css/page/batch.css?conditionalComment=lt+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/_/download/contextbatch/css/page/batch.css" media="all">
+<!--[if lt IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/_/download/contextbatch/css/viewcontent,main/batch.css?conditionalComment=lt+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/_/download/contextbatch/css/viewcontent,main/batch.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.27/_/download/batch/confluence.macros.advanced-recently-updated-concise-resources/confluence.macros.advanced-recently-updated-concise-resources.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.1/_/download/batch/com.atlassian.confluence.plugins.pagetree-pagetree-resources/com.atlassian.confluence.plugins.pagetree-pagetree-resources.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/3/_/styles/colors-spaceKey=design.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.5/_/download/resources/com.atlassian.confluence.plugins.doctheme-documentation/default-theme.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.5/_/download/resources/com.atlassian.confluence.plugins.doctheme-documentation/splitter.css" media="all">
+
+<!-- end system css resources -->
+
+    <meta name="confluence-request-time" content="1556128815447">
+            <meta name="ajs-page-id" content="458775">
+            <meta name="ajs-parent-page-id" content="">
+            <meta name="ajs-space-key" content="design">
+            <meta name="ajs-space-name" content="Clojure Design">
+            <meta name="ajs-page-title" content="Home">
+            <meta name="ajs-parent-page-title" content="">
+            <meta name="ajs-from-page-title" content="">
+            <meta name="ajs-context-path" content="">
+            <meta name="ajs-version-number" content="4.0">
+            <meta name="ajs-build-number" content="3047">
+            <meta name="ajs-remote-user" content="">
+            <meta name="ajs-static-resource-url-prefix" content="/s/en_GB/3047/3/_">
+            <meta name="ajs-global-settings-attachment-max-size" content="10485760">
+            <meta name="ajs-user-locale" content="en_GB">
+            <meta name="ajs-enabled-dark-features" content="">
+            <meta name="ajs-atl-token" content="30041c830a95ce9c95d0b58cb377def6b96aa6d2">
+            
+            <meta name="ajs-keyboardshortcut-hash" content="7b95af54c6deada096af1f28fdd0f413">
+            <meta name="ajs-use-keyboard-shortcuts" content="true">
+    <!-- Deprecated since 3.4. To be removed in a future version of Confluence; use atl.header -->
+        
+            <script type="text/x-template" title="share-content-popup">
+    <form action="#" method="post" class="aui share-content-popup">
+        <fieldset>
+            <label for="users">User name or email</label>
+            <div class="autocomplete-user-target">
+                <input class="text autocomplete-sharepage" id="users" data-max="10" data-dropdown-target=".autocomplete-user-target" data-none-message="No matching user or email found"/>
+            </div>
+            <ol class="recipients">
+            </ol>
+            <div><label for="note">Note</label></div>
+            <textarea class="textarea" id="note" placeholder="Add an optional note"/>
+        </fieldset>
+        <div class="button-panel">
+            <div class="progress-messages-icon"></div>
+            <div class="progress-messages">
+            </div>
+            <input class="button submit" type="submit" value="Share" disabled/>
+            <a class="close-dialog" href="#">Cancel</a>
+        </div>
+    </form>
+</script>
+
+<script type="text/x-template" title="share-content-popup-recipient-username">
+    <li data-username="{username}" style="display: none">
+        <span>
+            <img src="{thumbnailLink.href}" title="{title}">
+            <span>{title}</span>
+            <span class="remove-recipient"/>
+        </span>
+    </li>
+</script>
+
+<script type="text/x-template" title="share-content-popup-recipient-email">
+    <li data-email="{email}" style="display: none">
+        <span>
+            <img src="{icon}" title="{email}">
+            <span>{email}</span>
+            <span class="remove-recipient"/>
+        </span>
+    </li>
+</script>
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="icon" type="image/png" href="../../s/en_GB/3047/3/_/images/logo/confluence_16.png">
+
+<link rel="search" type="application/opensearchdescription+xml" href="../../opensearch/osd.action.xml" title="Clojure Development"/>
+
+        <!-- include system javascript resources -->
+                        
+    
+    <script type="text/javascript" src="../../s/en_GB/3047/3/55/_/download/superbatch/js/batch.js" ></script>
+<!--[if lte IE 8]>
+<script type="text/javascript" src="/s/en_GB/3047/3/55/_/download/superbatch/js/batch.js?conditionalComment=lte+IE+8" ></script>
+<![endif]-->
+<script type="text/javascript" src="../../s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/_/download/contextbatch/js/page/batch.js" ></script>
+<script type="text/javascript" src="../../s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/_/download/contextbatch/js/viewcontent,main/batch.js" ></script>
+<script type="text/javascript" src="../../s/en_GB/3047/3/2.0.1/_/download/batch/com.atlassian.confluence.plugins.pagetree-pagetree-resources/com.atlassian.confluence.plugins.pagetree-pagetree-resources.js" ></script>
+
+    
+    <!-- end system javascript resources -->
+
+    
+
+    
+    <link rel="canonical" href="Home.html">
+    <link rel="shortlink" href="Home.html">
+    <meta name="wikilink" content="[design:Home]">
+    <meta name="page-version" content="7">
+
+</head>
+
+<body             onload="placeFocus()"
+     id="com-atlassian-confluence" class="theme-documentation ">
+<div id="full-height-container">
+    <div id="header-precursor">
+        
+        
+                </div>
+
+<div id="header" class="sectionbottom ">
+   
+</div>
+
+    <div id="splitter">
+    <div id="splitter-sidebar" >
+        
+
+            </div>
+    <div id="splitter-content">
+
+                    <script type="text/javascript" src="../../s/en_GB/3047/3/2.0.5/_/download/resources/com.atlassian.confluence.plugins.doctheme-resources/doc-theme.js"></script>
+    
+            
+    
+<div id="main" >
+    <div id="main-header">
+	    
+	    <h1 id="title-heading" class="pagetitle">
+	        	            <a href="Home-jsessionid=3A56E29DA520B75101350BA4484B9990.html"><img class="logo global custom" src="../../download/attachments/131074/global.logo.png" alt=""></a>	        	
+			<span id="title-text">
+							            <a href="Home.html">Home</a>
+    						</span>
+	    </h1>
+	</div>
+
+
+<div id="content" class="page view">
+    
+    
+        <fieldset class="hidden parameters">
+            <input type="hidden" title="parentPageId" value="">
+        </fieldset>
+
+        
+                            
+    
+
+                    
+
+        
+        <a href="#page-metadata-end" class="assistive">Skip to end of metadata</a>
+<div id="page-metadata-start" class="assistive"></div>
+
+    <div class="page-metadata">
+        <ul>
+                            <li class="page-metadata-item noprint">
+    
+            
+    
+    <a  id="content-metadata-page-restrictions" href="#"  class="page-metadata-icon page-restrictions hidden"   title="Page restrictions apply. Click the lock icon to view or edit the restriction.">
+                   <span>Page restrictions apply</span></a>        </li>
+                        <li class="page-metadata-modification-info">
+                                    Added by <a href="../../login.action-os_destination=-display-~richhickey.html"
+                          class="url fn"
+                   >Rich Hickey</a>, last edited by <a href="../../login.action-os_destination=-display-~stu.html"
+                          class="url fn"
+                   >Stuart Halloway</a> on Apr 12, 2013
+                                                                <span class="noprint">&nbsp;(<a id="view-change-link" href="../../pages/diffpages.action-pageId=458775&amp;originalId=7700503.html">view change</a>)</span>
+                                                </li>
+                    </ul>
+                </div>
+
+
+<a href="#page-metadata-start" class="assistive">Go to start of metadata</a>
+<div id="page-metadata-end" class="assistive"></div>
+        
+        <fieldset class="hidden parameters">
+                        <input type="hidden" title="browsePageTreeMode" value="view">
+        </fieldset>
+
+        <div class="wiki-content">
+                           <table class="sectionMacro" border="0" cellpadding="5" cellspacing="0" width="100%"><tbody>
+							   <tr>
+								   <td class="confluenceTd" valign="top" width="60%">
+<h4 id="Home-ClojureDesign">Clojure Design Wiki Archive</h4>
+
+<p>This site is a read-only archive of the Clojure design wiki, formerly hosted on confluence at https://dev.clojure.org/display/design. It has been kept for historical purposes and should be read in context.</p>
+							   
+							   
+<!-- insert -->
+
+<div class="plugin_pagetree_children" id="children458775-0">
+	<ul class="plugin_pagetree_children_list" id="child_ul458775-0">
+		<li>
+			<div class="plugin_pagetree_children_content">
+				<span id="childrenspan8192213-0"><a href="Idea+Hammock.html">Idea Hammock</a></span>
+			</div>
+			<div id="children8192213-0" class="plugin_pagetree_children_container">
+				<ul class="plugin_pagetree_children_list" id="child_ul8192213-0">
+					<li>
+						<div class="plugin_pagetree_children_content">
+							<span class="plugin_pagetree_children_span" id="childrenspan2424919-0"><a href="ClojureScript.html">ClojureScript</a></span>
+						</div>
+						<div id="children2424919-0" class="plugin_pagetree_children_container">
+							<ul class="plugin_pagetree_children_list" id="child_ul2424919-0">
+								<li>
+									<div class="plugin_pagetree_children_content">
+										<span class="plugin_pagetree_children_span" id="childrenspan5767211-0"><a href="AST+children.html">AST children</a></span>
+									</div>
+								</li>
+								<li>
+									<div class="plugin_pagetree_children_content">
+										<span class="plugin_pagetree_children_span" id="childrenspan4063586-0">                        
+											<a href="pages/viewpage.action-pageId=4063586.html">Clojure &amp; ClojureScript Data Exchange</a>
+										</span>            
+									</div>
+								</li>
+								<li>
+									<div class="plugin_pagetree_children_content">
+										<span class="plugin_pagetree_children_span" id="childrenspan4063481-0">                        
+											<a href="ClojureScript+Debugger.html">ClojureScript Debugger</a>
+										</span>            
+									</div>
+								</li>
+								<li>
+									<div class="plugin_pagetree_children_content">
+										<span class="plugin_pagetree_children_span" id="childrenspan5242961-0">                        
+											<a href="ClojureScript+pluggable+backends.html">ClojureScript pluggable backends</a>
+										</span>            
+									</div>
+									<div id="children5242961-0" class="plugin_pagetree_children_container">
+										<ul class="plugin_pagetree_children_list" id="child_ul5242961-0">
+											<li>
+												<div class="plugin_pagetree_children_content">
+													<span class="plugin_pagetree_children_span" id="childrenspan5242963-0">                     
+														<a href="Decoupling+cljs.core.html">Decoupling cljs.core</a>
+													</span>            
+												</div>
+											</li>
+											<li>
+												<div class="plugin_pagetree_children_content">
+													<span class="plugin_pagetree_children_span" id="childrenspan5242968-0">                    
+														<a href="How+to+make+the+analyzer+parametric.html">How to make the analyzer parametric</a>
+													</span>          
+												</div>
+											</li>
+										</ul>
+									</div>
+								</li>
+								<li>
+									<div class="plugin_pagetree_children_content">
+										<span class="plugin_pagetree_children_span" id="childrenspan4063530-0">                   
+											<a href="ClojureScript+Releases.html">ClojureScript Releases</a>
+										</span>           
+									</div>
+
+								</li>
+								<li>
+									<div class="plugin_pagetree_children_content">
+										<span class="plugin_pagetree_children_span" id="childrenspan4653088-0">                       
+											<a href="Dynamic+Binding.html">Dynamic Binding</a>
+										</span>          
+									</div>
+
+								</li>
+								<li>
+									
+									<div class="plugin_pagetree_children_content">
+										<span class="plugin_pagetree_children_span" id="childrenspan4063513-0">                       
+											<a href="Enhancing+the+ClojureScript+analyzer.html">Enhancing the ClojureScript analyzer</a>
+										</span>         
+									</div>
+
+
+								</li>
+								<li>
+									
+									<div class="plugin_pagetree_children_content">
+										<span class="plugin_pagetree_children_span" id="childrenspan6389779-0">                    
+											<a href="Formalize+AST.html">Formalize AST</a>
+										</span>          
+									</div>
+
+								</li>
+								<li>
+									
+									<div class="plugin_pagetree_children_content">
+		
+										<span class="plugin_pagetree_children_span" id="childrenspan9142651-0">                    
+											<a href="Google+Closure+Modules.html">Google Closure Modules</a>
+										</span>        
+									</div>
+
+								</li>
+								<li>
+									
+									<div class="plugin_pagetree_children_content">
+										<span class="plugin_pagetree_children_span" id="childrenspan5767405-0">                        
+											<a href="JavaScript+AST.html">JavaScript AST</a>
+										</span>          
+									</div>
+
+								</li>
+								<li>
+									
+									<div class="plugin_pagetree_children_content">
+										<span class="plugin_pagetree_children_span" id="childrenspan4653766-0">                       
+											<a href="Macros.html">Macros</a>
+										</span>            </div>
+
+									</li>
+									<li>
+										
+										<div class="plugin_pagetree_children_content">
+											<span class="plugin_pagetree_children_span" id="childrenspan4653780-0">                       
+												<a href="Numerics.html">Numerics</a>
+											</span>        
+										</div>
+
+									</li>
+									<li>
+										
+										<div class="plugin_pagetree_children_content">
+											<span class="plugin_pagetree_children_span" id="childrenspan8192615-0">                       
+												<a href="Optimizing+Expression+Semantics.html">Optimizing Expression Semantics</a>
+											</span>           
+										</div>
+
+									</li>
+									<li>
+										
+										<div class="plugin_pagetree_children_content">
+											<span class="plugin_pagetree_children_span" id="childrenspan8192620-0">                   
+												<a href="Optimizing+Keywords.html">Optimizing Keywords</a>
+											</span>          
+										</div>
+
+
+									</li>
+									<li>
+										
+										<div class="plugin_pagetree_children_content">
+											<span class="plugin_pagetree_children_span" id="childrenspan4063622-0">              
+												<a href="Performance.html">Performance</a>
+											</span>           
+										</div>
+
+
+									</li>
+									<li>
+										
+										<div class="plugin_pagetree_children_content">
+											<span class="plugin_pagetree_children_span" id="childrenspan5243094-0">                        <a href="Reactive+Programming.html">Reactive Programming</a>
+											</span>            </div>
+
+										</li>
+										<li>
+											
+											<div class="plugin_pagetree_children_content">
+												<span class="plugin_pagetree_children_span" id="childrenspan4063620-0">                        <a href="Reflection.html">Reflection</a>
+												</span>            </div>
+
+											</li>
+											<li>
+												
+												<div class="plugin_pagetree_children_content">
+													<span class="plugin_pagetree_children_span" id="childrenspan2686979-0">                        <a href="REPL.html">REPL</a>
+													</span>            </div>
+
+												</li>
+												<li>
+													
+													<div class="plugin_pagetree_children_content">
+														<span class="plugin_pagetree_children_span" id="childrenspan5243058-0">                        <a href="Source+Maps.html">Source Maps</a>
+														</span>            </div>
+
+													</li>
+													<li>
+														
+														<div class="plugin_pagetree_children_content">
+															<span class="plugin_pagetree_children_span" id="childrenspan5767379-0">                        <a href="specify+i.e.+reify+for+instances.html">specify i.e. reify for instances</a>
+															</span>            </div>
+
+														</li>
+														<li>
+															
+															<div class="plugin_pagetree_children_content">
+																<span class="plugin_pagetree_children_span" id="childrenspan2687021-0">                        <a href="this.html">this</a>
+																</span>            </div>
+
+															</li>
+														</ul>
+													</div>
+												</li>
+												<li>
+													<div class="plugin_pagetree_children_content">
+														<span class="plugin_pagetree_children_span" id="childrenspan458787-0">                        <a href="Compiler+in+Clojure.html">Compiler in Clojure</a>
+														</span>            </div>
+
+														<div id="children458787-0" class="plugin_pagetree_children_container">
+															<ul class="plugin_pagetree_children_list" id="child_ul458787-0">
+																<li>
+																	
+																	<div class="plugin_pagetree_children_content">
+																		<span class="plugin_pagetree_children_span" id="childrenspan458803-0">                        <a href="Better+method+inference.html">Better method inference</a>
+																		</span>            </div>
+
+
+																	</li>
+																	<li>
+																		
+																		<div class="plugin_pagetree_children_content">
+																			<span class="plugin_pagetree_children_span" id="childrenspan458801-0">                        <a href="letmacro.html">letmacro</a>
+																			</span>            </div>
+																		</li>
+																		<li>
+																			
+																			<div class="plugin_pagetree_children_content">
+																				<span class="plugin_pagetree_children_span" id="childrenspan458805-0">                        <a href="Wart+Removal.html">Wart Removal</a>
+																				</span>            </div>
+
+																			</li>
+																		</ul>
+																	</div>
+																</li>
+																<li>
+																	<div class="plugin_pagetree_children_content">
+																		<span class="plugin_pagetree_children_span" id="childrenspan8192230-0">                        <a href="Contrib.html">Contrib</a>
+																		</span>            </div>
+
+																		<div id="children8192230-0" class="plugin_pagetree_children_container">
+																			<ul class="plugin_pagetree_children_list" id="child_ul8192230-0">
+																				<li>
+																					<div class="plugin_pagetree_children_content">
+																						<span class="plugin_pagetree_children_span" id="childrenspan8192585-0">                        <a href="core.typed.html">core.typed</a>
+																						</span>            </div>
+
+																						<div id="children8192585-0" class="plugin_pagetree_children_container">
+																							<ul class="plugin_pagetree_children_list" id="child_ul8192585-0">
+																								<li>
+																									
+																									<div class="plugin_pagetree_children_content">
+																										<span class="plugin_pagetree_children_span" id="childrenspan8192707-0">                        <a href="Abstract+HMap+types.html">Abstract HMap types</a>
+																										</span>            </div>
+
+
+																									</li>
+																									<li>
+																										
+																										<div class="plugin_pagetree_children_content">
+																											<span class="plugin_pagetree_children_span" id="childrenspan8192684-0">                        <a href="Cleaning+up+Type+Syntax.html">Cleaning up Type Syntax</a>
+																											</span>            </div>
+
+																										</li>
+																										<li>
+																											
+																											<div class="plugin_pagetree_children_content">
+																												<span class="plugin_pagetree_children_span" id="childrenspan8192686-0">                        <a href="Counterclockwise+Integration.html">Counterclockwise Integration</a>
+																												</span>            </div>
+
+																											</li>
+																											<li>
+																												
+																												<div class="plugin_pagetree_children_content">
+																													<span class="plugin_pagetree_children_span" id="childrenspan8192714-0">                        <a href="Generating+predicates+from+Types.html">Generating predicates from Types</a>
+																													</span>            </div>
+																												</li>
+																												<li>
+																													
+																													<div class="plugin_pagetree_children_content">
+																														<span class="plugin_pagetree_children_span" id="childrenspan8192600-0">                        <a href="Implicitly+Disjoint+Types.html">Implicitly Disjoint Types</a>
+																														</span>            </div>
+																													</li>
+																													<li>
+																														
+																														<div class="plugin_pagetree_children_content">
+																															<span class="plugin_pagetree_children_span" id="childrenspan8192654-0">                        <a href="Recursive+Definitions.html">Recursive Definitions</a>
+																															</span>            </div>
+
+																														</li>
+																														<li>
+																															
+																															<div class="plugin_pagetree_children_content">
+																																<span class="plugin_pagetree_children_span" id="childrenspan8192710-0">                        <a href="Simplifying+related+types.html">Simplifying related types</a>
+																																</span>            </div>
+																															</li>
+																															<li>
+																																
+																																<div class="plugin_pagetree_children_content">
+																																	<span class="plugin_pagetree_children_span" id="childrenspan8192587-0">                        <a href="Typed+CLJS.html">Typed CLJS</a>
+																																	</span>            </div>
+
+
+																																</li>
+																																<li>
+																																	
+																																	<div class="plugin_pagetree_children_content">
+																																		<span class="plugin_pagetree_children_span" id="childrenspan8192605-0">                        <a href="Weakening+Type+Checking.html">Weakening Type Checking</a>
+																																		</span>            </div>
+
+																																	</li>
+																																</ul>
+																															</div>
+																														</li>
+																														<li>
+																															
+																															<div class="plugin_pagetree_children_content">
+																																<span class="plugin_pagetree_children_span" id="childrenspan2424859-0">                        <a href="java.jdbc.html">java.jdbc</a>
+																																</span>            </div>
+
+																															</li>
+																															<li>
+																																<div class="plugin_pagetree_children_content">
+																																	<span class="plugin_pagetree_children_span" id="childrenspan11305338-0">                        <a href="test.check.html">test.check</a>
+																																	</span>            </div>
+
+																																	<div id="children11305338-0" class="plugin_pagetree_children_container">
+																																		<ul class="plugin_pagetree_children_list" id="child_ul11305338-0">
+																																			<li>
+																																				
+																																				<div class="plugin_pagetree_children_content">
+																																					<span class="plugin_pagetree_children_span" id="childrenspan17206086-0">                        <a href="Generators+Reboot.html">Generators Reboot</a>
+																																					</span>            </div>
+
+																																				</li>
+																																				<li>
+																																					
+																																					<div class="plugin_pagetree_children_content">
+																																						<span class="plugin_pagetree_children_span" id="childrenspan16482851-0">                        <a href="quickcheck+refactoring.html">quickcheck refactoring</a>
+																																						</span>            </div>
+
+																																					</li>
+																																				</ul>
+																																			</div>
+																																		</li>
+																																	</ul>
+																																</div>
+																															</li>
+																															<li>
+
+																																<div class="plugin_pagetree_children_content">
+																																	<span class="plugin_pagetree_children_span" id="childrenspan950459-0">                        <a href="Core.html">Core</a>
+																																	</span>            </div>
+
+																																	<div id="children950459-0" class="plugin_pagetree_children_container">
+																																		<ul class="plugin_pagetree_children_list" id="child_ul950459-0">
+																																			<li>
+																																				
+																																				<div class="plugin_pagetree_children_content">
+																																					<span class="plugin_pagetree_children_span" id="childrenspan4063367-0">                        <a href="Provide+friendly+interface+to+Clojure%27s+analyzer%2C+independently+callable+a+la+carte.html">Provide friendly interface to Clojure's analyzer, independently callable a la carte</a>
+																																					</span>            </div>
+
+																																				</li>
+																																				<li>
+																																					
+																																					<div class="plugin_pagetree_children_content">
+																																						<span class="plugin_pagetree_children_span" id="childrenspan4653824-0">                        <a href="Annotating+Analysis+Results.html">Annotating Analysis Results</a>
+																																						</span>            </div>
+
+																																						<div id="children4653824-0" class="plugin_pagetree_children_container">
+																																							<ul class="plugin_pagetree_children_list" id="child_ul4653824-0"></ul>
+																																						</div>
+																																					</li>
+																																					<li>
+																																						<div class="plugin_pagetree_children_content">
+																																							<span class="plugin_pagetree_children_span" id="childrenspan950655-0">                        <a href="Loading%2C+Compiling%2C+and+Namespaces.html">Loading, Compiling, and Namespaces</a>
+																																							</span>            </div>
+
+																																							<div id="children950655-0" class="plugin_pagetree_children_container">
+																																								<ul class="plugin_pagetree_children_list" id="child_ul950655-0">
+																																									<li>
+																																										
+																																										<div class="plugin_pagetree_children_content">
+																																											<span class="plugin_pagetree_children_span" id="childrenspan1573069-0">                        <a href="Metadata+on+declare.html">Metadata on declare</a>
+																																											</span>            </div>
+
+																																											<div id="children1573069-0" class="plugin_pagetree_children_container">
+																																												<ul class="plugin_pagetree_children_list" id="child_ul1573069-0"></ul>
+																																											</div>
+																																										</li>
+																																										<li>
+																																											
+																																											<div class="plugin_pagetree_children_content">
+																																												<span class="plugin_pagetree_children_span" id="childrenspan950697-0">                        <a href="Namespace+and+Library+Operations.html">Namespace and Library Operations</a>
+																																												</span>            </div>
+
+																																												<div id="children950697-0" class="plugin_pagetree_children_container">
+																																													<ul class="plugin_pagetree_children_list" id="child_ul950697-0"></ul>
+																																												</div>
+																																											</li>
+																																										</ul>
+																																									</div>
+																																								</li>
+																																								<li>
+																																									
+																																									<div class="plugin_pagetree_children_content">
+																																										<span class="plugin_pagetree_children_span" id="childrenspan458784-0">                        <a href="Android+Support.html">Android Support</a>
+																																										</span>            </div>
+
+																																										<div id="children458784-0" class="plugin_pagetree_children_container">
+																																											<ul class="plugin_pagetree_children_list" id="child_ul458784-0"></ul>
+																																										</div>
+																																									</li>
+																																									<li>
+																																										
+																																										<div class="plugin_pagetree_children_content">
+																																											<span class="plugin_pagetree_children_span" id="childrenspan458789-0">                        <a href="JSR+292+Support.html">JSR 292 Support</a>
+																																											</span>            </div>
+
+																																											<div id="children458789-0" class="plugin_pagetree_children_container">
+																																												<ul class="plugin_pagetree_children_list" id="child_ul458789-0"></ul>
+																																											</div>
+																																										</li>
+																																										<li>
+																																											
+																																											<div class="plugin_pagetree_children_content">
+																																												<span class="plugin_pagetree_children_span" id="childrenspan458791-0">                        <a href="Modularity.html">Modularity</a>
+																																												</span>            </div>
+
+																																												<div id="children458791-0" class="plugin_pagetree_children_container">
+																																													<ul class="plugin_pagetree_children_list" id="child_ul458791-0"></ul>
+																																												</div>
+																																											</li>
+																																											<li>
+																																												
+																																												<div class="plugin_pagetree_children_content">
+																																													<span class="plugin_pagetree_children_span" id="childrenspan950293-0">                        <a href="pages/viewpage.action-pageId=950293.html">Vars too rich for global namespace default?</a>
+																																													</span>            </div>
+
+																																													<div id="children950293-0" class="plugin_pagetree_children_container">
+																																														<ul class="plugin_pagetree_children_list" id="child_ul950293-0"></ul>
+																																													</div>
+																																												</li>
+																																												<li>
+
+																																													<div class="plugin_pagetree_children_content">
+																																														<span class="plugin_pagetree_children_span" id="childrenspan950768-0">                        <a href="Error+Handling.html">Error Handling</a>
+																																														</span>            </div>
+
+																																														<div id="children950768-0" class="plugin_pagetree_children_container">
+																																															<ul class="plugin_pagetree_children_list" id="child_ul950768-0">
+																																																<li>
+																																																	
+																																																	<div class="plugin_pagetree_children_content">
+																																																		<span class="plugin_pagetree_children_span" id="childrenspan950772-0">                        <a href="Error+Handling+Comparisons.html">Error Handling Comparisons</a>
+																																																		</span>            </div>
+
+																																																		<div id="children950772-0" class="plugin_pagetree_children_container">
+																																																			<ul class="plugin_pagetree_children_list" id="child_ul950772-0"></ul>
+																																																		</div>
+																																																	</li>
+																																																	<li>
+																																																		
+																																																		<div class="plugin_pagetree_children_content">
+																																																			<span class="plugin_pagetree_children_span" id="childrenspan950770-0">                        <a href="Error+Handling+Phase+Next.html">Error Handling Phase Next</a>
+																																																			</span>            </div>
+
+																																																			<div id="children950770-0" class="plugin_pagetree_children_container">
+																																																				<ul class="plugin_pagetree_children_list" id="child_ul950770-0"></ul>
+																																																			</div>
+																																																		</li>
+																																																		<li>
+																																																			
+																																																			<div class="plugin_pagetree_children_content">
+																																																				<span class="plugin_pagetree_children_span" id="childrenspan950774-0">                        <a href="Error+Handling+References.html">Error Handling References</a>
+																																																				</span>            </div>
+
+																																																				<div id="children950774-0" class="plugin_pagetree_children_container">
+																																																					<ul class="plugin_pagetree_children_list" id="child_ul950774-0"></ul>
+																																																				</div>
+																																																			</li>
+																																																			<li>
+																																																				
+																																																				<div class="plugin_pagetree_children_content">
+																																																					<span class="plugin_pagetree_children_span" id="childrenspan950562-0">                        <a href="Exception+Handling+%28Old%29.html">Exception Handling (Old)</a>
+																																																					</span>            </div>
+
+																																																					<div id="children950562-0" class="plugin_pagetree_children_container">
+																																																						<ul class="plugin_pagetree_children_list" id="child_ul950562-0"></ul>
+																																																					</div>
+																																																				</li>
+																																																				<li>
+																																																					
+																																																					<div class="plugin_pagetree_children_content">
+																																																						<span class="plugin_pagetree_children_span" id="childrenspan8192759-0">                        <a href="Platform+Errors.html">Platform Errors</a>
+																																																						</span>            </div>
+
+																																																						<div id="children8192759-0" class="plugin_pagetree_children_container">
+																																																							<ul class="plugin_pagetree_children_list" id="child_ul8192759-0"></ul>
+																																																						</div>
+																																																					</li>
+																																																					<li>
+																																																						
+																																																						<div class="plugin_pagetree_children_content">
+																																																							<span class="plugin_pagetree_children_span" id="childrenspan950489-0">                        <a href="Stacktraces.html">Stacktraces</a>
+																																																							</span>            </div>
+
+																																																							<div id="children950489-0" class="plugin_pagetree_children_container">
+																																																								<ul class="plugin_pagetree_children_list" id="child_ul950489-0"></ul>
+																																																							</div>
+																																																						</li>
+																																																					</ul>
+																																																				</div>
+																																																			</li>
+																																																			<li>
+																																																				
+																																																				<div class="plugin_pagetree_children_content">
+																																																					<span class="plugin_pagetree_children_span" id="childrenspan1572873-0">                        <a href="Ranges.html">Ranges</a>
+																																																					</span>            </div>
+
+																																																					<div id="children1572873-0" class="plugin_pagetree_children_container">
+																																																						<ul class="plugin_pagetree_children_list" id="child_ul1572873-0"></ul>
+																																																					</div>
+																																																				</li>
+																																																				<li>
+																																																					
+																																																					<div class="plugin_pagetree_children_content">
+																																																						<span class="plugin_pagetree_children_span" id="childrenspan1573294-0">                        <a href="Dynamic+defrecord+definitions+trumped+by+AOT+versions+in+classpath.html">Dynamic defrecord definitions trumped by AOT versions in classpath</a>
+																																																						</span>            </div>
+
+																																																						<div id="children1573294-0" class="plugin_pagetree_children_container">
+																																																							<ul class="plugin_pagetree_children_list" id="child_ul1573294-0"></ul>
+																																																						</div>
+																																																					</li>
+																																																					<li>
+																																																						<div >
+																																																						<div class="plugin_pagetree_children_content">
+																																																							<span class="plugin_pagetree_children_span" id="childrenspan2424921-0">                        <a href="Math.html">Math</a>
+																																																							</span>            </div>
+
+																																																							<div id="children2424921-0" class="plugin_pagetree_children_container">
+																																																								<ul class="plugin_pagetree_children_list" id="child_ul2424921-0">
+																																																									<li>
+																																																										
+																																																										<div class="plugin_pagetree_children_content">
+																																																											<span class="plugin_pagetree_children_span" id="childrenspan6389916-0">                        <a href="Generate+math+runtime+support+from+rules+and+types.html">Generate math runtime support from rules and types</a>
+																																																											</span>            </div>
+
+																																																											<div id="children6389916-0" class="plugin_pagetree_children_container">
+																																																												<ul class="plugin_pagetree_children_list" id="child_ul6389916-0"></ul>
+																																																											</div>
+																																																										</li>
+																																																									</ul>
+																																																								</div>
+																																																							</li>
+																																																							<li>
+																																																								
+																																																								<div class="plugin_pagetree_children_content">
+																																																									<span class="plugin_pagetree_children_span" id="childrenspan5243048-0">                        <a href="Make+Compiler+Expr%27s+Public+to+avoid+Reflection.html">Make Compiler Expr's Public to avoid Reflection</a>
+																																																									</span>            </div>
+
+																																																									<div id="children5243048-0" class="plugin_pagetree_children_container">
+																																																										<ul class="plugin_pagetree_children_list" id="child_ul5243048-0"></ul>
+																																																									</div>
+																																																								</li>
+																																																								<li>
+																																																									
+																																																									<div class="plugin_pagetree_children_content">
+																																																										<span class="plugin_pagetree_children_span" id="childrenspan2424967-0">                        <a href="Cross-Dialect+Enhancements.html">Cross-Dialect Enhancements</a>
+																																																										</span>            </div>
+
+																																																										<div id="children2424967-0" class="plugin_pagetree_children_container">
+																																																											<ul class="plugin_pagetree_children_list" id="child_ul2424967-0"></ul>
+																																																										</div>
+																																																									</li>
+																																																									<li>
+																																																										
+																																																										<div class="plugin_pagetree_children_content">
+																																																											<span class="plugin_pagetree_children_span" id="childrenspan5767190-0">                        <a href="Compiler+tracking+of+columns.html">Compiler tracking of columns</a>
+																																																											</span>            </div>
+
+																																																											<div id="children5767190-0" class="plugin_pagetree_children_container">
+																																																												<ul class="plugin_pagetree_children_list" id="child_ul5767190-0"></ul>
+																																																											</div>
+																																																										</li>
+																																																										<li>
+																																																											
+																																																											<div class="plugin_pagetree_children_content">
+																																																												<span class="plugin_pagetree_children_span" id="childrenspan5767239-0">                        <a href="Allow+duplicate+map+keys+and+set+elements.html">Allow duplicate map keys and set elements</a>
+																																																												</span>            </div>
+
+																																																												<div id="children5767239-0" class="plugin_pagetree_children_container">
+																																																													<ul class="plugin_pagetree_children_list" id="child_ul5767239-0"></ul>
+																																																												</div>
+																																																											</li>
+																																																											<li>
+																																																												
+																																																												<div class="plugin_pagetree_children_content">
+																																																													<span class="plugin_pagetree_children_span" id="childrenspan9142536-0">                        <a href="AOT+Problem+Overview.html">AOT Problem Overview</a>
+																																																													</span>            </div>
+
+																																																													<div id="children9142536-0" class="plugin_pagetree_children_container">
+																																																														<ul class="plugin_pagetree_children_list" id="child_ul9142536-0"></ul>
+																																																													</div>
+																																																												</li>
+																																																												<li>
+																																																													
+																																																													<div class="plugin_pagetree_children_content">
+																																																														<span class="plugin_pagetree_children_span" id="childrenspan9142703-0">                        <a href="Pausing+and+resuming+function+support+in+the+compiler+%28a+la+generators%2C+core.async%2C+etc%29.html">Pausing and resuming function support in the compiler (a la generators, core.async, etc)</a>
+																																																														</span>            </div>
+
+																																																														<div id="children9142703-0" class="plugin_pagetree_children_container">
+																																																															<ul class="plugin_pagetree_children_list" id="child_ul9142703-0"></ul>
+																																																														</div>
+																																																													</li>
+																																																													<li>
+																																																														
+																																																														<div class="plugin_pagetree_children_content">
+																																																															<span class="plugin_pagetree_children_span" id="childrenspan5242904-0">                        <a href="Overriding+compile-time+var+values+at+expression-level+granularity.html">Overriding compile-time var values at expression-level granularity</a>
+																																																															</span>            </div>
+
+																																																															<div id="children5242904-0" class="plugin_pagetree_children_container">
+																																																																<ul class="plugin_pagetree_children_list" id="child_ul5242904-0"></ul>
+																																																															</div>
+																																																														</li>
+																																																														<li>
+																																																															
+																																																															<div class="plugin_pagetree_children_content">
+																																																																<span class="plugin_pagetree_children_span" id="childrenspan8192098-0">                        <a href="Language-level+multi-platform+support.html">Language-level multi-platform support</a>
+																																																																</span>            </div>
+
+																																																																<div id="children8192098-0" class="plugin_pagetree_children_container">
+																																																																	<ul class="plugin_pagetree_children_list" id="child_ul8192098-0"></ul>
+																																																																</div>
+																																																															</li>
+																																																															<li>
+																																																																
+																																																																<div class="plugin_pagetree_children_content">
+																																																																	<span class="plugin_pagetree_children_span" id="childrenspan4063426-0">                        <a href="Alternate+string+quote+syntaxes.html">Alternate string quote syntaxes</a>
+																																																																	</span>            </div>
+
+																																																																	<div id="children4063426-0" class="plugin_pagetree_children_container">
+																																																																		<ul class="plugin_pagetree_children_list" id="child_ul4063426-0"></ul>
+																																																																	</div>
+																																																																</li>
+																																																																<li>
+																																																																	
+																																																																	<div class="plugin_pagetree_children_content">
+																																																																		<span class="plugin_pagetree_children_span" id="childrenspan8192565-0">                        <a href="Named+loops+with+recur-to.html">Named loops with recur-to</a>
+																																																																		</span>            </div>
+
+																																																																		<div id="children8192565-0" class="plugin_pagetree_children_container">
+																																																																			<ul class="plugin_pagetree_children_list" id="child_ul8192565-0"></ul>
+																																																																		</div>
+																																																																	</li>
+																																																																	<li>
+																																																																		
+																																																																		<div class="plugin_pagetree_children_content">
+																																																																			<span class="plugin_pagetree_children_span" id="childrenspan9142699-0">                        <a href="lib-clojure.html">lib-clojure</a>
+																																																																			</span>            </div>
+
+																																																																			<div id="children9142699-0" class="plugin_pagetree_children_container">
+																																																																				<ul class="plugin_pagetree_children_list" id="child_ul9142699-0"></ul>
+																																																																			</div>
+																																																																		</li>
+																																																																		<li>
+																																																																			
+																																																																			<div class="plugin_pagetree_children_content">
+																																																																				<span class="plugin_pagetree_children_span" id="childrenspan12845084-0">                        <a href="Function+overloading.html">Function overloading</a>
+																																																																				</span>            </div>
+
+																																																																				<div id="children12845084-0" class="plugin_pagetree_children_container">
+																																																																					<ul class="plugin_pagetree_children_list" id="child_ul12845084-0"></ul>
+																																																																				</div>
+																																																																			</li>
+																																																																			<li>
+																																																																				
+																																																																				<div class="plugin_pagetree_children_content">
+																																																																					<span class="plugin_pagetree_children_span" id="childrenspan12845136-0">                        <a href="Destructuring+cleanup.html">Destructuring cleanup</a>
+																																																																					</span>            </div>
+
+																																																																					<div id="children12845136-0" class="plugin_pagetree_children_container">
+																																																																						<ul class="plugin_pagetree_children_list" id="child_ul12845136-0"></ul>
+																																																																					</div>
+																																																																				</li>
+																																																																				<li>
+																																																																					
+																																																																					<div class="plugin_pagetree_children_content">
+																																																																						<span class="plugin_pagetree_children_span" id="childrenspan18415663-0">                        <a href="Exception+handling+update.html">Exception handling update</a>
+																																																																						</span>            </div>
+
+																																																																						<div id="children18415663-0" class="plugin_pagetree_children_container">
+																																																																							<ul class="plugin_pagetree_children_list" id="child_ul18415663-0"></ul>
+																																																																						</div>
+																																																																					</li>
+																																																																				</ul>
+																																																																			</div>
+																																																																		</li>
+																																																																		<li>
+																																																																			<div class="plugin_pagetree_children_content">
+																																																																				<span class="plugin_pagetree_children_span" id="childrenspan950457-0">                        <a href="Data.html">Data</a>
+																																																																				</span>            </div>
+
+																																																																				<div id="children950457-0" class="plugin_pagetree_children_container">
+																																																																					<ul class="plugin_pagetree_children_list" id="child_ul950457-0">
+																																																																						<li>
+																																																																							
+																																																																							<div class="plugin_pagetree_children_content">
+																																																																								<span class="plugin_pagetree_children_span" id="childrenspan2424880-0">                        <a href="Byte+Sequences.html">Byte Sequences</a>
+																																																																								</span>            </div>
+
+																																																																								<div id="children2424880-0" class="plugin_pagetree_children_container">
+																																																																									<ul class="plugin_pagetree_children_list" id="child_ul2424880-0"></ul>
+																																																																								</div>
+																																																																							</li>
+																																																																							<li>
+																																																																								
+																																																																								<div class="plugin_pagetree_children_content">
+																																																																									<span class="plugin_pagetree_children_span" id="childrenspan950342-0">                        <a href="Matching.html">Matching</a>
+																																																																									</span>            </div>
+
+																																																																									<div id="children950342-0" class="plugin_pagetree_children_container">
+																																																																										<ul class="plugin_pagetree_children_list" id="child_ul950342-0"></ul>
+																																																																									</div>
+																																																																								</li>
+																																																																								<li>
+																																																																									
+																																																																									<div class="plugin_pagetree_children_content">
+																																																																										<span class="plugin_pagetree_children_span" id="childrenspan13108507-0">                        <a href="Portable+UUID+support.html">Portable UUID support</a>
+																																																																										</span>            </div>
+
+																																																																										<div id="children13108507-0" class="plugin_pagetree_children_container">
+																																																																											<ul class="plugin_pagetree_children_list" id="child_ul13108507-0"></ul>
+																																																																										</div>
+																																																																									</li>
+																																																																									<li>
+																																																																										
+																																																																										<div class="plugin_pagetree_children_content">
+																																																																											<span class="plugin_pagetree_children_span" id="childrenspan8192126-0">                        <a href="pages/viewpage.action-pageId=8192126.html">Representing &amp; Printing Edn</a>
+																																																																											</span>            </div>
+
+																																																																											<div id="children8192126-0" class="plugin_pagetree_children_container">
+																																																																												<ul class="plugin_pagetree_children_list" id="child_ul8192126-0"></ul>
+																																																																											</div>
+																																																																										</li>
+																																																																										<li>
+																																																																											
+																																																																											<div class="plugin_pagetree_children_content">
+																																																																												<span class="plugin_pagetree_children_span" id="childrenspan11862058-0">                        <a href="pages/viewpage.action-pageId=11862058.html">Syntax for printing and reading (nearly?) arbitrary characters in symbols and keywords</a>
+																																																																												</span>            </div>
+
+																																																																												<div id="children11862058-0" class="plugin_pagetree_children_container">
+																																																																													<ul class="plugin_pagetree_children_list" id="child_ul11862058-0"></ul>
+																																																																												</div>
+																																																																											</li>
+																																																																										</ul>
+																																																																									</div>
+																																																																								</li>
+																																																																								<li>
+																																																										
+																																																																									<div class="plugin_pagetree_children_content">
+																																																																										<span class="plugin_pagetree_children_span" id="childrenspan8192221-0">                        <a href="Infrastructure.html">Infrastructure</a>
+																																																																										</span>            </div>
+
+																																																																										<div id="children8192221-0" class="plugin_pagetree_children_container">
+																																																																											<ul class="plugin_pagetree_children_list" id="child_ul8192221-0">
+																																																																												<li>
+																																																																													
+																																																																													<div class="plugin_pagetree_children_content">
+																																																																														<span class="plugin_pagetree_children_span" id="childrenspan4063307-0">                        <a href="Clojure+workflow+%28experimental%29.html">Clojure workflow (experimental)</a>
+																																																																														</span>            </div>
+
+																																																																														<div id="children4063307-0" class="plugin_pagetree_children_container">
+																																																																															<ul class="plugin_pagetree_children_list" id="child_ul4063307-0"></ul>
+																																																																														</div>
+																																																																													</li>
+																																																																													<li>
+																																																																														
+																																																																														<div class="plugin_pagetree_children_content">
+																																																																															<span class="plugin_pagetree_children_span" id="childrenspan8192470-0">                        <a href="JIRA+workflow+update.html">JIRA workflow update</a>
+																																																																															</span>            </div>
+
+																																																																															<div id="children8192470-0" class="plugin_pagetree_children_container">
+																																																																																<ul class="plugin_pagetree_children_list" id="child_ul8192470-0"></ul>
+																																																																															</div>
+																																																																														</li>
+																																																																													</ul>
+																																																																												</div>
+																																																																											</li>
+																																																																											<li>
+																																																									
+																																																																												<div class="plugin_pagetree_children_content">
+																																																																													<span class="plugin_pagetree_children_span" id="childrenspan950453-0">                        <a href="State%2C+Concurrency%2C+and+Parallelism.html">State, Concurrency, and Parallelism</a>
+																																																																													</span>            </div>
+
+																																																																													<div id="children950453-0" class="plugin_pagetree_children_container">
+																																																																														<ul class="plugin_pagetree_children_list" id="child_ul950453-0">
+																																																																															<li>
+																																																																																
+																																																																																<div class="plugin_pagetree_children_content">
+																																																																																	<span class="plugin_pagetree_children_span" id="childrenspan1573148-0">                        <a href="Asynchronous+Events.html">Asynchronous Events</a>
+																																																																																	</span>            </div>
+
+																																																																																	<div id="children1573148-0" class="plugin_pagetree_children_container">
+																																																																																		<ul class="plugin_pagetree_children_list" id="child_ul1573148-0"></ul>
+																																																																																	</div>
+																																																																																</li>
+																																																																																<li>
+																																																																																	
+																																																																																	<div class="plugin_pagetree_children_content">
+																																																																																		<span class="plugin_pagetree_children_span" id="childrenspan950287-0">                        <a href="Blocking+vs+Nonblocking+Reads.html">Blocking vs Nonblocking Reads</a>
+																																																																																		</span>            </div>
+
+																																																																																		<div id="children950287-0" class="plugin_pagetree_children_container">
+																																																																																			<ul class="plugin_pagetree_children_list" id="child_ul950287-0"></ul>
+																																																																																		</div>
+																																																																																	</li>
+																																																																																	<li>
+																																																																																		
+																																																																																		<div class="plugin_pagetree_children_content">
+																																																																																			<span class="plugin_pagetree_children_span" id="childrenspan950348-0">                        <a href="Improve+Binding.html">Improve Binding</a>
+																																																																																			</span>            </div>
+
+																																																																																			<div id="children950348-0" class="plugin_pagetree_children_container">
+																																																																																				<ul class="plugin_pagetree_children_list" id="child_ul950348-0"></ul>
+																																																																																			</div>
+																																																																																		</li>
+																																																																																		<li>
+																																																																																			
+																																																																																			<div class="plugin_pagetree_children_content">
+																																																																																				<span class="plugin_pagetree_children_span" id="childrenspan458795-0">                        <a href="Mutex+references+%28pods%2C+nee+cells%29.html">Mutex references (pods, nee cells)</a>
+																																																																																				</span>            </div>
+
+																																																																																				<div id="children458795-0" class="plugin_pagetree_children_container">
+																																																																																					<ul class="plugin_pagetree_children_list" id="child_ul458795-0"></ul>
+																																																																																				</div>
+																																																																																			</li>
+																																																																																			<li>
+																																																																																				
+																																																																																				<div class="plugin_pagetree_children_content">
+																																																																																					<span class="plugin_pagetree_children_span" id="childrenspan458777-0">                        <a href="Parallelism+Support.html">Parallelism Support</a>
+																																																																																					</span>            </div>
+
+																																																																																					<div id="children458777-0" class="plugin_pagetree_children_container">
+																																																																																						<ul class="plugin_pagetree_children_list" id="child_ul458777-0"></ul>
+																																																																																					</div>
+																																																																																				</li>
+																																																																																				<li>
+																																																																																					
+																																																																																					<div class="plugin_pagetree_children_content">
+																																																																																						<span class="plugin_pagetree_children_span" id="childrenspan5767444-0">                        <a href="Promises.html">Promises</a>
+																																																																																						</span>            </div>
+
+																																																																																						<div id="children5767444-0" class="plugin_pagetree_children_container">
+																																																																																							<ul class="plugin_pagetree_children_list" id="child_ul5767444-0"></ul>
+																																																																																						</div>
+																																																																																					</li>
+																																																																																					<li>
+																																																																																						
+																																																																																						<div class="plugin_pagetree_children_content">
+																																																																																							<span class="plugin_pagetree_children_span" id="childrenspan458779-0">                        <a href="Resource+Scopes.html">Resource Scopes</a>
+																																																																																							</span>            </div>
+
+																																																																																							<div id="children458779-0" class="plugin_pagetree_children_container">
+																																																																																								<ul class="plugin_pagetree_children_list" id="child_ul458779-0"></ul>
+																																																																																							</div>
+																																																																																						</li>
+																																																																																						<li>
+																																																																																							
+																																																																																							<div class="plugin_pagetree_children_content">
+																																																																																								<span class="plugin_pagetree_children_span" id="childrenspan1573161-0">                        <a href="Scheduled+Events.html">Scheduled Events</a>
+																																																																																								</span>            </div>
+
+																																																																																								<div id="children1573161-0" class="plugin_pagetree_children_container">
+																																																																																									<ul class="plugin_pagetree_children_list" id="child_ul1573161-0"></ul>
+																																																																																								</div>
+																																																																																							</li>
+																																																																																						</ul>
+																																																																																					</div>
+																																																																																				</li>
+																																																																																				<li>
+
+																																																																																					<div class="plugin_pagetree_children_content">
+																																																																																						<span class="plugin_pagetree_children_span" id="childrenspan950462-0">                        <a href="Tools.html">Tools</a>
+																																																																																						</span>            </div>
+
+																																																																																						<div id="children950462-0" class="plugin_pagetree_children_container">
+																																																																																							<ul class="plugin_pagetree_children_list" id="child_ul950462-0">
+																																																																																								<li>
+																																																																																									
+																																																																																									<div class="plugin_pagetree_children_content">
+																																																																																										<span class="plugin_pagetree_children_span" id="childrenspan19169304-0">                        <a href="clojure.test+improvements.html">clojure.test improvements</a>
+																																																																																										</span>            </div>
+
+																																																																																										<div id="children19169304-0" class="plugin_pagetree_children_container">
+																																																																																											<ul class="plugin_pagetree_children_list" id="child_ul19169304-0"></ul>
+																																																																																										</div>
+																																																																																									</li>
+																																																																																									<li>
+																																																																																										
+																																																																																										<div class="plugin_pagetree_children_content">
+																																																																																											<span class="plugin_pagetree_children_span" id="childrenspan950538-0">                        <a href="IDE+tooling+backend.html">IDE tooling backend</a>
+																																																																																											</span>            </div>
+
+																																																																																											<div id="children950538-0" class="plugin_pagetree_children_container">
+																																																																																												<ul class="plugin_pagetree_children_list" id="child_ul950538-0"></ul>
+																																																																																											</div>
+																																																																																										</li>
+																																																																																										<li>
+																																																																																											
+																																																																																											<div class="plugin_pagetree_children_content">
+																																																																																												<span class="plugin_pagetree_children_span" id="childrenspan5767246-0">                        <a href="Never+Close+a+REPL.html">Never Close a REPL</a>
+																																																																																												</span>            </div>
+
+																																																																																												<div id="children5767246-0" class="plugin_pagetree_children_container">
+																																																																																													<ul class="plugin_pagetree_children_list" id="child_ul5767246-0"></ul>
+																																																																																												</div>
+																																																																																											</li>
+																																																																																										</ul>
+																																																																																									</div>
+																																																																																								</li>
+																																																																																								<li>
+
+																																																																																									<div class="plugin_pagetree_children_content">
+																																																																																										<span class="plugin_pagetree_children_span" id="childrenspan1573338-0">                        <a href="Usability.html">Usability</a>
+																																																																																										</span>            </div>
+
+																																																																																										<div id="children1573338-0" class="plugin_pagetree_children_container">
+																																																																																											<ul class="plugin_pagetree_children_list" id="child_ul1573338-0">
+																																																																																												<li>
+																																																																																													
+																																																																																													<div class="plugin_pagetree_children_content">
+																																																																																														<span class="plugin_pagetree_children_span" id="childrenspan5767376-0">                        <a href="Better+Error+Messages.html">Better Error Messages</a>
+																																																																																														</span>            </div>
+
+																																																																																														<div id="children5767376-0" class="plugin_pagetree_children_container">
+																																																																																															<ul class="plugin_pagetree_children_list" id="child_ul5767376-0"></ul>
+																																																																																														</div>
+																																																																																													</li>
+																																																																																													<li>
+																																																																																														
+																																																																																														<div class="plugin_pagetree_children_content">
+																																																																																															<span class="plugin_pagetree_children_span" id="childrenspan950441-0">                        <a href="CLJ+Launcher.html">CLJ Launcher</a>
+																																																																																															</span>            </div>
+
+																																																																																															<div id="children950441-0" class="plugin_pagetree_children_container">
+																																																																																																<ul class="plugin_pagetree_children_list" id="child_ul950441-0"></ul>
+																																																																																															</div>
+																																																																																														</li>
+																																																																																													</ul>
+																																																																																												</div>
+																																																																																											</li>
+																																																																																										</ul>
+																																																																																									</div>
+																																																																																								</li>
+																																																																																								<li>
+
+																																																																																									<div class="plugin_pagetree_children_content">
+																																																																																										<span class="plugin_pagetree_children_span" id="childrenspan5767475-0">                        <a href="Release+Planning.html">Release Planning</a>
+																																																																																										</span>            </div>
+
+																																																																																										<div id="children5767475-0" class="plugin_pagetree_children_container">
+																																																																																											<ul class="plugin_pagetree_children_list" id="child_ul5767475-0">
+																																																																																												<li>
+																																																																																													
+																																																																																													<div class="plugin_pagetree_children_content">
+																																																																																														<span class="plugin_pagetree_children_span" id="childrenspan8192234-0">                        <a href="Release+1.2.html">Release 1.2</a>
+																																																																																														</span>            </div>
+
+																																																																																														<div id="children8192234-0" class="plugin_pagetree_children_container">
+																																																																																															<ul class="plugin_pagetree_children_list" id="child_ul8192234-0"></ul>
+																																																																																														</div>
+																																																																																													</li>
+																																																																																													<li>
+																																																																																														
+																																																																																														<div class="plugin_pagetree_children_content">
+																																																																																															<span class="plugin_pagetree_children_span" id="childrenspan1572921-0">                        <a href="Release+1.2.1.html">Release 1.2.1</a>
+																																																																																															</span>            </div>
+
+																																																																																															<div id="children1572921-0" class="plugin_pagetree_children_container">
+																																																																																																<ul class="plugin_pagetree_children_list" id="child_ul1572921-0"></ul>
+																																																																																															</div>
+																																																																																														</li>
+																																																																																														<li>
+
+																																																																																															<div class="plugin_pagetree_children_content">
+																																																																																																<span class="plugin_pagetree_children_span" id="childrenspan8192232-0">                        <a href="Release+1.3.html">Release 1.3</a>
+																																																																																																</span>            </div>
+
+																																																																																																<div id="children8192232-0" class="plugin_pagetree_children_container">
+																																																																																																	<ul class="plugin_pagetree_children_list" id="child_ul8192232-0">
+																																																																																																		<li>
+																																																																																																			<div >
+																																																																																																				<a id="plusminus1573016-0" class="plugin_pagetree_childtoggle icon " href="#">                
+																																																																																																				</a>
+																																																																																																			</div>
+																																																																																																			<div class="plugin_pagetree_children_content">
+																																																																																																				<span class="plugin_pagetree_children_span" id="childrenspan1573016-0">                        <a href="Clojure+Contrib.html">Clojure Contrib</a>
+																																																																																																				</span>            </div>
+
+																																																																																																				<div id="children1573016-0" class="plugin_pagetree_children_container">
+																																																																																																					<ul class="plugin_pagetree_children_list" id="child_ul1573016-0">
+																																																																																																						<li>
+																																																																																																							
+																																																																																																							<div class="plugin_pagetree_children_content">
+																																																																																																								<span class="plugin_pagetree_children_span" id="childrenspan459054-0">                        <a href="Better+infrastructure+for+contributed+libs.html">Better infrastructure for contributed libs</a>
+																																																																																																								</span>            </div>
+
+																																																																																																								<div id="children459054-0" class="plugin_pagetree_children_container">
+																																																																																																									<ul class="plugin_pagetree_children_list" id="child_ul459054-0"></ul>
+																																																																																																								</div>
+																																																																																																							</li>
+																																																																																																							<li>
+																																																																																																								<div class="plugin_pagetree_children_content">
+																																																																																																									<span class="plugin_pagetree_children_span" id="childrenspan950378-0">                        <a href="Common+Contrib+Build.html">Common Contrib Build</a>
+																																																																																																									</span>            </div>
+
+																																																																																																									<div id="children950378-0" class="plugin_pagetree_children_container">
+																																																																																																										<ul class="plugin_pagetree_children_list" id="child_ul950378-0">
+																																																																																																											<li>
+																																																																																																												
+																																																																																																												<div class="plugin_pagetree_children_content">
+																																																																																																													<span class="plugin_pagetree_children_span" id="childrenspan950726-0">                        <a href="Clojure+Maven+Plugin.html">Clojure Maven Plugin</a>
+																																																																																																													</span>            </div>
+
+																																																																																																													<div id="children950726-0" class="plugin_pagetree_children_container">
+																																																																																																														<ul class="plugin_pagetree_children_list" id="child_ul950726-0"></ul>
+																																																																																																													</div>
+																																																																																																												</li>
+																																																																																																												<li>
+																																																																																																													
+																																																																																																													<div class="plugin_pagetree_children_content">
+																																																																																																														<span class="plugin_pagetree_children_span" id="childrenspan950842-0">                        <a href="pages/viewpage.action-pageId=950842.html">Why Maven?</a>
+																																																																																																														</span>            </div>
+
+																																																																																																														<div id="children950842-0" class="plugin_pagetree_children_container">
+																																																																																																															<ul class="plugin_pagetree_children_list" id="child_ul950842-0"></ul>
+																																																																																																														</div>
+																																																																																																													</li>
+																																																																																																													<li>
+																																																																																																														
+																																																																																																														<div class="plugin_pagetree_children_content">
+																																																																																																															<span class="plugin_pagetree_children_span" id="childrenspan1572898-0">                        <a href="pages/viewpage.action-pageId=1572898.html">Why Source-Only JARs?</a>
+																																																																																																															</span>            </div>
+
+																																																																																																															<div id="children1572898-0" class="plugin_pagetree_children_container">
+																																																																																																																<ul class="plugin_pagetree_children_list" id="child_ul1572898-0"></ul>
+																																																																																																															</div>
+																																																																																																														</li>
+																																																																																																													</ul>
+																																																																																																												</div>
+																																																																																																											</li>
+																																																																																																											<li>
+																																																																																																												
+																																																																																																												<div class="plugin_pagetree_children_content">
+																																																																																																													<span class="plugin_pagetree_children_span" id="childrenspan950429-0">                        <a href="Contrib+Library+Names.html">Contrib Library Names</a>
+																																																																																																													</span>            </div>
+
+																																																																																																													<div id="children950429-0" class="plugin_pagetree_children_container">
+																																																																																																														<ul class="plugin_pagetree_children_list" id="child_ul950429-0"></ul>
+																																																																																																													</div>
+																																																																																																												</li>
+																																																																																																											</ul>
+																																																																																																										</div>
+																																																																																																									</li>
+																																																																																																									<li>
+																																																																																																										
+																																																																																																										<div class="plugin_pagetree_children_content">
+																																																																																																											<span class="plugin_pagetree_children_span" id="childrenspan950804-0">                        <a href="defrecord+improvements.html">defrecord improvements</a>
+																																																																																																											</span>            </div>
+
+																																																																																																											<div id="children950804-0" class="plugin_pagetree_children_container">
+																																																																																																												<ul class="plugin_pagetree_children_list" id="child_ul950804-0"></ul>
+																																																																																																											</div>
+																																																																																																										</li>
+																																																																																																										<li>
+
+																																																																																																											<div class="plugin_pagetree_children_content">
+																																																																																																												<span class="plugin_pagetree_children_span" id="childrenspan459001-0">                        <a href="Enhanced+Primitive+Support.html">Enhanced Primitive Support</a>
+																																																																																																												</span>            </div>
+
+																																																																																																												<div id="children459001-0" class="plugin_pagetree_children_container">
+																																																																																																													<ul class="plugin_pagetree_children_list" id="child_ul459001-0">
+																																																																																																														<li>
+																																																																																																															
+																																																																																																															<div class="plugin_pagetree_children_content">
+																																																																																																																<span class="plugin_pagetree_children_span" id="childrenspan1573197-0">                        <a href="Bit+Operations.html">Bit Operations</a>
+																																																																																																																</span>            </div>
+
+																																																																																																																<div id="children1573197-0" class="plugin_pagetree_children_container">
+																																																																																																																	<ul class="plugin_pagetree_children_list" id="child_ul1573197-0"></ul>
+																																																																																																																</div>
+																																																																																																															</li>
+																																																																																																															<li>
+																																																																																																																
+																																																																																																																<div class="plugin_pagetree_children_content">
+																																																																																																																	<span class="plugin_pagetree_children_span" id="childrenspan1572976-0">                        <a href="Documentation+for+1.3+Numerics.html">Documentation for 1.3 Numerics</a>
+																																																																																																																	</span>            </div>
+
+																																																																																																																	<div id="children1572976-0" class="plugin_pagetree_children_container">
+																																																																																																																		<ul class="plugin_pagetree_children_list" id="child_ul1572976-0"></ul>
+																																																																																																																	</div>
+																																																																																																																</li>
+																																																																																																															</ul>
+																																																																																																														</div>
+																																																																																																													</li>
+																																																																																																													<li>
+
+																																																																																																														<div class="plugin_pagetree_children_content">
+																																																																																																															<span class="plugin_pagetree_children_span" id="childrenspan950361-0">                        <a href="JIRA+usage+proposal.html">JIRA usage proposal</a>
+																																																																																																															</span>            </div>
+
+																																																																																																															<div id="children950361-0" class="plugin_pagetree_children_container">
+																																																																																																																<ul class="plugin_pagetree_children_list" id="child_ul950361-0">
+																																																																																																																	<li>
+																																																																																																																		
+																																																																																																																		<div class="plugin_pagetree_children_content">
+																																																																																																																			<span class="plugin_pagetree_children_span" id="childrenspan950890-0">                        <a href="Tickets+and+their+Properties.html">Tickets and their Properties</a>
+																																																																																																																			</span>            </div>
+
+																																																																																																																			<div id="children950890-0" class="plugin_pagetree_children_container">
+																																																																																																																				<ul class="plugin_pagetree_children_list" id="child_ul950890-0"></ul>
+																																																																																																																			</div>
+																																																																																																																		</li>
+																																																																																																																	</ul>
+																																																																																																																</div>
+																																																																																																															</li>
+																																																																																																															<li>
+																																																																																																																
+																																																																																																																<div class="plugin_pagetree_children_content">
+																																																																																																																	<span class="plugin_pagetree_children_span" id="childrenspan458797-0">                        <a href="Primitive+Support.html">Primitive Support</a>
+																																																																																																																	</span>            </div>
+
+																																																																																																																	<div id="children458797-0" class="plugin_pagetree_children_container">
+																																																																																																																		<ul class="plugin_pagetree_children_list" id="child_ul458797-0"></ul>
+																																																																																																																	</div>
+																																																																																																																</li>
+																																																																																																																<li>
+																																																																																																																	
+																																																																																																																	<div class="plugin_pagetree_children_content">
+																																																																																																																		<span class="plugin_pagetree_children_span" id="childrenspan950316-0">                        <a href="Reflection+API.html">Reflection API</a>
+																																																																																																																		</span>            </div>
+
+																																																																																																																		<div id="children950316-0" class="plugin_pagetree_children_container">
+																																																																																																																			<ul class="plugin_pagetree_children_list" id="child_ul950316-0"></ul>
+																																																																																																																		</div>
+																																																																																																																	</li>
+																																																																																																																</ul>
+																																																																																																															</div>
+																																																																																																														</li>
+																																																																																																														<li>
+																																																																																																															<div class="plugin_pagetree_children_content">
+																																																																																																																<span class="plugin_pagetree_children_span" id="childrenspan5767477-0">                        <a href="Release+1.4+Planning.html">Release 1.4 Planning</a>
+																																																																																																																</span>            </div>
+
+																																																																																																																<div id="children5767477-0" class="plugin_pagetree_children_container">
+																																																																																																																	<ul class="plugin_pagetree_children_list" id="child_ul5767477-0">
+																																																																																																																		<li>
+																																																																																																																			
+																																																																																																																			<div class="plugin_pagetree_children_content">
+																																																																																																																				<span class="plugin_pagetree_children_span" id="childrenspan2687200-0">                        <a href="Clojure+1.4+docstrings.html">Clojure 1.4 docstrings</a>
+																																																																																																																				</span>            </div>
+
+																																																																																																																				<div id="children2687200-0" class="plugin_pagetree_children_container">
+																																																																																																																					<ul class="plugin_pagetree_children_list" id="child_ul2687200-0"></ul>
+																																																																																																																				</div>
+																																																																																																																			</li>
+																																																																																																																			<li>
+																																																																																																																				
+																																																																																																																				<div class="plugin_pagetree_children_content">
+																																																																																																																					<span class="plugin_pagetree_children_span" id="childrenspan2687196-0">                        <a href="Clojure+1.4+error+messages.html">Clojure 1.4 error messages</a>
+																																																																																																																					</span>            </div>
+
+																																																																																																																					<div id="children2687196-0" class="plugin_pagetree_children_container">
+																																																																																																																						<ul class="plugin_pagetree_children_list" id="child_ul2687196-0"></ul>
+																																																																																																																					</div>
+																																																																																																																				</li>
+																																																																																																																				<li>
+																																																																																																																					
+																																																																																																																					<div class="plugin_pagetree_children_content">
+																																																																																																																						<span class="plugin_pagetree_children_span" id="childrenspan950382-0">                        <a href="pages/viewpage.action-pageId=950382.html">Clojure Instant Literal &amp; Library</a>
+																																																																																																																						</span>            </div>
+
+																																																																																																																						<div id="children950382-0" class="plugin_pagetree_children_container">
+																																																																																																																							<ul class="plugin_pagetree_children_list" id="child_ul950382-0"></ul>
+																																																																																																																						</div>
+																																																																																																																					</li>
+																																																																																																																					<li>
+																																																																																																																						
+																																																																																																																						<div class="plugin_pagetree_children_content">
+																																																																																																																							<span class="plugin_pagetree_children_span" id="childrenspan4063453-0">                        <a href="Tagged+Literals.html">Tagged Literals</a>
+																																																																																																																							</span>            </div>
+
+																																																																																																																							<div id="children4063453-0" class="plugin_pagetree_children_container">
+																																																																																																																								<ul class="plugin_pagetree_children_list" id="child_ul4063453-0"></ul>
+																																																																																																																							</div>
+																																																																																																																						</li>
+																																																																																																																						<li>
+																																																																																																																							
+																																																																																																																							<div class="plugin_pagetree_children_content">
+																																																																																																																								<span class="plugin_pagetree_children_span" id="childrenspan2687203-0">                        <a href="Unified+ClojureScript+and+Clojure+field+access+syntax.html">Unified ClojureScript and Clojure field access syntax</a>
+																																																																																																																								</span>            </div>
+
+																																																																																																																								<div id="children2687203-0" class="plugin_pagetree_children_container">
+																																																																																																																									<ul class="plugin_pagetree_children_list" id="child_ul2687203-0"></ul>
+																																																																																																																								</div>
+																																																																																																																							</li>
+																																																																																																																						</ul>
+																																																																																																																					</div>
+																																																																																																																				</li>
+																																																																																																																				<li>
+																																																																																																																					<div class="plugin_pagetree_children_content">
+																																																																																																																						<span class="plugin_pagetree_children_span" id="childrenspan8192269-0">                        <a href="Release+1.5.html">Release 1.5</a>
+																																																																																																																						</span>            </div>
+
+																																																																																																																						<div id="children8192269-0" class="plugin_pagetree_children_container">
+																																																																																																																							<ul class="plugin_pagetree_children_list" id="child_ul8192269-0">
+																																																																																																																								<li>
+																																																																																																																									
+																																																																																																																									<div class="plugin_pagetree_children_content">
+																																																																																																																										<span class="plugin_pagetree_children_span" id="childrenspan5767196-0">                        <a href="Print+Control+for+Java+Collection+Types.html">Print Control for Java Collection Types</a>
+																																																																																																																										</span>            </div>
+
+																																																																																																																										<div id="children5767196-0" class="plugin_pagetree_children_container">
+																																																																																																																											<ul class="plugin_pagetree_children_list" id="child_ul5767196-0"></ul>
+																																																																																																																										</div>
+																																																																																																																									</li>
+																																																																																																																								</ul>
+																																																																																																																							</div>
+																																																																																																																						</li>
+																																																																																																																						<li>
+																																																																																																																							<div class="plugin_pagetree_children_content">
+																																																																																																																								<span class="plugin_pagetree_children_span" id="childrenspan9142387-0">                        <a href="Release+1.6.html">Release 1.6</a>
+																																																																																																																								</span>            </div>
+
+																																																																																																																								<div id="children9142387-0" class="plugin_pagetree_children_container">
+																																																																																																																									<ul class="plugin_pagetree_children_list" id="child_ul9142387-0">
+																																																																																																																										<li>
+																																																																																																																											
+																																																																																																																											<div class="plugin_pagetree_children_content">
+																																																																																																																												<span class="plugin_pagetree_children_span" id="childrenspan950849-0">                        <a href="ASM.html">ASM</a>
+																																																																																																																												</span>            </div>
+
+																																																																																																																												<div id="children950849-0" class="plugin_pagetree_children_container">
+																																																																																																																													<ul class="plugin_pagetree_children_list" id="child_ul950849-0"></ul>
+																																																																																																																												</div>
+																																																																																																																											</li>
+																																																																																																																											<li>
+																																																																																																																												<div class="plugin_pagetree_children_content">
+																																																																																																																													<span class="plugin_pagetree_children_span" id="childrenspan7143440-0">                        <a href="Async+blocks.html">Async blocks</a>
+																																																																																																																													</span>            </div>
+
+																																																																																																																													<div id="children7143440-0" class="plugin_pagetree_children_container">
+																																																																																																																														<ul class="plugin_pagetree_children_list" id="child_ul7143440-0">
+																																																																																																																															<li>
+																																																																																																																																
+																																																																																																																																<div class="plugin_pagetree_children_content">
+																																																																																																																																	<span class="plugin_pagetree_children_span" id="childrenspan8192295-0">                        <a href="Async+Executor.html">Async Executor</a>
+																																																																																																																																	</span>            </div>
+
+																																																																																																																																	<div id="children8192295-0" class="plugin_pagetree_children_container">
+																																																																																																																																		<ul class="plugin_pagetree_children_list" id="child_ul8192295-0"></ul>
+																																																																																																																																	</div>
+																																																																																																																																</li>
+																																																																																																																																<li>
+																																																																																																																																	
+																																																																																																																																	<div class="plugin_pagetree_children_content">
+																																																																																																																																		<span class="plugin_pagetree_children_span" id="childrenspan950497-0">                        <a href="Channels.html">Channels</a>
+																																																																																																																																		</span>            </div>
+
+																																																																																																																																		<div id="children950497-0" class="plugin_pagetree_children_container">
+																																																																																																																																			<ul class="plugin_pagetree_children_list" id="child_ul950497-0"></ul>
+																																																																																																																																		</div>
+																																																																																																																																	</li>
+																																																																																																																																</ul>
+																																																																																																																															</div>
+																																																																																																																														</li>
+																																																																																																																														<li>
+																																																																																																																															
+																																																																																																																															<div class="plugin_pagetree_children_content">
+																																																																																																																																<span class="plugin_pagetree_children_span" id="childrenspan8192765-0">                        <a href="Better+hashing.html">Better hashing</a>
+																																																																																																																																</span>            </div>
+
+																																																																																																																																<div id="children8192765-0" class="plugin_pagetree_children_container">
+																																																																																																																																	<ul class="plugin_pagetree_children_list" id="child_ul8192765-0"></ul>
+																																																																																																																																</div>
+																																																																																																																															</li>
+																																																																																																																															<li>
+																																																																																																																																
+																																																																																																																																<div class="plugin_pagetree_children_content">
+																																																																																																																																	<span class="plugin_pagetree_children_span" id="childrenspan1573080-0">                        <a href="Improvements+to+interop+from+Java.html">Improvements to interop from Java</a>
+																																																																																																																																	</span>            </div>
+
+																																																																																																																																	<div id="children1573080-0" class="plugin_pagetree_children_container">
+																																																																																																																																		<ul class="plugin_pagetree_children_list" id="child_ul1573080-0"></ul>
+																																																																																																																																	</div>
+																																																																																																																																</li>
+																																																																																																																															</ul>
+																																																																																																																														</div>
+																																																																																																																													</li>
+																																																																																																																													<li>
+																																																																																																																														<div class="plugin_pagetree_children_content">
+																																																																																																																															<span class="plugin_pagetree_children_span" id="childrenspan11305137-0">                        <a href="Release+1.7.html">Release 1.7</a>
+																																																																																																																															</span>            </div>
+
+																																																																																																																															<div id="children11305137-0" class="plugin_pagetree_children_container">
+																																																																																																																																<ul class="plugin_pagetree_children_list" id="child_ul11305137-0">
+																																																																																																																																	<li>
+																																																																																																																																		
+																																																																																																																																		<div class="plugin_pagetree_children_content">
+																																																																																																																																			<span class="plugin_pagetree_children_span" id="childrenspan9142645-0">                        <a href="Making+Core+Generator+functions+IReduce%27able.html">Making Core Generator functions IReduce'able</a>
+																																																																																																																																			</span>            </div>
+
+																																																																																																																																			<div id="children9142645-0" class="plugin_pagetree_children_container">
+																																																																																																																																				<ul class="plugin_pagetree_children_list" id="child_ul9142645-0"></ul>
+																																																																																																																																			</div>
+																																																																																																																																		</li>
+																																																																																																																																		<li>
+																																																																																																																																			<div class="plugin_pagetree_children_content">
+																																																																																																																																				<span class="plugin_pagetree_children_span" id="childrenspan11305072-0">                        <a href="Reader+Conditionals.html">Reader Conditionals</a>
+																																																																																																																																				</span>            </div>
+
+																																																																																																																																				<div id="children11305072-0" class="plugin_pagetree_children_container">
+																																																																																																																																					<ul class="plugin_pagetree_children_list" id="child_ul11305072-0">
+																																																																																																																																						<li>
+																																																																																																																																							
+																																																																																																																																							<div class="plugin_pagetree_children_content">
+																																																																																																																																								<span class="plugin_pagetree_children_span" id="childrenspan5243060-0">                        <a href="Feature+Expressions.html">Feature Expressions</a>
+																																																																																																																																								</span>            </div>
+
+																																																																																																																																								<div id="children5243060-0" class="plugin_pagetree_children_container">
+																																																																																																																																									<ul class="plugin_pagetree_children_list" id="child_ul5243060-0"></ul>
+																																																																																																																																								</div>
+																																																																																																																																							</li>
+																																																																																																																																						</ul>
+																																																																																																																																					</div>
+																																																																																																																																				</li>
+																																																																																																																																			</ul>
+																																																																																																																																		</div>
+																																																																																																																																	</li>
+																																																																																																																																	<li>
+																																																																																																																																		<div class="plugin_pagetree_children_content">
+																																																																																																																																			<span class="plugin_pagetree_children_span" id="childrenspan12845093-0">                        <a href="Release+1.8.html">Release 1.8</a>
+																																																																																																																																			</span>            </div>
+
+																																																																																																																																			<div id="children12845093-0" class="plugin_pagetree_children_container">
+																																																																																																																																				<ul class="plugin_pagetree_children_list" id="child_ul12845093-0">
+																																																																																																																																					<li>
+																																																																																																																																						
+																																																																																																																																						<div class="plugin_pagetree_children_content">
+																																																																																																																																							<span class="plugin_pagetree_children_span" id="childrenspan11305253-0">                        <a href="Socket+Server+REPL.html">Socket Server REPL</a>
+																																																																																																																																							</span>            </div>
+
+																																																																																																																																							<div id="children11305253-0" class="plugin_pagetree_children_container">
+																																																																																																																																								<ul class="plugin_pagetree_children_list" id="child_ul11305253-0"></ul>
+																																																																																																																																							</div>
+																																																																																																																																						</li>
+																																																																																																																																					</ul>
+																																																																																																																																				</div>
+																																																																																																																																			</li>
+																																																																																																																																			<li>
+																																																																																																																																				<div class="plugin_pagetree_children_content">
+																																																																																																																																					<span class="plugin_pagetree_children_span" id="childrenspan14123028-0">                        <a href="Release+1.9.html">Release 1.9</a>
+																																																																																																																																					</span>            </div>
+
+																																																																																																																																					<div id="children14123028-0" class="plugin_pagetree_children_container">
+																																																																																																																																						<ul class="plugin_pagetree_children_list" id="child_ul14123028-0">
+																																																																																																																																							<li>
+																																																																																																																																								
+																																																																																																																																								<div class="plugin_pagetree_children_content">
+																																																																																																																																									<span class="plugin_pagetree_children_span" id="childrenspan14123031-0">                        <a href="Errors+found+with+core+specs.html">Errors found with core specs</a>
+																																																																																																																																									</span>            </div>
+
+																																																																																																																																									<div id="children14123031-0" class="plugin_pagetree_children_container">
+																																																																																																																																										<ul class="plugin_pagetree_children_list" id="child_ul14123031-0"></ul>
+																																																																																																																																									</div>
+																																																																																																																																								</li>
+																																																																																																																																							</ul>
+																																																																																																																																						</div>
+																																																																																																																																					</li>
+																																																																																																																																					<li>
+																																																																																																																																						
+																																																																																																																																						<div class="plugin_pagetree_children_content">
+																																																																																																																																							<span class="plugin_pagetree_children_span" id="childrenspan950802-0">                        <a href="Release.Next+Planning.html">Release.Next Planning</a>
+																																																																																																																																							</span>            </div>
+
+																																																																																																																																							<div id="children950802-0" class="plugin_pagetree_children_container">
+																																																																																																																																								<ul class="plugin_pagetree_children_list" id="child_ul950802-0"></ul>
+																																																																																																																																							</div>
+																																																																																																																																						</li>
+																																																																																																																																						<li>
+																																																																																																																																							<div class="plugin_pagetree_children_content">
+																																																																																																																																								<span class="plugin_pagetree_children_span" id="childrenspan12845098-0">                        <a href="Release.zFuture.html">Release.zFuture</a>
+																																																																																																																																								</span>            </div>
+
+																																																																																																																																								<div id="children12845098-0" class="plugin_pagetree_children_container">
+																																																																																																																																									<ul class="plugin_pagetree_children_list" id="child_ul12845098-0">
+																																																																																																																																										<li>
+																																																																																																																																											
+																																																																																																																																											<div class="plugin_pagetree_children_content">
+																																																																																																																																												<span class="plugin_pagetree_children_span" id="childrenspan9142384-0">                        <a href="%27Lean%27+Runtime.html">'Lean' Runtime</a>
+																																																																																																																																												</span>            </div>
+
+																																																																																																																																												<div id="children9142384-0" class="plugin_pagetree_children_container">
+																																																																																																																																													<ul class="plugin_pagetree_children_list" id="child_ul9142384-0"></ul>
+																																																																																																																																												</div>
+																																																																																																																																											</li>
+																																																																																																																																											<li>
+																																																																																																																																												
+																																																																																																																																												<div class="plugin_pagetree_children_content">
+																																																																																																																																													<span class="plugin_pagetree_children_span" id="childrenspan1573041-0">                        <a href="Build+Profiles.html">Build Profiles</a>
+																																																																																																																																													</span>            </div>
+
+																																																																																																																																													<div id="children1573041-0" class="plugin_pagetree_children_container">
+																																																																																																																																														<ul class="plugin_pagetree_children_list" id="child_ul1573041-0"></ul>
+																																																																																																																																													</div>
+																																																																																																																																												</li>
+																																																																																																																																												<li>
+																																																																																																																																													
+																																																																																																																																													<div class="plugin_pagetree_children_content">
+																																																																																																																																														<span class="plugin_pagetree_children_span" id="childrenspan12845249-0">                        <a href="Improving+Clojure+Start+Time.html">Improving Clojure Start Time</a>
+																																																																																																																																														</span>            </div>
+
+																																																																																																																																														<div id="children12845249-0" class="plugin_pagetree_children_container">
+																																																																																																																																															<ul class="plugin_pagetree_children_list" id="child_ul12845249-0"></ul>
+																																																																																																																																														</div>
+																																																																																																																																													</li>
+																																																																																																																																													<li>
+																																																																																																																																														
+																																																																																																																																														<div class="plugin_pagetree_children_content">
+																																																																																																																																															<span class="plugin_pagetree_children_span" id="childrenspan8781847-0">                        <a href="Inlined+code.html">Inlined code</a>
+																																																																																																																																															</span>            </div>
+
+																																																																																																																																															<div id="children8781847-0" class="plugin_pagetree_children_container">
+																																																																																																																																																<ul class="plugin_pagetree_children_list" id="child_ul8781847-0"></ul>
+																																																																																																																																															</div>
+																																																																																																																																														</li>
+																																																																																																																																														<li>
+																																																																																																																																															
+																																																																																																																																															<div class="plugin_pagetree_children_content">
+																																																																																																																																																<span class="plugin_pagetree_children_span" id="childrenspan12845199-0">                        <a href="Lazy+var+loading.html">Lazy var loading</a>
+																																																																																																																																																</span>            </div>
+
+																																																																																																																																																<div id="children12845199-0" class="plugin_pagetree_children_container">
+																																																																																																																																																	<ul class="plugin_pagetree_children_list" id="child_ul12845199-0"></ul>
+																																																																																																																																																</div>
+																																																																																																																																															</li>
+																																																																																																																																															<li>
+																																																																																																																																																
+																																																																																																																																																<div class="plugin_pagetree_children_content">
+																																																																																																																																																	<span class="plugin_pagetree_children_span" id="childrenspan12845194-0">                        <a href="Macro+Grammars.html">Macro Grammars</a>
+																																																																																																																																																	</span>            </div>
+
+																																																																																																																																																	<div id="children12845194-0" class="plugin_pagetree_children_container">
+																																																																																																																																																		<ul class="plugin_pagetree_children_list" id="child_ul12845194-0"></ul>
+																																																																																																																																																	</div>
+																																																																																																																																																</li>
+																																																																																																																																																<li>
+																																																																																																																																																	
+																																																																																																																																																	<div class="plugin_pagetree_children_content">
+																																																																																																																																																		<span class="plugin_pagetree_children_span" id="childrenspan3702860-0">                        <a href="Transitive+AOT+Compilation.html">Transitive AOT Compilation</a>
+																																																																																																																																																		</span>            </div>
+
+																																																																																																																																																		<div id="children3702860-0" class="plugin_pagetree_children_container">
+																																																																																																																																																			<ul class="plugin_pagetree_children_list" id="child_ul3702860-0"></ul>
+																																																																																																																																																		</div>
+																																																																																																																																																	</li>
+																																																																																																																																																</ul>
+																																																																																																																																															</div>
+																																																																																																																																														</li>
+																																																																																																																																													</ul>
+																																																																																																																																												</div>
+																																																																																																																																											</li>
+																																																																																																																																										</ul>
+																																																																																																																																									</div>
+																																																																																																																		
+
+
+<!-- end insert -->
+						   
+						   </td>
+						   <td class="confluenceTd" valign="top" width="5%"> </td>
+						   <td class="confluenceTd" valign="top" width="35%">    
+
+</div>
+</td></tr></tbody></table>
+    
+        </div>
+
+
+    <br class="clear">
+</div>
+  
+    </div>
+</div>
+
+<div id="footer">
+                                                <p class="license license-opensource">
+                  Powered by a free <b>Atlassian Confluence Open Source Project License</b> granted to Clojure. <a href="http://www.atlassian.com/c/conf/11461">Evaluate Confluence today</a>.<br>
+                </p>
+                        
+    <ul id="poweredby">
+        <li class="noprint">Powered by <a href="http://www.atlassian.com/software/confluence" class="hover-footer-link">Atlassian Confluence</a> <span id='footer-build-information'>4.0</span>, the <a href="http://www.atlassian.com/software/confluence/tour/enterprise-wiki.jsp" class="hover-footer-link">Enterprise Wiki</a></li>
+        <li class="print-only">Printed by Atlassian Confluence 4.0, the Enterprise Wiki.</li>        
+        <li class="noprint"> &nbsp; |&nbsp; <a href="http://jira.atlassian.com/secure/BrowseProject.jspa?id=10470" class="hover-footer-link">Report a bug</a></li>
+        <li class="noprint"> &nbsp;|&nbsp; <a href="http://www.atlassian.com/about/connected.jsp?s_kwcid=Confluence-stayintouch" class="hover-footer-link">Atlassian News</a></li>
+    </ul>
+
+    
+
+            <div><span style="">Site support by</span><a href="http://contegix.com"> <img style="vertical-align:middle" src="../../download/attachments/459015/contegix.jpg.html"/></a></div>
+    </div></div>
+</body>
+</html>

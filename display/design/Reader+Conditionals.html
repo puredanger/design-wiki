@@ -1,0 +1,1024 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reader Conditionals - Clojure Design - Clojure Development</title>
+
+        
+
+                        
+    
+
+            <meta http-equiv="X-UA-Compatible" content="IE=EDGE">
+<meta charset="UTF-8">
+<!-- Deprecated since 3.4. To be removed in a future version of Confluence; use AJS.Confluence.getContextPath() -->
+<meta id="confluence-context-path" name="confluence-context-path" content="">
+<meta id="confluence-base-url" name="confluence-base-url" content="https://dev.clojure.org">
+
+<meta id="atlassian-token" name="atlassian-token" content="30041c830a95ce9c95d0b58cb377def6b96aa6d2">
+
+<meta id="confluence-space-key" name="confluence-space-key" content="design">
+<script type="text/javascript">
+    // Deprecated global variables. To be removed in a future version of Confluence.
+    var contextPath = '';
+</script>
+
+    
+
+<!-- include system css resources -->
+
+
+    <link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/55/_/download/superbatch/css/batch.css" media="all">
+<!--[if lt IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/_/download/superbatch/css/batch.css?conditionalComment=lt+IE+9" media="all">
+<![endif]-->
+<!--[if IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/_/download/superbatch/css/batch.css?conditionalComment=IE+9" media="all">
+<![endif]-->
+<!--[if lte IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/_/download/superbatch/css/batch.css?conditionalComment=lte+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/55/_/download/superbatch/css/batch-media=print.css" media="print">
+<!--[if lt IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/_/download/contextbatch/css/page/batch.css?conditionalComment=lt+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/_/download/contextbatch/css/page/batch.css" media="all">
+<!--[if lt IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/_/download/contextbatch/css/viewcontent,main/batch.css?conditionalComment=lt+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/_/download/contextbatch/css/viewcontent,main/batch.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.6/_/download/batch/com.atlassian.confluence.ext.newcode-macro-plugin-syntaxhighlighter/com.atlassian.confluence.ext.newcode-macro-plugin-syntaxhighlighter.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.6/_/download/batch/com.atlassian.confluence.ext.newcode-macro-plugin-sh-theme-confluence/com.atlassian.confluence.ext.newcode-macro-plugin-sh-theme-confluence.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.1/_/download/batch/com.atlassian.confluence.plugins.pagetree-pagetree-resources/com.atlassian.confluence.plugins.pagetree-pagetree-resources.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/3/_/styles/colors-spaceKey=design.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.5/_/download/resources/com.atlassian.confluence.plugins.doctheme-documentation/default-theme.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.5/_/download/resources/com.atlassian.confluence.plugins.doctheme-documentation/splitter.css" media="all">
+
+<!-- end system css resources -->
+
+    <meta name="confluence-request-time" content="1556128843276">
+            <meta name="ajs-page-id" content="11305072">
+            <meta name="ajs-parent-page-id" content="11305137">
+            <meta name="ajs-space-key" content="design">
+            <meta name="ajs-space-name" content="Clojure Design">
+            <meta name="ajs-page-title" content="Reader Conditionals">
+            <meta name="ajs-parent-page-title" content="Release 1.7">
+            <meta name="ajs-from-page-title" content="">
+            <meta name="ajs-context-path" content="">
+            <meta name="ajs-version-number" content="4.0">
+            <meta name="ajs-build-number" content="3047">
+            <meta name="ajs-remote-user" content="">
+            <meta name="ajs-static-resource-url-prefix" content="/s/en_GB/3047/3/_">
+            <meta name="ajs-global-settings-attachment-max-size" content="10485760">
+            <meta name="ajs-user-locale" content="en_GB">
+            <meta name="ajs-enabled-dark-features" content="">
+            <meta name="ajs-atl-token" content="30041c830a95ce9c95d0b58cb377def6b96aa6d2">
+            
+            <meta name="ajs-keyboardshortcut-hash" content="7b95af54c6deada096af1f28fdd0f413">
+            <meta name="ajs-use-keyboard-shortcuts" content="true">
+    <!-- Deprecated since 3.4. To be removed in a future version of Confluence; use atl.header -->
+        
+            <script type="text/x-template" title="share-content-popup">
+    <form action="#" method="post" class="aui share-content-popup">
+        <fieldset>
+            <label for="users">User name or email</label>
+            <div class="autocomplete-user-target">
+                <input class="text autocomplete-sharepage" id="users" data-max="10" data-dropdown-target=".autocomplete-user-target" data-none-message="No matching user or email found"/>
+            </div>
+            <ol class="recipients">
+            </ol>
+            <div><label for="note">Note</label></div>
+            <textarea class="textarea" id="note" placeholder="Add an optional note"/>
+        </fieldset>
+        <div class="button-panel">
+            <div class="progress-messages-icon"></div>
+            <div class="progress-messages">
+            </div>
+            <input class="button submit" type="submit" value="Share" disabled/>
+            <a class="close-dialog" href="#">Cancel</a>
+        </div>
+    </form>
+</script>
+
+<script type="text/x-template" title="share-content-popup-recipient-username">
+    <li data-username="{username}" style="display: none">
+        <span>
+            <img src="{thumbnailLink.href}" title="{title}">
+            <span>{title}</span>
+            <span class="remove-recipient"/>
+        </span>
+    </li>
+</script>
+
+<script type="text/x-template" title="share-content-popup-recipient-email">
+    <li data-email="{email}" style="display: none">
+        <span>
+            <img src="{icon}" title="{email}">
+            <span>{email}</span>
+            <span class="remove-recipient"/>
+        </span>
+    </li>
+</script>
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="icon" type="image/png" href="../../s/en_GB/3047/3/_/images/logo/confluence_16.png">
+
+<link rel="search" type="application/opensearchdescription+xml" href="../../opensearch/osd.action.xml" title="Clojure Development"/>
+
+        <!-- include system javascript resources -->
+                        
+    
+    <script type="text/javascript" src="../../s/en_GB/3047/3/55/_/download/superbatch/js/batch.js" ></script>
+<!--[if lte IE 8]>
+<script type="text/javascript" src="/s/en_GB/3047/3/55/_/download/superbatch/js/batch.js?conditionalComment=lte+IE+8" ></script>
+<![endif]-->
+<script type="text/javascript" src="../../s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/_/download/contextbatch/js/page/batch.js" ></script>
+<script type="text/javascript" src="../../s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/_/download/contextbatch/js/viewcontent,main/batch.js" ></script>
+<script type="text/javascript" src="../../s/en_GB/3047/3/2.0.6/_/download/batch/com.atlassian.confluence.ext.newcode-macro-plugin-syntaxhighlighter/com.atlassian.confluence.ext.newcode-macro-plugin-syntaxhighlighter.js" ></script>
+<script type="text/javascript" src="../../s/en_GB/3047/3/2.0.6/_/download/batch/com.atlassian.confluence.ext.newcode-macro-plugin-syntaxhighlighter-brushes/com.atlassian.confluence.ext.newcode-macro-plugin-syntaxhighlighter-brushes.js" ></script>
+<script type="text/javascript" src="../../s/en_GB/3047/3/2.0.1/_/download/batch/com.atlassian.confluence.plugins.pagetree-pagetree-resources/com.atlassian.confluence.plugins.pagetree-pagetree-resources.js" ></script>
+
+    
+    <!-- end system javascript resources -->
+
+    
+
+    
+    <link rel="canonical" href="Reader+Conditionals.html">
+    <link rel="shortlink" href="Reader+Conditionals.html">
+    <meta name="wikilink" content="[design:Reader Conditionals]">
+    <meta name="page-version" content="16">
+
+</head>
+
+<body             onload="placeFocus()"
+     id="com-atlassian-confluence" class="theme-documentation ">
+<div id="full-height-container">
+    <div id="header-precursor">
+        
+        
+                </div>
+
+<div id="header" class="sectionbottom ">
+        <form id="quick-search" class="quick-search" method="get" action="../../dosearchsite.action.html">
+                <fieldset>
+            <input type="hidden" name="spaceSearch" value="false"/>
+        </fieldset>
+        <fieldset>
+            <legend>Quick Search</legend>
+            <input class="quick-search-query" id="quick-search-query" type="text" accessKey="search-pages-action.accesskey" autocomplete="off" name="queryString" size="25"/>
+            <input class="quick-search-submit" id="quick-search-submit" type="submit"  value="Search Confluence" />
+            <div class="aui-dd-parent quick-nav-drop-down"><!-- Quick nav appears here --></div>
+        </fieldset>
+        <fieldset class="hidden parameters">
+            <input type="hidden" id="quickNavEnabled" value="true" />
+                    </fieldset>
+    </form>
+
+    <ul id="header-menu-bar" class="ajs-menu-bar">
+                    
+        
+            <li class="normal ajs-menu-item">
+        <a id="browse-menu-link" class="browse trigger ajs-menu-title" href="#"><span><span>Browse</span></span></a>         <div class="assistive ajs-drop-down">
+                        <ul  id="browse-menu-link-leading"                 class="section-leading first">
+                                        <li>
+    
+        
+    
+    <a  id="space-pages-link" href="../../pages/recentlyupdated.action-key=design.html"  class=""   title="Browse pages in the Clojure Design space">
+                   <span>Pages</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-blogposts-link" href="../../pages/viewrecentblogposts.action-key=design.html"  class=""   title="Browse blogs in the Clojure Design space">
+                   <span>Blog</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-labels-link" href="../../labels/listlabels-heatmap.action-key=design.html"  class=""   title="Browse labels in the Clojure Design space">
+                   <span>Labels</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-attachments-link" href="../../spaces/listattachmentsforspace.action-key=design.html"  class=""   title="Browse attachments in the Clojure Design space">
+                   <span>Attachments</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-mail-link" href="../../spaces/viewmailarchive.action-key=design.html"  class=""   title="Browse mail in the Clojure Design space">
+                   <span>Mail</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-advanced-link" href="../../spaces/viewspacesummary.action-key=design.html"  class=""   title="Browse additional space functions in the Clojure Design space">
+                   <span>Advanced</span></a>        </li>
+                            </ul>
+                        <ul  id="browse-menu-link-global"                 class="section-global">
+                                        <li>
+    
+        
+    
+    <a  id="whats-new-menu-link" href="http://docs.atlassian.com/confluence/docs-40/whatsnew/iframe"  class=""   title="">
+                   <span>What’s New</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-directory-link" href="../../spacedirectory/view.action.html"  class=""   title="Browse the Confluence space directory">
+                   <span>Space Directory</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="feed-builder-link" href="../../dashboard/configurerssfeed.action.html"  class=""   title="Create your custom RSS feed.">
+                   <span>Feed Builder</span></a>        </li>
+                                        <li>
+    
+            
+    
+    <a  id="keyboard-shortcuts-link" href="#"  class=""   title="View available keyboard shortcuts">
+                   <span>Keyboard Shortcuts</span></a>        </li>
+                                        <li>
+    
+            
+    
+    <a  id="gadget-directory-link" href="#"  class="user-item administration-link"   title="Browse gadgets provided by Confluence">
+                   <span>Confluence Gadgets</span></a>        </li>
+                            </ul>
+                    </div>
+    </li>
+        
+                                                         <li class="ajs-menu-item normal">
+        
+        
+    
+    <a  id="login-link" href="../../login.action-os_destination=-display-design-Reader+Conditionals.html"  class="user-item login-link"   title="">
+                   <span>Log In</span></a>        </li>
+                            <li class="ajs-menu-item normal">
+    
+        
+    
+    <a  id="signup-link" href="../../signup.action.html"  class="user-item signup-link"   title="">
+                   <span>Sign Up</span></a>        </li>
+                                <li class="normal ajs-menu-item">
+            <div id="splitter-button" class="hidden" title="Show or hide sidebar"></div>
+        </li>
+
+    </ul>
+    
+    
+    <ol id="breadcrumbs">
+                    
+                        
+        <li class="first" >
+                                    <span><a href="../../dashboard.action.html" title="Go to Dashboard">Dashboard</a></span>
+                </li>
+                    
+                
+        <li>
+                                    <span><a href="Home-jsessionid=3A56E29DA520B75101350BA4484B9990.html">Clojure Design</a></span>
+                </li>
+                                        <li id="ellipsis" title="Show all breadcrumbs"><span><strong>&#8230;</strong></span></li>
+                                    
+                
+        <li class="hidden-crumb" >
+                                    <span><a href="Home.html">Home</a></span>
+                </li>
+                                
+                
+        <li class="hidden-crumb" >
+                                    <span><a href="Release+Planning.html">Release Planning</a></span>
+                </li>
+                                
+                
+        <li class="hidden-crumb" >
+                                    <span><a href="Release+1.7.html">Release 1.7</a></span>
+                </li>
+                    
+                
+        <li>
+                                    <span><a href="Reader+Conditionals.html">Reader Conditionals</a></span>
+                </li>
+        </ol>
+
+</div>
+
+    <div id="splitter">
+    <div id="splitter-sidebar" >
+        
+
+                    
+        
+    
+
+<div class="plugin_pagetree">
+
+                <div id="pagetreesearch">
+            <form method="POST" action="../../dosearchsite.action-searchQuery.queryString=&amp;searchQuery.spaceKey=conf_all.html" name="pagetreesearchform">
+                                    <input type="hidden" name="ancestorId" value="458775">
+                                <input type="hidden" name="spaceKey" value="design">
+                <input type="text"  size="20" name="queryString">
+                <input type="submit" value="Search">
+            </form>
+        </div>
+    
+        
+    <ul class="plugin_pagetree_children_list plugin_pagetree_children_list_noleftspace">
+        <div class="plugin_pagetree_children">
+        </div>
+    </ul>
+
+    <fieldset class="hidden">
+        <input type="hidden" name="treeId" value="">
+        <input type="hidden" name="treeRequestId" value="/plugins/pagetree/naturalchildren.action?decorator=none&amp;excerpt=false&amp;sort=position&amp;reverse=false&amp;disableLinks=false">
+        <input type="hidden" name="treePageId" value="11305072">
+
+        <input type="hidden" name="noRoot" value="false">
+        <input type="hidden" name="rootPageId" value="458775">
+
+        <input type="hidden" name="rootPage" value="">
+        <input type="hidden" name="startDepth" value="0">
+        <input type="hidden" name="spaceKey" value="design" >
+
+        <input type="hidden" name="i18n-pagetree.loading" value="Loading...">
+        <input type="hidden" name="i18n-pagetree.error.permission" value="Unable to load page tree. It seems that you do not have permission to view the root page.">
+        <input type="hidden" name="i18n-pagetree.eeror.general" value="There was a problem retrieving the page tree. Please check the server log file for more information.">
+        <input type="hidden" name="loginUrl" value="/login.action?os_destination=%2Fdisplay%2Fdesign%2FReader%2BConditionals">
+
+                <fieldset class="hidden">
+                                                <input type="hidden" name="ancestorId" value="11305137">
+                                    <input type="hidden" name="ancestorId" value="5767475">
+                                    <input type="hidden" name="ancestorId" value="458775">
+                                    </fieldset>
+    </fieldset>
+</div>
+
+
+
+            </div>
+    <div id="splitter-content">
+
+                    <script type="text/javascript" src="../../s/en_GB/3047/3/2.0.5/_/download/resources/com.atlassian.confluence.plugins.doctheme-resources/doc-theme.js"></script>
+    
+            
+    
+<div id="main" >
+    <div id="main-header">
+	    
+	    
+    <div id="navigation" class="content-navigation view">
+                    <ul class="ajs-menu-bar">
+                                
+                        
+            <li class="normal ajs-menu-item">
+        <a id="action-menu-link" class="action trigger ajs-menu-title" href="#"><span><span>Tools</span></span></a>         <div class="assistive ajs-drop-down">
+                        <ul  id="action-menu-link-primary"                 class="section-primary first">
+                                        <li>
+    
+        
+    
+    <a  id="view-attachments-link" href="../../pages/viewpageattachments.action-pageId=11305072.html"  class="action-view-attachments"  accessKey="a"  title="View Attachments">
+                   <span><u>A</u>ttachments (0)</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="action-view-history-link" href="../../pages/viewpreviousversions.action-pageId=11305072.html"  class="action-view-history"   title="">
+                   <span>Page History</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="action-page-permissions-link" href="../../pages/viewinfo.action-pageId=11305072.html"  class="action-page-permissions"   title="Edit restrictions">
+                   <span>Restrictions</span></a>        </li>
+                            </ul>
+                        <ul  id="action-menu-link-secondary"                 class="section-secondary">
+                                        <li>
+    
+        
+    
+    <a  id="view-page-info-link" href="../../pages/viewinfo.action-pageId=11305072.html"  class="action-view-info"   title="">
+                   <span>Info</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="link-to-page-link" href="../../pages/viewinfo.action-pageId=11305072.html"  class=""   title="Link to this Page">
+                   <span>Link to this Page&hellip;</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="view-in-hierarchy-link" href="../../pages/listpages-dirview.action-key=design&amp;openId=11305072.html#selectedPageInHierarchy"  class=""   title="">
+                   <span>View in Hierarchy</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="action-view-source-link" href="../../plugins/viewsource/viewpagesrc.action-pageId=11305072.html"  class="action-view-source popup-link"   title="">
+                   <span>View Source</span></a>        </li>
+                            </ul>
+                    </div>
+    </li>
+            </ul>
+    </div>
+
+	    
+	    <h1 id="title-heading" class="pagetitle">
+	        	            <a href="Home-jsessionid=3A56E29DA520B75101350BA4484B9990.html"><img class="logo global custom" src="../../download/attachments/131074/global.logo.png" alt=""></a>	        	
+			<span id="title-text">
+							            <a href="Reader+Conditionals.html">Reader Conditionals</a>
+    						</span>
+	    </h1>
+	</div>
+
+    
+
+    
+    
+    
+    
+    
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+        
+    
+    
+                    
+    
+
+    
+
+
+<div id="content" class="page view">
+    
+
+
+
+                
+<script type="text/x-template" title="movePageDialog">
+    <div class="row information">
+        <div class="inner">
+            <div class="element">
+                Specify the new parent page for this page and its children by space and title.
+            </div>
+        </div>
+    </div>
+    <div class="form">
+        <fieldset>
+                
+
+    <legend class="assistive"><span>Change the Parent Page to a Known Page</span></legend>
+            <div class="row">
+                <label for="new-space">New space:</label>
+                <div class="value new-space-value">
+                    <input id="new-space-key" name="new-space-key" type="hidden" value="design">
+                                            <span class="space-input">
+                            <input id="new-space" name="new-space" value="Clojure Design" disabled="disabled">
+                        </span>
+                        <span class="description warning">You cannot move this page to another space because you do not have permission to remove it from this space.</span>
+                                        <div class="new-space-dropdown aui-dd-parent autocomplete"></div>
+                </div>
+            </div>
+            <div class="row">
+                <label for="new-parent-page">New parent page:</label>
+                <div class="value new-parent-page-value">
+                    <span class="page-input">
+                        <input id="new-parent-page" name="new-parent-page" value="Release 1.7">
+                    </span>
+                    <span class="description">Start typing a page title to see a list of suggestions.</span>
+                    <div class="new-parent-page-dropdown aui-dd-parent autocomplete"></div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <div class="location-info">
+        <div class="row">
+            <label>Current location:</label>
+            <div class="value breadcrumbs-container">
+                <div class="breadcrumbs-line">
+                    <ul id="current-parent-breadcrumbs" class="breadcrumbs">
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <label>New location:</label>
+            <div class="value breadcrumbs-container">
+                <div class="breadcrumbs-line">
+                    <ul id="new-parent-breadcrumbs" class="breadcrumbs">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/x-template" title="movePageSearchPanel">
+    <div class="row information">
+        <div class="inner">
+            <div class="element">
+                Search for and select the new parent page for this page and its children.
+            </div>
+        </div>
+    </div>
+    <div id="move-page-search-container" class="row">
+        <div class="search-form">
+            <fieldset>
+                    
+
+    <legend class="assistive"><span>Search for a New Parent Page</span></legend>
+                    
+
+    <label  for="move-page-search-query" class="assistive">Search keywords</label>
+                <input class="search-query" id="move-page-search-query">
+                    
+
+    <label  for="move-page-search-space" class="assistive">Search in space</label>
+                                    <select id="move-page-search-space" class="search-space" disabled="disabled">
+                        <option value="design" selected="selected">Clojure Design</option>
+                    </select>
+                                <input type="button" value="Search">
+                                    <div class="description warning">You cannot move this page to another space because you do not have permission to remove it from this space.</div>
+                            </fieldset>
+        </div>
+        <div class="search-results">
+        </div>
+    </div>
+</script>
+<script type="text/x-template" title="searchResultsGrid">
+    <table>
+        <thead>
+            <tr class="header">
+                <th class="search-result-title">Page Title</th>
+                <th class="search-result-space">Space</th>
+                <th class="search-result-date">Updated</th>
+            </tr>
+        </thead>
+    </table>
+</script>
+<script type="text/x-template" title="searchResultsGridCount">
+    <p class="search-result-count">{0}</p>
+</script>
+<script type="text/x-template" title="searchResultsGridRow">
+    <tr class="search-result">
+        <th class="search-result-title"><a href="{1}" class="content-type-{2}"><span>{0}</span></a></th>
+        <td class="search-result-space"><a class="space" href="/display/{4}/" title="{3}">{3}</a></td>
+        <td class="search-result-date"><span class="date" title="{6}">{5}</span></td>
+    </tr>
+</script><!-- Start restrictions section -->
+<script type="text/x-template" title="page-permissions-div">
+<div id="page-permissions-div">
+    <div id="page-permissions-editor-form">
+
+                <div id="page-permissions-error-div" class="hidden">
+            <a href="#" id="permissions-error-div-close">Ok</a>
+            <div></div>
+        </div>
+
+                <div id="page-permissions-type-radios" class="page-permissions-label-rows">
+            <div>
+                <input id="restrictViewRadio" type="radio" checked="checked" name="pagePermissionTypeRadio" value="view"/>
+                <label for="restrictViewRadio">Restrict viewing of this page</label>
+                <input id="restrictEditRadio" type="radio" name="pagePermissionTypeRadio" value="edit"/>
+                <label for="restrictEditRadio">Restrict editing of this page</label>
+            </div>
+        </div>
+        <div id="page-permissions-input" class="page-permissions-label-rows">
+            <div class="page-permissions-label">To:</div>
+            <div id="page-permissions-chooser-box">
+                                <span id="page-permissions-choose-user" class="ajs-button">
+                    
+
+
+
+    
+
+
+
+<a href="#" id='userpicker-popup-link-image' onClick="var picker = window.open('/spaces/openuserpicker.action?key=design&amp;startIndex=0&amp;onPopupSubmit=AJS.PagePermissions.addUserPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=700,height=680,scrollbars=yes'); picker.focus(); return false;"><img src="/s/en_GB/3047/3/_/images/icons/user_16.gif" height=16 width=16 border=0 align="absmiddle"  title="Choose users" /></a>
+<a href="#" id='userpicker-popup-link-text' onClick="var picker = window.open('/spaces/openuserpicker.action?key=design&amp;startIndex=0&amp;onPopupSubmit=AJS.PagePermissions.addUserPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=700,height=680,scrollbars=yes'); picker.focus(); return false;">Person...</a>
+
+
+                </span>
+                <span id="page-permissions-choose-group" class="ajs-button">
+                    
+
+
+
+    
+
+ 
+
+<a href="#" id='grouppicker-popup-link-image' onClick="var picker = window.open('/spaces/opengrouppicker.action?key=design&amp;startIndex=0&amp;actionName=dosearchgroups.action&amp;onPopupSubmit=AJS.PagePermissions.addGroupPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=580,height=550,scrollbars=yes'); picker.focus(); return false;"><img src="/s/en_GB/3047/3/_/images/icons/group_16.gif" height=16 width=16 border=0 align="absmiddle"  title="Choose groups" /></a>
+<a href="#" id='grouppicker-popup-link-text' onClick="var picker = window.open('/spaces/opengrouppicker.action?key=design&amp;startIndex=0&amp;actionName=dosearchgroups.action&amp;onPopupSubmit=AJS.PagePermissions.addGroupPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=580,height=550,scrollbars=yes'); picker.focus(); return false;">Group...</a>
+
+
+                </span>
+            </div>
+            <div id="page-permissions-input-box">
+                <input type="text" id="page-permissions-names-input" name="permissionNames"
+                    placeholder="Enter user or group name" class="autocomplete-user"
+                    data-max="10" data-none-message="No matches"
+                    data-target="#page-permissions-names-hidden" data-template="{username}"
+                    data-dropdown-target="#page-perms-name-dropdown-wrapper" data-resize-to-input="true"
+                    size="30"/>
+                <input
+    type="hidden"
+                            id="page-permissions-names-hidden"           />                <img height="16px" width="1px" src="/s/en_GB/3047/3/_/images/border/spacer.gif"/>
+                <input type="button" id="add-typed-names" value="Restrict">
+                <div id="page-perms-name-dropdown-wrapper" class="aui-dd-parent autocomplete"></div>
+            </div>
+        </div>
+    </div>
+    <div id="page-permissions-tables">
+        <div id="page-permissions-table-div">
+                        <table id="page-permissions-table" class="page-permissions-table">
+                <tr id="page-permissions-no-views" class="marker-row">
+                    <td colspan="3" class="page-permissions-marker-cell"><span>No view restrictions are defined for this page</span></td>
+                </tr>
+                <tr id="page-permissions-no-edits" class="marker-row">
+                    <td colspan="3" class="page-permissions-marker-cell"><span>No edit restrictions are defined for this page</span></td>
+                </tr>
+            </table>
+        </div>
+        <div id="page-inherited-permissions-table-div" class="hidden">
+            <span id="page-inherited-permissions-table-desc">
+                <a class="icon twisty-closed">Show/Hide</a>
+                <a id="toggle-inherited-permissions" title="Click to see inherited restrictions">This page has restricted parent pages. It can only be seen by users who can see those parent pages.</a>
+            </span>
+            <div id="page-inherited-permissions-tables" class="hidden page-inheritance-togglable"></div>
+        </div>
+    </div>
+</div>
+</script>
+
+<!-- End restrictions section -->
+
+        
+    
+    
+        <fieldset class="hidden parameters">
+            <input type="hidden" title="parentPageId" value="11305137">
+        </fieldset>
+
+        
+                            
+    
+
+                    
+
+        
+        <a href="#page-metadata-end" class="assistive">Skip to end of metadata</a>
+<div id="page-metadata-start" class="assistive"></div>
+
+    <div class="page-metadata">
+        <ul>
+                            <li class="page-metadata-item noprint">
+    
+            
+    
+    <a  id="content-metadata-page-restrictions" href="#"  class="page-metadata-icon page-restrictions hidden"   title="Page restrictions apply. Click the lock icon to view or edit the restriction.">
+                   <span>Page restrictions apply</span></a>        </li>
+                        <li class="page-metadata-modification-info">
+                                    Added by <a href="../../login.action-os_destination=-display-~alexmiller.html"
+                          class="url fn"
+                   >Alex Miller</a>, last edited by <a href="../../login.action-os_destination=-display-~alexmiller.html"
+                          class="url fn"
+                   >Alex Miller</a> on Sep 20, 2016
+                                                                <span class="noprint">&nbsp;(<a id="view-change-link" href="../../pages/diffpages.action-pageId=11305072&amp;originalId=14123205.html">view change</a>)</span>
+                                                </li>
+                    </ul>
+                </div>
+
+
+<a href="#page-metadata-start" class="assistive">Go to start of metadata</a>
+<div id="page-metadata-end" class="assistive"></div>
+        
+        <fieldset class="hidden parameters">
+                        <input type="hidden" title="browsePageTreeMode" value="view">
+        </fieldset>
+
+        <div class="wiki-content">
+                           <h2 id="ReaderConditionals-Problem">Problem</h2><p>There are Clojure dialects (Clojure, ClojureScript, ClojureCLR) hosted on several different platforms. We wish to write libraries that can share as much portable code as possible while leaving flexibility to provide platform-specific bits as needed, then have this code run on all of them.</p><p>Use cases for platform-specific functionality currently handled by cljx:</p><div class="table-wrap"><table class="confluenceTable"><tbody><tr class="confluenceTr"><th class="confluenceTh">Use case</th><th class="confluenceTh">Example (cljx)</th><th class="confluenceTh">Example (reader conditional)</th></tr><tr class="confluenceTr"><td class="confluenceTd">Platform-specific require/import</td><td class="confluenceTd"><p>In .cljx file which is preprocessed into .clj and .cljs files:</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[(ns cemerick.pprng
+ #+cljs (:require math.seedrandom
+ [cljs.core :as lang])
+ #+clj (:require [clojure.core :as lang])
+ #+clj (:import java.util.Random)
+ (:refer-clojure :exclude (double float int long boolean)))]]></script>
+</div></div></td><td class="confluenceTd"><p>In .cljc file loadable in both Clojure and ClojureScript:</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[(ns cemerick.pprng
+ #?(:cljs (:require math.seedrandom
+            [cljs.core :as lang]))
+ #?@(:clj [
+   (:require [clojure.core :as lang])
+   (:import java.util.Random)])
+ (:refer-clojure :exclude (double float int long boolean)))]]></script>
+</div></div></td></tr><tr class="confluenceTr"><td class="confluenceTd"><p>Exception handling, catching &quot;all&quot;</p></td><td class="confluenceTd"><p>In .cljx file which is preprocessed into .clj and .cljs files:</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[(try
+ (&gt;! c msg)
+ (catch #+clj Exception
+        #+cljs :default 
+        e)
+    .... ))]]></script>
+</div></div></td><td class="confluenceTd"><p>In .cljc file loadable in both Clojure and ClojureScript:</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[(try
+ (&gt;! c msg)
+ (catch #?(:clj Exception
+           :cljs :default)
+        e)
+ .... ))]]></script>
+</div></div></td></tr><tr class="confluenceTr"><td class="confluenceTd"><p> </p><p>Platform-specific calls for &quot;hosty&quot; library things (strings, math, dates, random numbers, uris, reflection warnings)</p></td><td class="confluenceTd"><p>In .cljx file which is preprocessed into .clj and .cljs files:</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[;; dates
+ (.getTime 
+  #+clj (java.util.Date.)
+  #+cljs (js/Date.))
+
+;; uris 
+#+clj
+(defn url-encode
+ [string]
+ (some-&gt; string str (URLEncoder/encode &quot;UTF-8&quot;) (.replace &quot;+&quot; &quot;%20&quot;)))
+#+cljs
+(defn url-encode
+ [string]
+ (some-&gt; string str (js/encodeURIComponent) (.replace &quot;+&quot; &quot;%20&quot;)))
+
+;; reflection warnings
+#+clj (set! *warn-on-reflection* true)]]></script>
+</div></div></td><td class="confluenceTd"><p>In .cljc file loadable in both Clojure and ClojureScript:</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[;; dates
+ (.getTime
+   #?(:clj (java.util.Date.)
+      :cljs (js/Date.)))   
+
+;; uris
+#?(
+:clj
+(defn url-encode
+ [string]
+ (some-&gt; string str (URLEncoder/encode &quot;UTF-8&quot;) (.replace &quot;+&quot; &quot;%20&quot;)))
+:cljs
+(defn url-encode
+ [string]
+ (some-&gt; string str (js/encodeURIComponent) (.replace &quot;+&quot; &quot;%20&quot;))))
+
+;; reflection warnings
+#?(:clj (set! *warn-on-reflection* true))]]></script>
+</div></div></td></tr><tr class="confluenceTr"><td class="confluenceTd">Protocol invocation (CLJS internal protocol names start with -, CLJ interfaces do not)</td><td class="confluenceTd"><p>In .cljx file which is preprocessed into .clj and .cljs files:</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[#+cljs
+(deftype With [name unique-name body value bang]
+ SpecComponent
+ (install [this description]
+ (swap! (.-withs description) conj this))
+ cljs.core/IDeref
+ (-deref [this]
+ (when (= ::none @value)
+ (reset! value (body)))
+ @value))]]></script>
+</div></div><p> (See &quot;-deref&quot; in CLJS vs &quot;deref&quot; in CLJ.)</p></td><td class="confluenceTd"><p>In .cljc file loadable in both Clojure and ClojureScript:</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[#?(:cljs
+(deftype With [name unique-name body value bang]
+ SpecComponent
+ (install [this description]
+   (swap! (.-withs description) conj this))
+ cljs.core/IDeref
+ (-deref [this]
+   (when (= ::none @value)
+     (reset! value (body)))
+   @value)))]]></script>
+</div></div></td></tr><tr class="confluenceTr"><td class="confluenceTd">Extending protocols to implementation-specific classes</td><td class="confluenceTd"><p>In .cljx file which is preprocessed into .clj and .cljs files:</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[#+clj
+(extend-protocol SpecComponent
+ java.lang.Object
+ (install [this description] ,,,))]]></script>
+</div></div></td><td class="confluenceTd"><p>In .cljc file loadable in both Clojure and ClojureScript:</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[#?(:clj
+(extend-protocol SpecComponent
+ java.lang.Object
+ (install [this description] ,,,)))]]></script>
+</div></div></td></tr></tbody></table></div><h2 id="ReaderConditionals-Proposalsummary">Proposal summary</h2><p>The feature expression proposal includes the following items:</p><div class="table-wrap"><table class="confluenceTable"><tbody><tr class="confluenceTr"><th colspan="1" class="confluenceTh">Where</th><th class="confluenceTh">Item</th><th class="confluenceTh">Description</th><th class="confluenceTh">Example</th></tr><tr class="confluenceTr"><td colspan="1" class="confluenceTd">all</td><td class="confluenceTd">Well-known platform feature names</td><td class="confluenceTd">Each platform has a well-known platform feature when loading or compiling source files.</td><td class="confluenceTd"><code>clj</code>, <code>cljs</code>, <code>cljr</code></td></tr><tr class="confluenceTr"><td colspan="1" class="confluenceTd">all</td><td class="confluenceTd">Reader syntax for conditional expressions</td><td class="confluenceTd"><p>read-cond or #?(feature expr ...) - alternating feature and expression (similar to cond). First feature that is included in the current feature set will result in the expr being read.</p></td><td class="confluenceTd"><pre>(defn my-trim [s]<br />  #?(:clj (.. s toString trim)<br />     :cljs (gstring/trim s)))</pre></td></tr><tr class="confluenceTr"><td colspan="1" class="confluenceTd">all</td><td colspan="1" class="confluenceTd">Reader syntax for conditional spliced expressions</td><td colspan="1" class="confluenceTd">read-cond-splicing or #?@(feature expr ...) - same as read-cond, but expression must be a java.util.List and will be spliced into the resulting read.</td><td colspan="1" class="confluenceTd"><pre>(ns a.b<br /> #?@(:clj [(:require clojure.string)<br />           (:import java.util.Date)]))</pre></td></tr><tr class="confluenceTr"><td colspan="1" class="confluenceTd">all</td><td colspan="1" class="confluenceTd">Reader syntax for conditional read :default</td><td colspan="1" class="confluenceTd"><p>If no feature is matched in #? or #?@, <em>:default</em> is a well-known keyword indicating a default expression to use instead. If no expression is chosen, nothing (not nil, but literally nothing) is read.</p></td><td colspan="1" class="confluenceTd"><pre>#?(:clj (Foo.) :default [])</pre></td></tr><tr class="confluenceTr"><td colspan="1" class="confluenceTd">all</td><td colspan="1" class="confluenceTd"><p>Allow reader conditional read mode with reader option <br /><code style="font-size: 10.0pt;line-height: 13.0pt;">{:read-cond :allow</code><span style="font-size: 10.0pt;line-height: 13.0pt;">}</span></p></td><td colspan="1" class="confluenceTd"><p>In <em>allow</em> mode, reader conditional syntax is allowed. Reader conditionals are evaluated and replaced with the result of the appropriate branch.</p><p>Reading source files containing reader conditionals without this option results in a runtime exception.</p></td><td colspan="1" class="confluenceTd"><pre>(read-string <br />  {:read-cond :allow} <br />  &quot;#?(:clj &quot;clj&quot; :default nil)&quot;) </pre></td></tr><tr class="confluenceTr"><td colspan="1" class="confluenceTd">all</td><td colspan="1" class="confluenceTd"><span>Preserve reader conditional read mode with reader option<br /><span> </span><code>{:read-cond :preserve</code><span>}</span></span></td><td colspan="1" class="confluenceTd"><p>In <em>preserve</em> mode, <span style="font-size: 10.0pt;line-height: 13.0pt;">the reader-conditional is not replaced by the selected branch but instead returned as a form containing all branches. Tagged literals and nested reader-conditionals in all non-chosen branches will be represented in data form.</span></p></td><td colspan="1" class="confluenceTd"><pre>(read-string<br />  {:read-cond :preserve}<br />  &quot;#?(:clj foo :cljs bar)&quot;)</pre></td></tr><tr class="confluenceTr"><td colspan="1" class="confluenceTd">all</td><td colspan="1" class="confluenceTd">Read-conditional data instance</td><td colspan="1" class="confluenceTd">In <em>preserve</em> mode, this instance may be returned. See below for details on what it supports.</td><td colspan="1" class="confluenceTd"><pre>;; Construct like:<br />(reader-conditional  )</pre></td></tr><tr class="confluenceTr"><td colspan="1" class="confluenceTd">all</td><td colspan="1" class="confluenceTd"><span>Type-independent tagged literal data instance</span></td><td colspan="1" class="confluenceTd"><span>In <em>preserve</em> mode, this instance may be returned. See below for details on what it supports.</span></td><td colspan="1" class="confluenceTd"><pre>;; Construct like:<br />(tagged-literal &quot;js&quot; {}) </pre></td></tr><tr class="confluenceTr"><td colspan="1" class="confluenceTd">all</td><td colspan="1" class="confluenceTd">New .cljc extension indicating a portable source file</td><td colspan="1" class="confluenceTd"><p>Clojure, ClojureScript, and ClojureCLR should load both .cljc (which may have reader conditionals) and their own platform-specific files as source files.</p><p>For .cljc files: the reader will be invoked with read-cond mode :allow.</p><p>For .clj/.cljs files: the reader will be invoked with read-cond disabled. All other read modes (such as the repl) will disable reader conditionals by default. The reader may be invoked with appropriate options to enable this mode.</p></td><td colspan="1" class="confluenceTd"> </td></tr></tbody></table></div><h2 id="ReaderConditionals-DetailedProposal"><span>Detailed Proposal</span></h2><h3 id="ReaderConditionals-FeatureSets"><span>Feature Sets</span></h3><p>The platform feature will be one of: <code>clj</code>, <code>cljs</code>, or <code>cljr</code>.  The platform feature will always be available when reading. <span style="font-size: 10.0pt;line-height: 13.0pt;">The features </span><code style="font-size: 10.0pt;line-height: 13.0pt;">default</code><span style="font-size: 10.0pt;line-height: 13.0pt;">, </span><code style="font-size: 10.0pt;line-height: 13.0pt;">else</code><span style="font-size: 10.0pt;line-height: 13.0pt;">, and </span><code style="font-size: 10.0pt;line-height: 13.0pt;">none</code><span style="font-size: 10.0pt;line-height: 13.0pt;"> are reserved.</span></p><p><span style="font-size: 10.0pt;line-height: 13.0pt;">See &quot;Reader options&quot; below for more options on modifying the feature set for read.</span></p><p><span style="color: rgb(0,0,0);font-size: 1.4em;font-weight: bold;line-height: normal;">Reader syntax</span></p><p>There are two new reader literal forms: #? (read-cond) and #?@ (read-cond-splicing). Both have the same syntax but the first reads as a single expression whereas the second is read as a list that will be spliced into the parent expression.</p><p><span style="font-size: 10.0pt;line-height: 13.0pt;">The syntax of the body of these forms consists of pairs of <em>feature-condition</em> and <em>expression</em>. The form is interpreted in a manner similar to cond. Feature conditions are tested in order until there is a match, then the corresponding expression is returned (and spliced if using #?@).</span></p><p><span style="font-size: 10.0pt;line-height: 13.0pt;">The well-known feature-condition <code>:default</code> can be used to indicate a condition that always matches. </span></p><p><span style="font-size: 10.0pt;line-height: 13.0pt;">If no feature-conditions match and there is no :default, then the reader will read nothing (not nil, but literally no value will be returned) from the read-cond or read-cond-splicing forms.</span></p><p><span style="color: rgb(0,0,0);font-size: 1.4em;font-weight: bold;line-height: normal;">Reader options and preserve-read-cond mode</span></p><p>The reader (via both read and read-string) can now be invoked with a map of options. Available options include:</p><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh">Key</th><th class="confluenceTh">Values</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd">:eof</td><td class="confluenceTd">value or :eofthrow</td><td class="confluenceTd">If EOF is reached then return value, unless :eofthrow then throw runtime exception.</td></tr><tr><td class="confluenceTd">:read-cond</td><td class="confluenceTd">:allow, :preserve</td><td class="confluenceTd">:allow = read conditionally. :preserve = read conditionally, and preserve all branches not taken as data</td></tr><tr><td class="confluenceTd">:features</td><td class="confluenceTd">set of keyword features</td><td class="confluenceTd">This can be used to conditionally read forms with broader feature sets. The platform feature (:clj) will <strong>always</strong> be present.</td></tr></tbody></table></div><p> </p><p>Example of direct use:</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[user=&gt; (read-string
+ {:read-cond :allow}
+ &quot;#?(:clj :clojure 
+     :cljs :clojurescript 
+     :default :unknown)&quot;)
+:clojure&nbsp;]]></script>
+</div></div><p>To read and preserve all read-conditional branches, use preserve mode to return a read-conditional instance. Within each un-chosen branch of the read-conditional, tagged literals will be represented in a data-only form (both of these are described in the next section). Example:</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[user=&gt; (read-string
+  {:read-cond :preserve}
+  &quot;#?(:clj {} :cljs #js {})&quot;)
+#?(:clj {} :cljs #js{})
+
+user=&gt; (class *1)
+clojure.lang.ReaderConditional]]></script>
+</div></div><p><span style="color: rgb(0,0,0);font-size: 1.4em;font-weight: bold;line-height: normal;"><br /></span></p><p><span style="color: rgb(0,0,0);font-size: 1.4em;font-weight: bold;line-height: normal;">Read-conditional and tagged literal instances</span></p><p><span style="font-size: 10.0pt;line-height: 13.0pt;">A tagged literal read in an unchosen branch of a reader conditional with preserved-read-cond mode is read as a data-only tagged literal. </span></p><p><span style="font-size: 10.0pt;line-height: 13.0pt;">Given </span><code style="font-size: 10.0pt;line-height: 13.0pt;">#some-tag some-form</code><span style="font-size: 10.0pt;line-height: 13.0pt;"> read as </span><em style="font-size: 10.0pt;line-height: 13.0pt;">x</em><span style="font-size: 10.0pt;line-height: 13.0pt;">:</span><span style="font-size: 10.0pt;line-height: 13.0pt;"> </span></p><div><p> </p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[(tagged-literal? x) -&gt; true
+ (= (tagged-literal 'some-tag some-form) x) -&gt; true
+ (:tag x) -&gt; 'some-tag
+ (:form x) -&gt; some-form
+ (pr x) -&gt; #some-tag some-form ;; prints same as read]]></script>
+</div></div><p>That is, the instance returned will be a clojure.lang.TaggedLiteral with a constructor function, keyword predicate lookup (for :tag and :form), and print capability.</p><p> </p></div><div>A similar approach can then be taken for reader conditionals when read in preserve-read-cond mode. </div><div><span style="font-size: 10.0pt;line-height: 13.0pt;">Given </span><code style="font-size: 10.0pt;line-height: 13.0pt;">#?(...)</code><span style="font-size: 10.0pt;line-height: 13.0pt;"> read as </span><em style="font-size: 10.0pt;line-height: 13.0pt;">x</em><span style="font-size: 10.0pt;line-height: 13.0pt;">:</span></div><div><p> </p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[(reader-conditional? x) -&gt; true
+ (= (reader-conditional '(...)) x) -&gt; true ;; only = when ... uses generic tagged literals
+ (:form x) -&gt; (...)
+ (:splicing? x) -&gt; false ;; true when #?@
+ (pr x) -&gt; #?(...) ;; prints same as read]]></script>
+</div></div><p>That is, the instance returned will be a clojure.lang.ReadConditional with a constructor function, keyword predicate lookup (for :form and :splicing), and print capability.</p><h3 id="ReaderConditionals-Newportablefileextensioncljc">New portable file extension: .cljc</h3><p><span style="color: rgb(0,0,0);"><span style="color: rgb(0,0,0);">To create a single portable file we need a file that can be found and loaded in both Clojure and ClojureScript. Existing file extensions of .clj and .cljs must be read in their respective platforms for backwards compatibility. ClojureScript </span></span><span style="color: rgb(0,0,0);font-size: 10.0pt;line-height: 13.0pt;">currently uses .clj files for macro definition and they <em><strong>may</strong></em> live in the same directory as .cljs source files. Thus, mixing .clj and .cljs files in the same ClojureScript source tree is potentially problematic for some code bases. </span></p><p>Because of all this, the proposal adds a new file extension for Clojure files designed to be portable: <strong>.cljc</strong>. These files are the only place a reader conditional is allowed. Both Clojure and ClojureScript should load these files as source and apply reader conditionals during read.</p><p><span style="font-size: 10.0pt;line-height: 13.0pt;">When finding a library in any Clojure dialect, the platform-specific resource will be found and loaded first (.clj or .cljs) before the portable file (.cljc) is found or loaded. This allows the opportunity to override a platform-agnostic file with a platform-specific implementation of a namespace.</span></p></div><div> </div><div>More background on this can be found in earlier work on the <a href="Feature+Expressions.html">Feature Expressions</a> page.</div><h2 id="ReaderConditionals-Patches"><span style="color: rgb(0,0,0);">Patches</span></h2><p>JIRA Tickets and patches supporting this proposal can be found in several tickets:</p><ul><li><a href="../../jira/browse/CLJ-1424.html" class="external-link" rel="nofollow">http://dev.clojure.org/jira/browse/CLJ-1424</a> - Clojure</li><li><a href="../../jira/browse/TRDR-14.html" style="font-size: 10.0pt;line-height: 13.0pt;" class="external-link" rel="nofollow">http://dev.clojure.org/jira/browse/TRDR-14</a><span style="font-size: 10.0pt;line-height: 13.0pt;"> - tools.reader, used by ClojureScript</span></li><li><a href="../../jira/browse/CLJS-27.html" class="external-link" rel="nofollow">http://dev.clojure.org/jira/browse/CLJS-27</a><span> - ClojureScript</span></li><li><span><a href="../../jira/browse/TNS-34.html" class="external-link" rel="nofollow">http://dev.clojure.org/jira/browse/TNS-34</a> - tools.namespace<br /></span></li></ul><h2 id="ReaderConditionals-BuildingPortableLibraries">Building Portable Libraries</h2><div>This section discusses different techniques for building portable libraries.</div><div> </div><div><strong>Case 1:</strong> Independent CLJS and CLJ files packaged in the same jar</div><div> </div><div>Some libraries may provide independent implementations of a library for both CLJ and CLJS and be packaged in the same jar. Each platform will load the platform-specific resource:</div><div><p> </p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[myproj/clj/mylib.clj
+myproj/cljs/mylib.cljs]]></script>
+</div></div><p> </p></div><div><span><strong>Case 2:</strong> Mixed portable and non-portable CLJS and CLJ packaged in the same jar</span></div><div><span><br /></span></div><div><span>The myproj/mylib.cljc file will contain reader conditional specializing it for multiple supported platforms. The jar might contain additional code specific only to certain platforms, which might be loaded by myproj.mylib for example.</span></div><div> </div><div><p> </p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[myproj/mylib.cljc - portable code with reader conditionals - both CLJ and CLJS load myproj.mylib
+myproj/foo.clj - helper Clojure ns
+myproj/bar.cljs - helper ClojureScript ns]]></script>
+</div></div><p> </p></div><div><strong>Case 3:</strong> Library designed for open extension</div><div> </div><div>A library designed for open extension isolates platform-specific code in one or more namespaces. The library code may compile against (but not include) a stub namespace or use a .cljc portable file to contain a default library implementation. The non-isolated code should all be .cljc files that are portable across platforms.</div><div><p> </p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[myproj/mylib.clj 
+myproj/io.cljc - a ns used by mylib but designed to be overridden or replaced by a platform-specific version of the ns]]></script>
+</div></div><p><span style="font-size: 10.0pt;line-height: 13.0pt;">A separate jar would supply the platform-specific version of the ns:</span></p></div><div><p> </p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[myproj/io.cljs]]></script>
+</div></div><p> </p></div><div>Other additional jars would be used to supply other platform-specific versions of the ns. A consumer would use the first jar + the selected extension jar.</div><h2 id="ReaderConditionals-FutureExtensions">Future Extensions</h2><h3 id="ReaderConditionals-Openfeatureset">Open feature set</h3><p>While the reader can be invoked now with an open feature set, that is not available in general cljc files supporting reader conditionals. In the future open features may be allowed.</p><h3 id="ReaderConditionals-Defaultdatareaderfortaggedreaderinstances">Default data reader for tagged reader instances</h3><p>Currently, if no data reader is found for a tagged literal then the default-data-reader-fn will be invoked (if something has been installed for that fn). By default, no function is installed.</p><p>The new tagged literal constructor could be the default data reader fn. In that case, an unknown tagged literal would result in reading the tagged literal in a form that does not require a known type and where the tagged literal data can be recovered and/or passed along to another system.</p><h3 id="ReaderConditionals-Booleanfeaturecombinations">Boolean feature combinations</h3><p>The proposal above does not include support for boolean feature combinations (and, or, not) but it would be straightforward to extend the reader-conditional syntax to support it using something like this:</p><pre>#?((and :clj :arch/osx) 1 :default 2)</pre><h3 id="ReaderConditionals-Openextensions"><span>Open extensions</span></h3><p><span><span style="color: rgb(34,34,34);">Instead of default, a reader conditional could end with a final solitary (namespaced!) keyword serving as a semantic label for extension: </span><br /><br /><span style="color: rgb(34,34,34);">#?(:clj this </span><span style="color: rgb(34,34,34);">:cljs that  </span><span style="color: rgb(34,34,34);">::whatever-extension) </span><br /><br /><span style="color: rgb(34,34,34);">Given this, some read-time mechanism could be consulted to see if there is an entry for :your-lib/whatever-extension. If so, it is used as the value read from the form, else the form logic runs. Then if none of the conditions hold and no default it is an error, since there is a way to provide customization for your environment w/o changing the source. </span><br /><br /><span style="color: rgb(34,34,34);">This would also allow for shared, named snippets: </span><br /><br /><span style="color: rgb(34,34,34);">#?(:<a href="http://clojure.port/date-ctor" class="external-link" rel="nofollow">clojure.port/date-ctor</a>) </span><br /><br /><span style="color: rgb(34,34,34);">There is a lot more infrastructure required for this extensibility, and it remains a future prospect. </span></span></p><p><span><br /></span></p>
+    
+        </div>
+
+        <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="https://dev.clojure.org/display/design/Reader+Conditionals"
+    dc:identifier="https://dev.clojure.org/display/design/Reader+Conditionals"
+    dc:title="Reader Conditionals"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/11305072"/>
+</rdf:RDF>
+-->
+
+        <script type="text/x-template" title="labels-dialog-div">
+
+    
+    <div id="labels-dialog">
+        <div class="labels-editor">
+            <span class="errorMessage error" id="errorSpan"></span>
+            <form method="GET" action="" id="add-labels-form">
+                <div id="labelOperationErrorContainer">
+                    <span class="error"><span class="errorMessage" id="labelOperationErrorMessage"></span></span>
+                </div>
+    
+                <div class="caption">Enter labels to add to this page:</div>
+                <div id="label-input-fields">
+                    <input autocomplete="off" id="labelsString" name="labelsString" value="">
+                    <input id="add-labels-editor-button" type="submit" class="add-labels" value="Add">
+                </div>
+                <div id="labelsAutocompleteList" class="aui-dd-parent resize-to-input" style="width: 417px"></div>
+                <div id="dialog-label-list">
+                    <span id="labels-section-title-none" class="no-labels-message" >
+None
+</span>
+<ul class="label-list">
+</ul>
+                </div>
+                <div id="waitImageAndStatus">
+                    <img class="waiting" alt="Please wait" src="/s/en_GB/3047/3/_/images/icons/wait.gif">&nbsp;
+                    <span id="labelOperationStatus" class="smalltext"></span>
+                </div>
+                <div class="labels-tip"></div>
+            </form>
+        </div>
+    </div>
+</script>
+            
+    
+
+
+<div id="labels-section" class="pageSection group">
+    <div class="labels-editor">
+        <span id="labels-section-title" class="label-title">Labels:</span>
+        <div id="labels-section-content" class="content-column">
+            <span id="labels-section-title-none" class="no-labels-message" >
+None
+</span>
+<ul class="label-list">
+</ul>
+
+                            <a id="labels-edit" href="#" class="show-labels-editor editor-icon" title="Edit Labels">
+                    <span class="icon icon-edit">Edit Labels</span>
+                </a>
+                    </div>
+    </div>
+</div>
+
+                    <div id="children-section" class="pageSection children-showing group">
+                
+        <div class="section-header ">
+            <h2 id="children-section-title" class="section-title">
+                <a href="Reader+Conditionals-showChildren=false.html#children" class="children-show-hide">
+                                            1 Child Page
+                                    </a>
+            </h2>
+
+            <a href="Reader+Conditionals-showChildren=false.html#children" class="children-show-hide icon"></a>
+            <!--
+            <span class="noprint grey">
+                <a class="children-subtitle" href="/pages/listpages-dirview.action?key=design&amp;openId=11305072#selectedPageInHierarchy">Reorder Pages</a>
+                            </span>
+            -->
+        </div>
+        <div id="page-children" class="pageSectionBody children-loaded">
+                                        <span class="child-display">
+                                     <span class="icon icon-page" title="Page">Page:</span>
+                         <a href="Feature+Expressions.html">Feature Expressions</a>
+                         </span>
+                                </div>
+        </div>
+    
+            
+
+
+
+
+            
+    
+
+
+
+
+
+
+
+<div id="comments-section" class="pageSection group">
+    
+    
+    
+    
+    </div>
+
+
+            
+</div>
+
+
+    
+
+
+
+    
+    
+
+    
+    
+    
+
+
+    
+
+
+
+    <br class="clear">
+</div>
+  
+    </div>
+</div>
+
+<div id="footer">
+                                                <p class="license license-opensource">
+                  Powered by a free <b>Atlassian Confluence Open Source Project License</b> granted to Clojure. <a href="http://www.atlassian.com/c/conf/11461">Evaluate Confluence today</a>.<br>
+                </p>
+                        
+    <ul id="poweredby">
+        <li class="noprint">Powered by <a href="http://www.atlassian.com/software/confluence" class="hover-footer-link">Atlassian Confluence</a> <span id='footer-build-information'>4.0</span>, the <a href="http://www.atlassian.com/software/confluence/tour/enterprise-wiki.jsp" class="hover-footer-link">Enterprise Wiki</a></li>
+        <li class="print-only">Printed by Atlassian Confluence 4.0, the Enterprise Wiki.</li>        
+        <li class="noprint"> &nbsp; |&nbsp; <a href="http://jira.atlassian.com/secure/BrowseProject.jspa?id=10470" class="hover-footer-link">Report a bug</a></li>
+        <li class="noprint"> &nbsp;|&nbsp; <a href="http://www.atlassian.com/about/connected.jsp?s_kwcid=Confluence-stayintouch" class="hover-footer-link">Atlassian News</a></li>
+    </ul>
+
+    
+
+            <div><span style="">Site support by</span><a href="http://contegix.com"> <img style="vertical-align:middle" src="../../download/attachments/459015/contegix.jpg.html"/></a></div>
+    </div></div>
+</body>
+</html>

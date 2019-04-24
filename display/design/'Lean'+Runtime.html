@@ -1,0 +1,916 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>&#39;Lean&#39; Runtime - Clojure Design - Clojure Development</title>
+
+        
+
+                        
+    
+
+            <meta http-equiv="X-UA-Compatible" content="IE=EDGE">
+<meta charset="UTF-8">
+<!-- Deprecated since 3.4. To be removed in a future version of Confluence; use AJS.Confluence.getContextPath() -->
+<meta id="confluence-context-path" name="confluence-context-path" content="">
+<meta id="confluence-base-url" name="confluence-base-url" content="https://dev.clojure.org">
+
+<meta id="atlassian-token" name="atlassian-token" content="30041c830a95ce9c95d0b58cb377def6b96aa6d2">
+
+<meta id="confluence-space-key" name="confluence-space-key" content="design">
+<script type="text/javascript">
+    // Deprecated global variables. To be removed in a future version of Confluence.
+    var contextPath = '';
+</script>
+
+    
+
+<!-- include system css resources -->
+
+
+    <link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/55/_/download/superbatch/css/batch.css" media="all">
+<!--[if lt IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/_/download/superbatch/css/batch.css?conditionalComment=lt+IE+9" media="all">
+<![endif]-->
+<!--[if IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/_/download/superbatch/css/batch.css?conditionalComment=IE+9" media="all">
+<![endif]-->
+<!--[if lte IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/_/download/superbatch/css/batch.css?conditionalComment=lte+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/55/_/download/superbatch/css/batch-media=print.css" media="print">
+<!--[if lt IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/_/download/contextbatch/css/page/batch.css?conditionalComment=lt+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/_/download/contextbatch/css/page/batch.css" media="all">
+<!--[if lt IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/_/download/contextbatch/css/viewcontent,main/batch.css?conditionalComment=lt+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/_/download/contextbatch/css/viewcontent,main/batch.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.1/_/download/batch/com.atlassian.confluence.plugins.pagetree-pagetree-resources/com.atlassian.confluence.plugins.pagetree-pagetree-resources.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/3/_/styles/colors-spaceKey=design.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.5/_/download/resources/com.atlassian.confluence.plugins.doctheme-documentation/default-theme.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.5/_/download/resources/com.atlassian.confluence.plugins.doctheme-documentation/splitter.css" media="all">
+
+<!-- end system css resources -->
+
+    <meta name="confluence-request-time" content="1556129036244">
+            <meta name="ajs-page-id" content="9142384">
+            <meta name="ajs-parent-page-id" content="12845098">
+            <meta name="ajs-space-key" content="design">
+            <meta name="ajs-space-name" content="Clojure Design">
+            <meta name="ajs-page-title" content="&#39;Lean&#39; Runtime">
+            <meta name="ajs-parent-page-title" content="Release.zFuture">
+            <meta name="ajs-from-page-title" content="">
+            <meta name="ajs-context-path" content="">
+            <meta name="ajs-version-number" content="4.0">
+            <meta name="ajs-build-number" content="3047">
+            <meta name="ajs-remote-user" content="">
+            <meta name="ajs-static-resource-url-prefix" content="/s/en_GB/3047/3/_">
+            <meta name="ajs-global-settings-attachment-max-size" content="10485760">
+            <meta name="ajs-user-locale" content="en_GB">
+            <meta name="ajs-enabled-dark-features" content="">
+            <meta name="ajs-atl-token" content="30041c830a95ce9c95d0b58cb377def6b96aa6d2">
+            
+            <meta name="ajs-keyboardshortcut-hash" content="7b95af54c6deada096af1f28fdd0f413">
+            <meta name="ajs-use-keyboard-shortcuts" content="true">
+    <!-- Deprecated since 3.4. To be removed in a future version of Confluence; use atl.header -->
+        
+            <script type="text/x-template" title="share-content-popup">
+    <form action="#" method="post" class="aui share-content-popup">
+        <fieldset>
+            <label for="users">User name or email</label>
+            <div class="autocomplete-user-target">
+                <input class="text autocomplete-sharepage" id="users" data-max="10" data-dropdown-target=".autocomplete-user-target" data-none-message="No matching user or email found"/>
+            </div>
+            <ol class="recipients">
+            </ol>
+            <div><label for="note">Note</label></div>
+            <textarea class="textarea" id="note" placeholder="Add an optional note"/>
+        </fieldset>
+        <div class="button-panel">
+            <div class="progress-messages-icon"></div>
+            <div class="progress-messages">
+            </div>
+            <input class="button submit" type="submit" value="Share" disabled/>
+            <a class="close-dialog" href="#">Cancel</a>
+        </div>
+    </form>
+</script>
+
+<script type="text/x-template" title="share-content-popup-recipient-username">
+    <li data-username="{username}" style="display: none">
+        <span>
+            <img src="{thumbnailLink.href}" title="{title}">
+            <span>{title}</span>
+            <span class="remove-recipient"/>
+        </span>
+    </li>
+</script>
+
+<script type="text/x-template" title="share-content-popup-recipient-email">
+    <li data-email="{email}" style="display: none">
+        <span>
+            <img src="{icon}" title="{email}">
+            <span>{email}</span>
+            <span class="remove-recipient"/>
+        </span>
+    </li>
+</script>
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="icon" type="image/png" href="../../s/en_GB/3047/3/_/images/logo/confluence_16.png">
+
+<link rel="search" type="application/opensearchdescription+xml" href="../../opensearch/osd.action.xml" title="Clojure Development"/>
+
+        <!-- include system javascript resources -->
+                        
+    
+    <script type="text/javascript" src="../../s/en_GB/3047/3/55/_/download/superbatch/js/batch.js" ></script>
+<!--[if lte IE 8]>
+<script type="text/javascript" src="/s/en_GB/3047/3/55/_/download/superbatch/js/batch.js?conditionalComment=lte+IE+8" ></script>
+<![endif]-->
+<script type="text/javascript" src="../../s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/_/download/contextbatch/js/page/batch.js" ></script>
+<script type="text/javascript" src="../../s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/_/download/contextbatch/js/viewcontent,main/batch.js" ></script>
+<script type="text/javascript" src="../../s/en_GB/3047/3/2.0.1/_/download/batch/com.atlassian.confluence.plugins.pagetree-pagetree-resources/com.atlassian.confluence.plugins.pagetree-pagetree-resources.js" ></script>
+
+    
+    <!-- end system javascript resources -->
+
+    
+
+    
+    <link rel="canonical" href="'Lean&apos;+Runtime.html'">
+    <link rel="shortlink" href="&apos;Lean&apos;+Runtime.html">
+    <meta name="wikilink" content="[design:&#39;Lean&#39; Runtime]">
+    <meta name="page-version" content="3">
+
+</head>
+
+<body             onload="placeFocus()"
+     id="com-atlassian-confluence" class="theme-documentation ">
+<div id="full-height-container">
+    <div id="header-precursor">
+        
+        
+                </div>
+
+<div id="header" class="sectionbottom ">
+        <form id="quick-search" class="quick-search" method="get" action="../../dosearchsite.action.html">
+                <fieldset>
+            <input type="hidden" name="spaceSearch" value="false"/>
+        </fieldset>
+        <fieldset>
+            <legend>Quick Search</legend>
+            <input class="quick-search-query" id="quick-search-query" type="text" accessKey="search-pages-action.accesskey" autocomplete="off" name="queryString" size="25"/>
+            <input class="quick-search-submit" id="quick-search-submit" type="submit"  value="Search Confluence" />
+            <div class="aui-dd-parent quick-nav-drop-down"><!-- Quick nav appears here --></div>
+        </fieldset>
+        <fieldset class="hidden parameters">
+            <input type="hidden" id="quickNavEnabled" value="true" />
+                    </fieldset>
+    </form>
+
+    <ul id="header-menu-bar" class="ajs-menu-bar">
+                    
+        
+            <li class="normal ajs-menu-item">
+        <a id="browse-menu-link" class="browse trigger ajs-menu-title" href="#"><span><span>Browse</span></span></a>         <div class="assistive ajs-drop-down">
+                        <ul  id="browse-menu-link-leading"                 class="section-leading first">
+                                        <li>
+    
+        
+    
+    <a  id="space-pages-link" href="../../pages/recentlyupdated.action-key=design.html"  class=""   title="Browse pages in the Clojure Design space">
+                   <span>Pages</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-blogposts-link" href="../../pages/viewrecentblogposts.action-key=design.html"  class=""   title="Browse blogs in the Clojure Design space">
+                   <span>Blog</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-labels-link" href="../../labels/listlabels-heatmap.action-key=design.html"  class=""   title="Browse labels in the Clojure Design space">
+                   <span>Labels</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-attachments-link" href="../../spaces/listattachmentsforspace.action-key=design.html"  class=""   title="Browse attachments in the Clojure Design space">
+                   <span>Attachments</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-mail-link" href="../../spaces/viewmailarchive.action-key=design.html"  class=""   title="Browse mail in the Clojure Design space">
+                   <span>Mail</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-advanced-link" href="../../spaces/viewspacesummary.action-key=design.html"  class=""   title="Browse additional space functions in the Clojure Design space">
+                   <span>Advanced</span></a>        </li>
+                            </ul>
+                        <ul  id="browse-menu-link-global"                 class="section-global">
+                                        <li>
+    
+        
+    
+    <a  id="whats-new-menu-link" href="http://docs.atlassian.com/confluence/docs-40/whatsnew/iframe"  class=""   title="">
+                   <span>What’s New</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-directory-link" href="../../spacedirectory/view.action.html"  class=""   title="Browse the Confluence space directory">
+                   <span>Space Directory</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="feed-builder-link" href="../../dashboard/configurerssfeed.action.html"  class=""   title="Create your custom RSS feed.">
+                   <span>Feed Builder</span></a>        </li>
+                                        <li>
+    
+            
+    
+    <a  id="keyboard-shortcuts-link" href="#"  class=""   title="View available keyboard shortcuts">
+                   <span>Keyboard Shortcuts</span></a>        </li>
+                                        <li>
+    
+            
+    
+    <a  id="gadget-directory-link" href="#"  class="user-item administration-link"   title="Browse gadgets provided by Confluence">
+                   <span>Confluence Gadgets</span></a>        </li>
+                            </ul>
+                    </div>
+    </li>
+        
+                                                         <li class="ajs-menu-item normal">
+        
+        
+    
+    <a  id="login-link" href="../../login.action-os_destination=-display-design-&apos;Lean&apos;+Runtime.html"  class="user-item login-link"   title="">
+                   <span>Log In</span></a>        </li>
+                            <li class="ajs-menu-item normal">
+    
+        
+    
+    <a  id="signup-link" href="../../signup.action.html"  class="user-item signup-link"   title="">
+                   <span>Sign Up</span></a>        </li>
+                                <li class="normal ajs-menu-item">
+            <div id="splitter-button" class="hidden" title="Show or hide sidebar"></div>
+        </li>
+
+    </ul>
+    
+    
+    <ol id="breadcrumbs">
+                    
+                        
+        <li class="first" >
+                                    <span><a href="../../dashboard.action.html" title="Go to Dashboard">Dashboard</a></span>
+                </li>
+                    
+                
+        <li>
+                                    <span><a href="Home-jsessionid=3A56E29DA520B75101350BA4484B9990.html">Clojure Design</a></span>
+                </li>
+                                        <li id="ellipsis" title="Show all breadcrumbs"><span><strong>&#8230;</strong></span></li>
+                                    
+                
+        <li class="hidden-crumb" >
+                                    <span><a href="Home.html">Home</a></span>
+                </li>
+                                
+                
+        <li class="hidden-crumb" >
+                                    <span><a href="Release+Planning.html">Release Planning</a></span>
+                </li>
+                                
+                
+        <li class="hidden-crumb" >
+                                    <span><a href="Release.zFuture.html">Release.zFuture</a></span>
+                </li>
+                    
+                
+        <li>
+                                    <span><a href="'Lean&apos;+Runtime.html'">&#39;Lean&#39; Runtime</a></span>
+                </li>
+        </ol>
+
+</div>
+
+    <div id="splitter">
+    <div id="splitter-sidebar" >
+        
+
+                    
+        
+    
+
+<div class="plugin_pagetree">
+
+                <div id="pagetreesearch">
+            <form method="POST" action="../../dosearchsite.action-searchQuery.queryString=&amp;searchQuery.spaceKey=conf_all.html" name="pagetreesearchform">
+                                    <input type="hidden" name="ancestorId" value="458775">
+                                <input type="hidden" name="spaceKey" value="design">
+                <input type="text"  size="20" name="queryString">
+                <input type="submit" value="Search">
+            </form>
+        </div>
+    
+        
+    <ul class="plugin_pagetree_children_list plugin_pagetree_children_list_noleftspace">
+        <div class="plugin_pagetree_children">
+        </div>
+    </ul>
+
+    <fieldset class="hidden">
+        <input type="hidden" name="treeId" value="">
+        <input type="hidden" name="treeRequestId" value="/plugins/pagetree/naturalchildren.action?decorator=none&amp;excerpt=false&amp;sort=position&amp;reverse=false&amp;disableLinks=false">
+        <input type="hidden" name="treePageId" value="9142384">
+
+        <input type="hidden" name="noRoot" value="false">
+        <input type="hidden" name="rootPageId" value="458775">
+
+        <input type="hidden" name="rootPage" value="">
+        <input type="hidden" name="startDepth" value="0">
+        <input type="hidden" name="spaceKey" value="design" >
+
+        <input type="hidden" name="i18n-pagetree.loading" value="Loading...">
+        <input type="hidden" name="i18n-pagetree.error.permission" value="Unable to load page tree. It seems that you do not have permission to view the root page.">
+        <input type="hidden" name="i18n-pagetree.eeror.general" value="There was a problem retrieving the page tree. Please check the server log file for more information.">
+        <input type="hidden" name="loginUrl" value="/login.action?os_destination=%2Fdisplay%2Fdesign%2F%27Lean%27%2BRuntime">
+
+                <fieldset class="hidden">
+                                                <input type="hidden" name="ancestorId" value="12845098">
+                                    <input type="hidden" name="ancestorId" value="5767475">
+                                    <input type="hidden" name="ancestorId" value="458775">
+                                    </fieldset>
+    </fieldset>
+</div>
+
+
+
+            </div>
+    <div id="splitter-content">
+
+                    <script type="text/javascript" src="../../s/en_GB/3047/3/2.0.5/_/download/resources/com.atlassian.confluence.plugins.doctheme-resources/doc-theme.js"></script>
+    
+            
+    
+<div id="main" >
+    <div id="main-header">
+	    
+	    
+    <div id="navigation" class="content-navigation view">
+                    <ul class="ajs-menu-bar">
+                                
+                        
+            <li class="normal ajs-menu-item">
+        <a id="action-menu-link" class="action trigger ajs-menu-title" href="#"><span><span>Tools</span></span></a>         <div class="assistive ajs-drop-down">
+                        <ul  id="action-menu-link-primary"                 class="section-primary first">
+                                        <li>
+    
+        
+    
+    <a  id="view-attachments-link" href="../../pages/viewpageattachments.action-pageId=9142384.html"  class="action-view-attachments"  accessKey="a"  title="View Attachments">
+                   <span><u>A</u>ttachments (0)</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="action-view-history-link" href="../../pages/viewpreviousversions.action-pageId=9142384.html"  class="action-view-history"   title="">
+                   <span>Page History</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="action-page-permissions-link" href="../../pages/viewinfo.action-pageId=9142384.html"  class="action-page-permissions"   title="Edit restrictions">
+                   <span>Restrictions</span></a>        </li>
+                            </ul>
+                        <ul  id="action-menu-link-secondary"                 class="section-secondary">
+                                        <li>
+    
+        
+    
+    <a  id="view-page-info-link" href="../../pages/viewinfo.action-pageId=9142384.html"  class="action-view-info"   title="">
+                   <span>Info</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="link-to-page-link" href="../../pages/viewinfo.action-pageId=9142384.html"  class=""   title="Link to this Page">
+                   <span>Link to this Page&hellip;</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="view-in-hierarchy-link" href="../../pages/listpages-dirview.action-key=design&amp;openId=9142384.html#selectedPageInHierarchy"  class=""   title="">
+                   <span>View in Hierarchy</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="action-view-source-link" href="../../plugins/viewsource/viewpagesrc.action-pageId=9142384.html"  class="action-view-source popup-link"   title="">
+                   <span>View Source</span></a>        </li>
+                            </ul>
+                    </div>
+    </li>
+            </ul>
+    </div>
+
+	    
+	    <h1 id="title-heading" class="pagetitle">
+	        	            <a href="Home-jsessionid=3A56E29DA520B75101350BA4484B9990.html"><img class="logo global custom" src="../../download/attachments/131074/global.logo.png" alt=""></a>	        	
+			<span id="title-text">
+							            <a href="'Lean&apos;+Runtime.html'">&#39;Lean&#39; Runtime</a>
+    						</span>
+	    </h1>
+	</div>
+
+    
+
+    
+    
+    
+    
+    
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+        
+    
+    
+                    
+    
+
+    
+
+
+<div id="content" class="page view">
+    
+
+
+
+                
+<script type="text/x-template" title="movePageDialog">
+    <div class="row information">
+        <div class="inner">
+            <div class="element">
+                Specify the new parent page for this page and its children by space and title.
+            </div>
+        </div>
+    </div>
+    <div class="form">
+        <fieldset>
+                
+
+    <legend class="assistive"><span>Change the Parent Page to a Known Page</span></legend>
+            <div class="row">
+                <label for="new-space">New space:</label>
+                <div class="value new-space-value">
+                    <input id="new-space-key" name="new-space-key" type="hidden" value="design">
+                                            <span class="space-input">
+                            <input id="new-space" name="new-space" value="Clojure Design" disabled="disabled">
+                        </span>
+                        <span class="description warning">You cannot move this page to another space because you do not have permission to remove it from this space.</span>
+                                        <div class="new-space-dropdown aui-dd-parent autocomplete"></div>
+                </div>
+            </div>
+            <div class="row">
+                <label for="new-parent-page">New parent page:</label>
+                <div class="value new-parent-page-value">
+                    <span class="page-input">
+                        <input id="new-parent-page" name="new-parent-page" value="Release.zFuture">
+                    </span>
+                    <span class="description">Start typing a page title to see a list of suggestions.</span>
+                    <div class="new-parent-page-dropdown aui-dd-parent autocomplete"></div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <div class="location-info">
+        <div class="row">
+            <label>Current location:</label>
+            <div class="value breadcrumbs-container">
+                <div class="breadcrumbs-line">
+                    <ul id="current-parent-breadcrumbs" class="breadcrumbs">
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <label>New location:</label>
+            <div class="value breadcrumbs-container">
+                <div class="breadcrumbs-line">
+                    <ul id="new-parent-breadcrumbs" class="breadcrumbs">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/x-template" title="movePageSearchPanel">
+    <div class="row information">
+        <div class="inner">
+            <div class="element">
+                Search for and select the new parent page for this page and its children.
+            </div>
+        </div>
+    </div>
+    <div id="move-page-search-container" class="row">
+        <div class="search-form">
+            <fieldset>
+                    
+
+    <legend class="assistive"><span>Search for a New Parent Page</span></legend>
+                    
+
+    <label  for="move-page-search-query" class="assistive">Search keywords</label>
+                <input class="search-query" id="move-page-search-query">
+                    
+
+    <label  for="move-page-search-space" class="assistive">Search in space</label>
+                                    <select id="move-page-search-space" class="search-space" disabled="disabled">
+                        <option value="design" selected="selected">Clojure Design</option>
+                    </select>
+                                <input type="button" value="Search">
+                                    <div class="description warning">You cannot move this page to another space because you do not have permission to remove it from this space.</div>
+                            </fieldset>
+        </div>
+        <div class="search-results">
+        </div>
+    </div>
+</script>
+<script type="text/x-template" title="searchResultsGrid">
+    <table>
+        <thead>
+            <tr class="header">
+                <th class="search-result-title">Page Title</th>
+                <th class="search-result-space">Space</th>
+                <th class="search-result-date">Updated</th>
+            </tr>
+        </thead>
+    </table>
+</script>
+<script type="text/x-template" title="searchResultsGridCount">
+    <p class="search-result-count">{0}</p>
+</script>
+<script type="text/x-template" title="searchResultsGridRow">
+    <tr class="search-result">
+        <th class="search-result-title"><a href="{1}" class="content-type-{2}"><span>{0}</span></a></th>
+        <td class="search-result-space"><a class="space" href="/display/{4}/" title="{3}">{3}</a></td>
+        <td class="search-result-date"><span class="date" title="{6}">{5}</span></td>
+    </tr>
+</script><!-- Start restrictions section -->
+<script type="text/x-template" title="page-permissions-div">
+<div id="page-permissions-div">
+    <div id="page-permissions-editor-form">
+
+                <div id="page-permissions-error-div" class="hidden">
+            <a href="#" id="permissions-error-div-close">Ok</a>
+            <div></div>
+        </div>
+
+                <div id="page-permissions-type-radios" class="page-permissions-label-rows">
+            <div>
+                <input id="restrictViewRadio" type="radio" checked="checked" name="pagePermissionTypeRadio" value="view"/>
+                <label for="restrictViewRadio">Restrict viewing of this page</label>
+                <input id="restrictEditRadio" type="radio" name="pagePermissionTypeRadio" value="edit"/>
+                <label for="restrictEditRadio">Restrict editing of this page</label>
+            </div>
+        </div>
+        <div id="page-permissions-input" class="page-permissions-label-rows">
+            <div class="page-permissions-label">To:</div>
+            <div id="page-permissions-chooser-box">
+                                <span id="page-permissions-choose-user" class="ajs-button">
+                    
+
+
+
+    
+
+
+
+<a href="#" id='userpicker-popup-link-image' onClick="var picker = window.open('/spaces/openuserpicker.action?key=design&amp;startIndex=0&amp;onPopupSubmit=AJS.PagePermissions.addUserPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=700,height=680,scrollbars=yes'); picker.focus(); return false;"><img src="/s/en_GB/3047/3/_/images/icons/user_16.gif" height=16 width=16 border=0 align="absmiddle"  title="Choose users" /></a>
+<a href="#" id='userpicker-popup-link-text' onClick="var picker = window.open('/spaces/openuserpicker.action?key=design&amp;startIndex=0&amp;onPopupSubmit=AJS.PagePermissions.addUserPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=700,height=680,scrollbars=yes'); picker.focus(); return false;">Person...</a>
+
+
+                </span>
+                <span id="page-permissions-choose-group" class="ajs-button">
+                    
+
+
+
+    
+
+ 
+
+<a href="#" id='grouppicker-popup-link-image' onClick="var picker = window.open('/spaces/opengrouppicker.action?key=design&amp;startIndex=0&amp;actionName=dosearchgroups.action&amp;onPopupSubmit=AJS.PagePermissions.addGroupPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=580,height=550,scrollbars=yes'); picker.focus(); return false;"><img src="/s/en_GB/3047/3/_/images/icons/group_16.gif" height=16 width=16 border=0 align="absmiddle"  title="Choose groups" /></a>
+<a href="#" id='grouppicker-popup-link-text' onClick="var picker = window.open('/spaces/opengrouppicker.action?key=design&amp;startIndex=0&amp;actionName=dosearchgroups.action&amp;onPopupSubmit=AJS.PagePermissions.addGroupPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=580,height=550,scrollbars=yes'); picker.focus(); return false;">Group...</a>
+
+
+                </span>
+            </div>
+            <div id="page-permissions-input-box">
+                <input type="text" id="page-permissions-names-input" name="permissionNames"
+                    placeholder="Enter user or group name" class="autocomplete-user"
+                    data-max="10" data-none-message="No matches"
+                    data-target="#page-permissions-names-hidden" data-template="{username}"
+                    data-dropdown-target="#page-perms-name-dropdown-wrapper" data-resize-to-input="true"
+                    size="30"/>
+                <input
+    type="hidden"
+                            id="page-permissions-names-hidden"           />                <img height="16px" width="1px" src="/s/en_GB/3047/3/_/images/border/spacer.gif"/>
+                <input type="button" id="add-typed-names" value="Restrict">
+                <div id="page-perms-name-dropdown-wrapper" class="aui-dd-parent autocomplete"></div>
+            </div>
+        </div>
+    </div>
+    <div id="page-permissions-tables">
+        <div id="page-permissions-table-div">
+                        <table id="page-permissions-table" class="page-permissions-table">
+                <tr id="page-permissions-no-views" class="marker-row">
+                    <td colspan="3" class="page-permissions-marker-cell"><span>No view restrictions are defined for this page</span></td>
+                </tr>
+                <tr id="page-permissions-no-edits" class="marker-row">
+                    <td colspan="3" class="page-permissions-marker-cell"><span>No edit restrictions are defined for this page</span></td>
+                </tr>
+            </table>
+        </div>
+        <div id="page-inherited-permissions-table-div" class="hidden">
+            <span id="page-inherited-permissions-table-desc">
+                <a class="icon twisty-closed">Show/Hide</a>
+                <a id="toggle-inherited-permissions" title="Click to see inherited restrictions">This page has restricted parent pages. It can only be seen by users who can see those parent pages.</a>
+            </span>
+            <div id="page-inherited-permissions-tables" class="hidden page-inheritance-togglable"></div>
+        </div>
+    </div>
+</div>
+</script>
+
+<!-- End restrictions section -->
+
+        
+    
+    
+        <fieldset class="hidden parameters">
+            <input type="hidden" title="parentPageId" value="12845098">
+        </fieldset>
+
+        
+                            
+    
+
+                    
+
+        
+        <a href="#page-metadata-end" class="assistive">Skip to end of metadata</a>
+<div id="page-metadata-start" class="assistive"></div>
+
+    <div class="page-metadata">
+        <ul>
+                            <li class="page-metadata-item noprint">
+    
+            
+    
+    <a  id="content-metadata-page-restrictions" href="#"  class="page-metadata-icon page-restrictions hidden"   title="Page restrictions apply. Click the lock icon to view or edit the restriction.">
+                   <span>Page restrictions apply</span></a>        </li>
+                        <li class="page-metadata-modification-info">
+                                    Added by <a href="../../login.action-os_destination=-display-~dsg.html"
+                          class="url fn"
+                   >Daniel Solano Gómez</a>, last edited by <a href="../../login.action-os_destination=-display-~arrdem.html"
+                          class="url fn"
+                   >Reid McKenzie</a> on May 27, 2014
+                                                                <span class="noprint">&nbsp;(<a id="view-change-link" href="../../pages/diffpages.action-pageId=9142384&amp;originalId=9142482.html">view change</a>)</span>
+                                                </li>
+                    </ul>
+                </div>
+
+
+<a href="#page-metadata-start" class="assistive">Go to start of metadata</a>
+<div id="page-metadata-end" class="assistive"></div>
+        
+        <fieldset class="hidden parameters">
+                        <input type="hidden" title="browsePageTreeMode" value="view">
+        </fieldset>
+
+        <div class="wiki-content">
+                           <h2 id="LeanRuntime-Theproblem">The problem</h2><p>Clojure's support for dynamic development incurs runtime costs that may be undesirable in certain production environments.  These include:</p><ul><li>Start time</li><li><p><code>Var.getRawRoot</code> overhead</p></li><li>Heap use</li><li>Deployment size</li></ul><p>Additionally, the indirection involved using a Var, especially via getting a reference to a Var via <code>Var.intern(String, String)</code> makes Clojure-generated bytecode hard to analyze via programs like <a href="http://proguard.sourceforge.net/" class="external-link" rel="nofollow">ProGuard</a>.</p><h3 id="LeanRuntime-Startuptime">Startup time</h3><p>Starting a Clojure program takes a significant amount of time, most of which is taken up by the Clojure runtime bootstrapping itself, i.e. loading and initialising namespaces and vars (see <a href="http://nicholaskariniemi.github.io/2014/02/25/clojure-bootstrapping.html" class="external-link" rel="nofollow">Why is Clojure bootstrapping so slow?</a>).  For long-running applications, this is probably not an issue.  However, this is a problem in other scenarios:</p><h4 id="LeanRuntime-Android">Android</h4><p>Android applications should ideally load about as fast as Java or Scala applications.  Currently, on a high-end telephone, a minimal Clojure program will take about one second longer, which is perceptible.  In some cases, having a Java splash screen thrown up while Clojure bootstraps may be an acceptable solution, but that doesn't work for all programs.</p><h4 id="LeanRuntime-Commandlineprogramsutilities">Command line programs/utilities</h4><p>Depending on the type of utility, Clojure's start time can dominate the time used to do the actual work.  Current workarounds include using persistent JVMs, i.e. nailgun, or using ClojureScript with Node.js.</p><h4 id="LeanRuntime-GoogleAppEngineGAE">Google App Engine (GAE)</h4><p>GAE imposes a strict sixty second time limit for responding to a request.  If the application hasn't warmed up, Clojure's startup can take up a significant portion of that time, resulting in the initial request timing out.</p><h3 id="LeanRuntime-VargetRawRootoverhead"><code>Var.getRawRoot</code> overhead</h3><p>Generally speaking, each time a Var is used within a function invocation, it's root binding must be retrieved.  While this is a very simple operation, it does require reading a <code>volatile</code> variable, which may impede optimisation.  In some programs, this overhead is measurable.  Currently, this best workaround for this is using a macro or <code>definline</code>, but this results in code that is harder to read and write.</p><h3 id="LeanRuntime-Heapuse">Heap use</h3><p>Clojure 1.5.1 uses over seventeen megabytes of heap size just starting a basic REPL.  Much of this heap use results from Clojure simply loading up a lot of Vars which may or may not be used in a given program. For servers with gigabytes of RAM, this may just be noise.  However, in more constrained environments, e.g. Android, this can be more of an issue.</p><p>Manual tree-shaking via commenting out portions of <code>clojure.core</code> has shown significant reductions in heap use.  Unfortunately, namespaces are currently atomic and cannot be easily broken up.</p><h3 id="LeanRuntime-Deploymentsize">Deployment size</h3><p>Clojure 1.5.1's JAR takes up about 3.5 megabytes.  This isn't an issue for a lot of environments, but this can be an issue for mobile applications or Clojure as a library.</p><h2 id="LeanRuntime-Mitigationstrategies">Mitigation strategies</h2><p>A number of mitigation strategies have been proposed to resolve one or more of the above issues:</p><ol><li>Static compilation</li><li>Lazy loading of Vars</li><li>Don't load the <code>user</code> namespace by default</li><li>Eliminate the compiler</li></ol><h4 id="LeanRuntime-Staticcompilation">Static compilation</h4><ul><li>Overall strategy:<ul><li>The general idea is to compile Vars down to static final fields and methods on namespace classes.</li><li>In the ideal case, there are no Vars involved at the point of use/invocation, just an <code>invokestatic</code> or <code>getstatic</code> op.</li><li>However, static methods aren't first class functions, so there is still a need to be able to invoke them through an object, possible a Var or another IFn instance.</li><li>Dynamic Vars would remain more or less the same.</li></ul></li><li>Things to think about:<ul><li>What's the best way to interoperate with code that explicitly manipulates namespaces or Vars, e.g. ns-resolve or with-redefs</li><li>Where does metadata go?</li><li>Should a 'static' Var invoke/get the static method/field, or should it have its w</li><li>In a more 'static' environment, is it possible to eliminate the <code>volatile</code> on a Var's root binding?</li><li>Given the changes in how things are compiled and possibly even changes to core Clojure classes, how do we solve the artifact distribution problem?  See <a href="Build+Profiles.html">Build Profiles</a>.</li><li>Is there a way to resolve Vars that enable dynamic development starting from a largely static runtime?</li></ul></li></ul><h4 id="LeanRuntime-LazyloadingofVars">Lazy loading of Vars</h4><ul><li>Currently, all Vars are created when their namespace is loaded.  What if that work could be deferred?</li><li>This strategy has been used in <a href="https://github.com/galdolber/clojure-objc" class="external-link" rel="nofollow">clojure-objc</a></li><li>While this ameliorates the startup time problem, all it does is put off the work to some other point in the program.  However, in conjunction with static compilation, it might mean that the Vars are only created for use in higher-order functions.</li><li>Is there an inexpensive way to keep track of whether a Var has been loaded?  Could we use the linker for this?</li></ul><h3 id="LeanRuntime-Dontloadtheusernamespacebydefault">Don't load the <code>user</code> namespace by default</h3><ul><li>In some environments, creating the <code>user</code> namespace is pure overhead.  Removing this can make a difference at startup time and on memory use.</li><li>How do we know when to do this or not?</li></ul><h4 id="LeanRuntime-Eliminatethecompiler">Eliminate the compiler</h4><ul><li>If it's not needed, why include it?  This can make a big difference in deployment size.</li><li>See <a href="Build+Profiles.html">Build Profiles</a></li></ul><h2 id="LeanRuntime-Otherthingstothinkabout">Other things to think about</h2><ul><li>The big one is <a href="Build+Profiles.html">Build Profiles</a>.<ul><li>At least in the Clojure open source world, most libraries are distributed as JARs of Clojure source files.  As such, library authors are largely off the hook as to make decisions about compilation decisions.</li><li>However, this isn't the case for everything, namely Clojure itself.</li></ul></li><li>What should be the default compilation mode?</li><li>What sorts of tests should be run to ensure that the technical solution is optimal?</li><li>How independent should each of these changes be?  Is it just a master production-/development-mode switch or are individual compilation features independently switchable?</li></ul><h2 id="LeanRuntime-Developmentplan">Development plan</h2><ul><li>There is a good chance we can have a Google Summer of Code student work on this.</li><li>It would be good to see some form of this in the next Clojure release.</li></ul><h2 id="LeanRuntime-RelatedHammocktopics">Related Hammock topics</h2><ul><li><a href="Android+Support.html">Android Support</a></li><li><a href="Build+Profiles.html">Build Profiles</a></li><li><a href="Inlined+code.html">Inlined code</a></li><li><a href="../../pages/viewpage.action-pageId=950293.html">Vars too rich for global namespace default?</a></li></ul>
+    
+        </div>
+
+        <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="https://dev.clojure.org/display/design/%27Lean%27+Runtime"
+    dc:identifier="https://dev.clojure.org/display/design/%27Lean%27+Runtime"
+    dc:title="&#39;Lean&#39; Runtime"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/9142384"/>
+</rdf:RDF>
+-->
+
+        <script type="text/x-template" title="labels-dialog-div">
+
+    
+    <div id="labels-dialog">
+        <div class="labels-editor">
+            <span class="errorMessage error" id="errorSpan"></span>
+            <form method="GET" action="" id="add-labels-form">
+                <div id="labelOperationErrorContainer">
+                    <span class="error"><span class="errorMessage" id="labelOperationErrorMessage"></span></span>
+                </div>
+    
+                <div class="caption">Enter labels to add to this page:</div>
+                <div id="label-input-fields">
+                    <input autocomplete="off" id="labelsString" name="labelsString" value="">
+                    <input id="add-labels-editor-button" type="submit" class="add-labels" value="Add">
+                </div>
+                <div id="labelsAutocompleteList" class="aui-dd-parent resize-to-input" style="width: 417px"></div>
+                <div id="dialog-label-list">
+                    <span id="labels-section-title-none" class="no-labels-message" >
+None
+</span>
+<ul class="label-list">
+</ul>
+                </div>
+                <div id="waitImageAndStatus">
+                    <img class="waiting" alt="Please wait" src="/s/en_GB/3047/3/_/images/icons/wait.gif">&nbsp;
+                    <span id="labelOperationStatus" class="smalltext"></span>
+                </div>
+                <div class="labels-tip"></div>
+            </form>
+        </div>
+    </div>
+</script>
+            
+    
+
+
+<div id="labels-section" class="pageSection group">
+    <div class="labels-editor">
+        <span id="labels-section-title" class="label-title">Labels:</span>
+        <div id="labels-section-content" class="content-column">
+            <span id="labels-section-title-none" class="no-labels-message" >
+None
+</span>
+<ul class="label-list">
+</ul>
+
+                            <a id="labels-edit" href="#" class="show-labels-editor editor-icon" title="Edit Labels">
+                    <span class="icon icon-edit">Edit Labels</span>
+                </a>
+                    </div>
+    </div>
+</div>
+
+            
+            
+
+
+
+
+            
+    
+
+
+
+
+
+
+
+<div id="comments-section" class="pageSection group">
+    
+            <div class="section-header ">
+            <h2 id="comments-section-title" class="section-title">
+                <a href="#" class="comments-show-hide comments-showing" name="comments">
+                                            1 Comment
+                                    </a>
+            </h2>
+            <a title="Hide/Show Comments" href="#" 
+               class="comments-show-hide icon comments-showing icon-section-opened">
+                Hide/Show Comments
+            </a>
+        </div>
+    
+    
+                            <ol class="comment-threads top-level " id="page-comments">
+                        <li id="comment-thread-9142397" class="comment-thread">
+                                <div class="comment  " id="comment-9142397">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: mikera" title="mikera">                </p>
+                <p class="date" title="Apr 03, 2014 20:09">
+                    Apr 03, 2014
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~mikera.html"
+                          class="url fn"
+                   >Mike Anderson</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>There are some strong connections here between some of this and the goals of my &quot;Kiss&quot; language design experiment that it is worth being aware of (<a href="https://github.com/mikera/kiss" class="external-link" rel="nofollow">https://github.com/mikera/kiss</a>)</p><p>Key points:</p><ol><li>Kiss eliminates mutable vars by replacing namespaces with immutable environments (redefining vars is possible just like in Clojure but produces a new immutable environment). This has the potential to eliminate 100% of the var lookup overhead.</li><li>Partly because of 1, is becomes much easier to do static type inference. Basically, we can have something analogous to core.typed running as part of the compiler, which nicely helps the static compilation issue.</li><li>Kiss maintains a dependency graph of symbol references. I believe this creates some interesting opportunities for lazy compilation (you can efficiently compile some code and all of its dependencies on demand).</li></ol><p>Kiss as currently envisioned will probably be about 95% Clojure compatible (it directly borrows most stuff: syntax, reader, immutable data structures etc), but there are some edge cases around vars / environment handling that will inevitably break some existing code.</p><p>Kiss isn't yet complete and it's definitely experimental - but I do think that the ideas are powerful and worth thinking about for the Clojure 2.0 timeframe. If the 'lean runtime' work can bear this in mind then it would be great!</p><p> </p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="&apos;Lean&apos;+Runtime-focusedCommentId=9142397.html#comment-9142397"
+                id="comment-permalink-9142397"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="&apos;Lean&apos;+Runtime-focusedCommentId=9142397.html#comment-9142397"
+    dc:identifier="&apos;Lean&apos;+Runtime-focusedCommentId=9142397.html#comment-9142397"
+    dc:title="&#39;Lean&#39; Runtime"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/9142397"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                </ol>
+    
+    </div>
+
+
+            
+</div>
+
+
+    
+
+
+
+    
+    
+
+    
+    
+    
+
+
+    
+
+
+
+    <br class="clear">
+</div>
+  
+    </div>
+</div>
+
+<div id="footer">
+                                                <p class="license license-opensource">
+                  Powered by a free <b>Atlassian Confluence Open Source Project License</b> granted to Clojure. <a href="http://www.atlassian.com/c/conf/11461">Evaluate Confluence today</a>.<br>
+                </p>
+                        
+    <ul id="poweredby">
+        <li class="noprint">Powered by <a href="http://www.atlassian.com/software/confluence" class="hover-footer-link">Atlassian Confluence</a> <span id='footer-build-information'>4.0</span>, the <a href="http://www.atlassian.com/software/confluence/tour/enterprise-wiki.jsp" class="hover-footer-link">Enterprise Wiki</a></li>
+        <li class="print-only">Printed by Atlassian Confluence 4.0, the Enterprise Wiki.</li>        
+        <li class="noprint"> &nbsp; |&nbsp; <a href="http://jira.atlassian.com/secure/BrowseProject.jspa?id=10470" class="hover-footer-link">Report a bug</a></li>
+        <li class="noprint"> &nbsp;|&nbsp; <a href="http://www.atlassian.com/about/connected.jsp?s_kwcid=Confluence-stayintouch" class="hover-footer-link">Atlassian News</a></li>
+    </ul>
+
+    
+
+            <div><span style="">Site support by</span><a href="http://contegix.com"> <img style="vertical-align:middle" src="../../download/attachments/459015/contegix.jpg.html"/></a></div>
+    </div></div>
+</body>
+</html>

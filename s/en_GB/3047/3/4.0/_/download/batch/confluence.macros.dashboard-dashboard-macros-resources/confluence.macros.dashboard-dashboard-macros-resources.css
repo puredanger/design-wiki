@@ -1,0 +1,215 @@
+/* Recently updated item groupings (for each user) */
+
+ul.update-groupings li.grouping {
+    border-bottom: 1px solid #eee;
+    padding: 10px 10px 10px 68px;
+    overflow: hidden;
+}
+
+ul.update-groupings li.grouping:hover {
+    background-color: #f9f9f9;
+}
+
+div.update-item-profile {
+    float: left;
+    display: inline;
+    margin-left: -68px;
+    padding-left: 10px;
+}
+
+div.update-items {
+    float: left;
+}
+
+div.update-items h3,
+div.update-items h3 a {
+    margin: 0;
+    padding: 0;
+    font-weight: bold;
+    font-size: 1em;
+    display: inline;
+}
+
+/* Recently updated items */
+
+div.update-items li.update-item {
+    padding: 5px 0;
+    margin: 2px 0 0 5px;
+    color: #666;
+    overflow: hidden;
+}
+
+div.update-items li.update-item a {
+    font-weight: normal;
+}
+
+div.update-items li.update-item div.update-item-icons {
+    display: inline;
+    float: left;
+    width: 40px;
+}
+
+div.update-items li.update-item div.update-item-content {
+    margin-left: 40px;
+}
+
+/* Item components */
+
+.update-item-arrow {
+    float: left;
+    margin-right: 3px;
+}
+
+.update-item-thumbnail-container {
+    clear: both;
+}
+
+.update-item-title,
+.update-item-changes,
+.update-item-summary,
+.update-item-date {
+    line-height: 17px;
+    margin-right: 4px;
+}
+
+.update-item-changes {
+    color: #666;
+    font-size: 0.9em;
+}
+
+.update-item-summary {
+    color: #000;
+    font-size: 0.9em;
+    margin: 0;
+    padding-top: 3px;
+}
+
+.update-item-date {
+    color: #666;
+    font-size: 12px;
+}
+
+#spacesLabel {
+    padding: 4px 6px 2px;
+    float: left;
+    margin-top: 3px;
+    font-weight: bold;
+}
+
+.aui-tabs.horizontal-tabs .tabs-menu .tabletitleops {
+    padding: 0;
+    margin: 9px 0 0;
+    line-height: 0;
+}
+
+.aui-tabs.horizontal-tabs .tabs-menu .tabletitleop {
+    float: right;
+    margin-right: 5px;
+}
+
+#recent-updates {
+    margin-top: 1px;
+}
+
+#recent-updates .team-selection {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 1em;
+}
+
+#recent-updates .team-selection label {
+    padding: 1em;
+}
+
+#recent-updates ul.updates-no-pics li {
+    border-bottom: 1px solid #eee;
+    overflow: hidden;
+    padding: 5px 0 3px 0;
+}
+
+#recent-updates ul.updates-no-pics li:hover {
+    background-color: #f9f9f9;
+}
+
+/* align the welcome heading underline with the tabs */
+#recent-updates.aui-tabs .tabs-menu .menu-item a strong {
+    height: 19px;
+    padding: 5px 8px 2px;
+}
+
+#recent-updates .nonexistent-labels ul {
+    margin-top: 0;
+    margin-bottom: 0
+}
+
+/* this is in dashmacros because we only want to set the height to align it with recent-updates */
+.welcome-message h2 {
+    line-height: 24px;
+}
+
+table.spaceList {
+    border-collapse: collapse;
+}
+
+.spaceList td.space-icon-col {
+    width: 16px;
+}
+
+.spaceList td.space-date-col {
+    text-align: center;
+    white-space: nowrap;
+}
+
+tr.spaceList td {
+    padding: 5px 0 5px 5px;
+    border-bottom: 1px solid #eee;
+    vertical-align: top;
+}
+
+tr.spaceList .operations {
+    vertical-align: top;
+    padding-right: 5px;
+}
+.spaceList td.operations,
+.spaceList .icon-set {
+    width: 65px;
+    white-space: nowrap;
+    text-align: right;
+}
+
+.spaceList td.operations div.entity-favourites {
+    display: inline;
+}
+
+.spaceList .spaceDescription {
+    margin-top: 3px;
+    color: #666;
+}
+
+.global-entities {
+    margin-top: 20px;
+}
+
+.global-entities h2.subheading {
+    margin: 0;
+    border: none;
+    color: #000;
+    font-weight: bold;
+}
+
+.entity-list-section {
+    padding: 10px 0 20px 0;
+}
+
+#spaces-pane .global-spaces-section .section-title {
+    display: inline-block;
+    width: 100%;
+}
+
+#spaces-pane .global-spaces-section .section-title .subheading {
+    float: left;
+}
+
+#spaces-pane .global-spaces-section .section-title .sublink {
+    float: right;
+    padding-top: 2px;
+}

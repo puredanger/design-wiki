@@ -1,0 +1,300 @@
+From a6cb982518acde66ba85de6c4f8752f9e9123c28 Mon Sep 17 00:00:00 2001
+From: Andy Fingerhut <andy_fingerhut@alum.wustl.edu>
+Date: Mon, 25 Nov 2013 09:38:06 -0800
+Subject: [PATCH 1/2] Implement Mark Engelberg's proposed hash function
+
+using as a multiplier constant for sequence hashes his favorite value
+as of Nov 18 2013.
+---
+ src/clj/clojure/gvec.clj                         |  2 +-
+ src/jvm/clojure/lang/APersistentMap.java         |  2 +-
+ src/jvm/clojure/lang/APersistentSet.java         |  2 +-
+ src/jvm/clojure/lang/APersistentVector.java      |  2 +-
+ src/jvm/clojure/lang/ASeq.java                   |  2 +-
+ src/jvm/clojure/lang/BigInt.java                 |  2 +-
+ src/jvm/clojure/lang/Numbers.java                |  2 +-
+ src/jvm/clojure/lang/PersistentQueue.java        |  2 +-
+ src/jvm/clojure/lang/Util.java                   | 22 ++++++++++++++++++++++
+ test/clojure/test_clojure/control.clj            |  2 ++
+ test/clojure/test_clojure/pprint/test_pretty.clj | 20 ++++++++------------
+ test/clojure/test_clojure/sequences.clj          |  4 ++--
+ 12 files changed, 42 insertions(+), 22 deletions(-)
+
+diff --git a/src/clj/clojure/gvec.clj b/src/clj/clojure/gvec.clj
+index 6d063a2..6691f34 100644
+--- a/src/clj/clojure/gvec.clj
++++ b/src/clj/clojure/gvec.clj
+@@ -141,7 +141,7 @@
+       (if (= i cnt)
+         hash
+         (let [val (.nth this i)]
+-          (recur (unchecked-add-int (unchecked-multiply-int 31 hash) 
++          (recur (unchecked-add-int (unchecked-multiply-int clojure.lang.Util/SEQUENCE_HASH_MULTIPLIER hash) 
+                                 (clojure.lang.Util/hash val)) 
+                  (inc i))))))
+ 
+diff --git a/src/jvm/clojure/lang/APersistentMap.java b/src/jvm/clojure/lang/APersistentMap.java
+index dc2be96..3020115 100644
+--- a/src/jvm/clojure/lang/APersistentMap.java
++++ b/src/jvm/clojure/lang/APersistentMap.java
+@@ -125,7 +125,7 @@ static public int mapHasheq(IPersistentMap m) {
+ 		{
+ 		Map.Entry e = (Map.Entry) s.first();
+ 		hash += Util.hasheq(e.getKey()) ^
+-				Util.hasheq(e.getValue());
++				Util.xorShift32(Util.hasheq(e.getValue()));
+ 		}
+ 	return hash;
+ }
+diff --git a/src/jvm/clojure/lang/APersistentSet.java b/src/jvm/clojure/lang/APersistentSet.java
+index 73723a4..8e6daa2 100644
+--- a/src/jvm/clojure/lang/APersistentSet.java
++++ b/src/jvm/clojure/lang/APersistentSet.java
+@@ -112,7 +112,7 @@ public int hasheq(){
+ 		for(ISeq s = seq(); s != null; s = s.next())
+ 			{
+ 			Object e = s.first();
+-			hash +=  Util.hasheq(e);
++			hash +=  Util.xorShift32(Util.hasheq(e));
+ 			}
+ 		this._hasheq = hash;		
+ 	}
+diff --git a/src/jvm/clojure/lang/APersistentVector.java b/src/jvm/clojure/lang/APersistentVector.java
+index a0ed215..1b04a7a 100644
+--- a/src/jvm/clojure/lang/APersistentVector.java
++++ b/src/jvm/clojure/lang/APersistentVector.java
+@@ -160,7 +160,7 @@ public int hasheq(){
+ 	while(i.hasNext())
+ 		{
+ 		Object obj = i.next();
+-		hash = 31 * hash + Util.hasheq(obj);
++		hash = Util.SEQUENCE_HASH_MULTIPLIER * hash + Util.hasheq(obj);
+ 		}
+ 	_hasheq = hash;
+ 	}
+diff --git a/src/jvm/clojure/lang/ASeq.java b/src/jvm/clojure/lang/ASeq.java
+index 6e02b55..a1ca133 100644
+--- a/src/jvm/clojure/lang/ASeq.java
++++ b/src/jvm/clojure/lang/ASeq.java
+@@ -80,7 +80,7 @@ public int hasheq(){
+ 		int hash = 1;
+ 		for(ISeq s = seq(); s != null; s = s.next())
+ 			{
+-			hash = 31 * hash + Util.hasheq(s.first());
++			hash = Util.SEQUENCE_HASH_MULTIPLIER * hash + Util.hasheq(s.first());
+ 			}
+ 		this._hasheq = hash;
+ 		}
+diff --git a/src/jvm/clojure/lang/BigInt.java b/src/jvm/clojure/lang/BigInt.java
+index 6a15164..3ab9e88 100644
+--- a/src/jvm/clojure/lang/BigInt.java
++++ b/src/jvm/clojure/lang/BigInt.java
+@@ -27,7 +27,7 @@ final public static BigInt ONE = new BigInt(1,null);
+ //must follow Long
+ public int hashCode(){
+ 	if(bipart == null)
+-		return (int) (this.lpart ^ (this.lpart >>> 32));
++		return Util.longHashMunge(lpart);
+ 	return bipart.hashCode();
+ }
+ 
+diff --git a/src/jvm/clojure/lang/Numbers.java b/src/jvm/clojure/lang/Numbers.java
+index 079baef..5c72c70 100644
+--- a/src/jvm/clojure/lang/Numbers.java
++++ b/src/jvm/clojure/lang/Numbers.java
+@@ -989,7 +989,7 @@ static int hasheq(Number x){
+ 		|| xc == Byte.class)
+ 		{
+ 		long lpart = x.longValue();
+-		return (int) (lpart ^ (lpart >>> 32));
++		return Util.longHashMunge(lpart);
+ 		}
+ 	if(xc == BigDecimal.class)
+ 		{
+diff --git a/src/jvm/clojure/lang/PersistentQueue.java b/src/jvm/clojure/lang/PersistentQueue.java
+index c57ba72..b6f6a14 100644
+--- a/src/jvm/clojure/lang/PersistentQueue.java
++++ b/src/jvm/clojure/lang/PersistentQueue.java
+@@ -87,7 +87,7 @@ public int hasheq() {
+ 		int hash = 1;
+ 		for(ISeq s = seq(); s != null; s = s.next())
+ 			{
+-			hash = 31 * hash + Util.hasheq(s.first());
++			hash = Util.SEQUENCE_HASH_MULTIPLIER * hash + Util.hasheq(s.first());
+ 			}
+ 		this._hasheq = hash;
+ 		}
+diff --git a/src/jvm/clojure/lang/Util.java b/src/jvm/clojure/lang/Util.java
+index 0f86d02..d369034 100644
+--- a/src/jvm/clojure/lang/Util.java
++++ b/src/jvm/clojure/lang/Util.java
+@@ -21,6 +21,7 @@ import java.lang.ref.SoftReference;
+ import java.lang.ref.ReferenceQueue;
+ 
+ public class Util{
++static public final int SEQUENCE_HASH_MULTIPLIER = -1640531535;
+ static public boolean equiv(Object k1, Object k2){
+ 	if(k1 == k2)
+ 		return true;
+@@ -181,6 +182,27 @@ static public int hashCombine(int seed, int hash){
+ 	return seed;
+ }
+ 
++static public int longHashMunge(long a){
++	// Source: "Xorshift RNGs" by George Marsaglia, just before the
++	// beginning of Section 3.1.
++	// http://www.jstatsoft.org/v08/i14/paper
++	a ^= (a << 13);
++	a ^= (a >>> 7);
++	a ^= (a << 17);
++	a ^= (a >>> 32);
++	return (int) a;
++}
++
++static public int xorShift32(int i){
++	// Source: "Xorshift RNGs" by George Marsaglia, just before the
++	// beginning of Section 3.1.
++	// http://www.jstatsoft.org/v08/i14/paper
++	i ^= (i << 13);
++	i ^= (i >>> 17);
++	i ^= (i << 5);
++	return i;
++}
++
+ static public boolean isPrimitive(Class c){
+ 	return c != null && c.isPrimitive() && !(c == Void.TYPE);
+ }
+diff --git a/test/clojure/test_clojure/control.clj b/test/clojure/test_clojure/control.clj
+index 3a7d4c3..ec4e274 100644
+--- a/test/clojure/test_clojure/control.clj
++++ b/test/clojure/test_clojure/control.clj
+@@ -366,6 +366,7 @@
+           ^Object y (Long. -1)]
+       (is (= :diff (case x -1 :oops :diff)))
+       (is (= :same (case y -1 :same :oops)))))
++(comment   ;; TBD: remove comment after determining new integer pair that have same hash value
+   (testing "test correct behavior on hash collision"
+     (is (== (hash 1) (hash 9223372039002259457N)))
+     (are [result input] (= result (case input
+@@ -407,6 +408,7 @@
+     (should-print-err-message
+      #"Performance warning, .*:\d+ - hash collision of some case test constants; if selected, those entries will be tested sequentially..*\r?\n"
+      (case 1 1 :long 9223372039002259457N :big 2)))
++)
+   (testing "test constants are *not* evaluated"
+     (let [test-fn
+           ;; never write code like this...
+diff --git a/test/clojure/test_clojure/pprint/test_pretty.clj b/test/clojure/test_clojure/pprint/test_pretty.clj
+index 9eba69a..d5477d9 100644
+--- a/test/clojure/test_clojure/pprint/test_pretty.clj
++++ b/test/clojure/test_clojure/pprint/test_pretty.clj
+@@ -294,26 +294,22 @@ It is implemented with a number of custom enlive templates.\"
+   (binding [*print-length* 8] (with-out-str (pprint [1 2 3 4 5 6])))
+   "[1 2 3 4 5 6]\n"
+ 
+-  ;; This set of tests isn't that great cause it assumes that the set remains
+-  ;; ordered for printing. This is currently (1.3) true, but no future
+-  ;; guarantees
+-  (binding [*print-length* 1] (with-out-str (pprint #{1 2 3 4 5 6})))
++  (binding [*print-length* 1] (with-out-str (pprint (sorted-set 1 2 3 4 5 6))))
+   "#{1 ...}\n"
+-  (binding [*print-length* 2] (with-out-str (pprint #{1 2 3 4 5 6})))
++  (binding [*print-length* 2] (with-out-str (pprint (sorted-set 1 2 3 4 5 6))))
+   "#{1 2 ...}\n"
+-  (binding [*print-length* 6] (with-out-str (pprint #{1 2 3 4 5 6})))
++  (binding [*print-length* 6] (with-out-str (pprint (sorted-set 1 2 3 4 5 6))))
+   "#{1 2 3 4 5 6}\n"
+-  (binding [*print-length* 8] (with-out-str (pprint #{1 2 3 4 5 6})))
++  (binding [*print-length* 8] (with-out-str (pprint (sorted-set 1 2 3 4 5 6))))
+   "#{1 2 3 4 5 6}\n"
+ 
+-  ;; See above comment and apply to this map :)
+-  (binding [*print-length* 1] (with-out-str (pprint {1 2, 3 4, 5 6, 7 8, 9 10, 11 12})))
++  (binding [*print-length* 1] (with-out-str (pprint (sorted-map 1 2, 3 4, 5 6, 7 8, 9 10, 11 12))))
+   "{1 2, ...}\n"
+-  (binding [*print-length* 2] (with-out-str (pprint {1 2, 3 4, 5 6, 7 8, 9 10, 11 12})))
++  (binding [*print-length* 2] (with-out-str (pprint (sorted-map 1 2, 3 4, 5 6, 7 8, 9 10, 11 12))))
+   "{1 2, 3 4, ...}\n"
+-  (binding [*print-length* 6] (with-out-str (pprint {1 2, 3 4, 5 6, 7 8, 9 10, 11 12})))
++  (binding [*print-length* 6] (with-out-str (pprint (sorted-map 1 2, 3 4, 5 6, 7 8, 9 10, 11 12))))
+   "{1 2, 3 4, 5 6, 7 8, 9 10, 11 12}\n"
+-  (binding [*print-length* 8] (with-out-str (pprint {1 2, 3 4, 5 6, 7 8, 9 10, 11 12})))
++  (binding [*print-length* 8] (with-out-str (pprint (sorted-map 1 2, 3 4, 5 6, 7 8, 9 10, 11 12))))
+   "{1 2, 3 4, 5 6, 7 8, 9 10, 11 12}\n"
+ 
+ 
+diff --git a/test/clojure/test_clojure/sequences.clj b/test/clojure/test_clojure/sequences.clj
+index 404a506..167fb58 100644
+--- a/test/clojure/test_clojure/sequences.clj
++++ b/test/clojure/test_clojure/sequences.clj
+@@ -1114,10 +1114,10 @@
+        [1 2 3 4 5] `(1 2 3 4 5)
+        ;maps
+        [] {:a 1 :b 2}
+-       [:a 1 :b 2] (seq {:a 1 :b 2})
++       [:a 1 :b 2] (seq (sorted-map :a 1 :b 2))
+        [] {[:a :b] 1 :c 2}
+        [:a :b 1 :c 2] (seq {[:a :b] 1 :c 2})
+-       [:a 1 2 :b 3] (seq {:a [1 2] :b 3})
++       [:a 1 2 :b 3] (seq (sorted-map :a [1 2] :b 3))
+        ;Strings
+        [] "12345"
+        [\1 \2 \3 \4 \5] (seq "12345")
+-- 
+1.8.4
+
+
+From c1e8757a97fc682ef797b406fc0d2a83d811bc8a Mon Sep 17 00:00:00 2001
+From: Andy Fingerhut <andy_fingerhut@alum.wustl.edu>
+Date: Sat, 23 Nov 2013 14:58:32 -0800
+Subject: [PATCH 2/2] Change Compiler to use hasheq for case* expressions
+
+Signed-off-by: Andy Fingerhut <andy_fingerhut@alum.wustl.edu>
+---
+ src/jvm/clojure/lang/Compiler.java    | 5 ++---
+ test/clojure/test_clojure/control.clj | 9 ++++++++-
+ 2 files changed, 10 insertions(+), 4 deletions(-)
+
+diff --git a/src/jvm/clojure/lang/Compiler.java b/src/jvm/clojure/lang/Compiler.java
+index c961f2f..9706cfd 100644
+--- a/src/jvm/clojure/lang/Compiler.java
++++ b/src/jvm/clojure/lang/Compiler.java
+@@ -8141,8 +8141,7 @@ public static class CaseExpr implements Expr, MaybePrimitiveExpr{
+ 	final static Type NUMBER_TYPE = Type.getType(Number.class);
+ 	final static Method intValueMethod = Method.getMethod("int intValue()");
+ 
+-	final static Method hashMethod = Method.getMethod("int hash(Object)");
+-	final static Method hashCodeMethod = Method.getMethod("int hashCode()");
++	final static Method hasheqMethod = Method.getMethod("int hasheq(Object)");
+ 	final static Method equivMethod = Method.getMethod("boolean equiv(Object, Object)");
+     final static Keyword compactKey = Keyword.intern(null, "compact");
+     final static Keyword sparseKey = Keyword.intern(null, "sparse");
+@@ -8344,7 +8343,7 @@ public static class CaseExpr implements Expr, MaybePrimitiveExpr{
+ 
+     private void emitExprForHashes(ObjExpr objx, GeneratorAdapter gen){
+         expr.emit(C.EXPRESSION, objx, gen);
+-        gen.invokeStatic(UTIL_TYPE,hashMethod);
++        gen.invokeStatic(UTIL_TYPE,hasheqMethod);
+         emitShiftMask(gen);
+     }
+ 
+diff --git a/test/clojure/test_clojure/control.clj b/test/clojure/test_clojure/control.clj
+index ec4e274..520ae2a 100644
+--- a/test/clojure/test_clojure/control.clj
++++ b/test/clojure/test_clojure/control.clj
+@@ -418,4 +418,11 @@
+       (are [result input] (= result (test-fn input))
+            :piece-of-throw-expr 'throw
+            :piece-of-throw-expr '[RuntimeException. "boom"]
+-           :no-match nil))))
++           :no-match nil)))
++  (testing "test that case uses hasheq"
++    (let [test-fn (fn [x]
++                    (case x
++                      (byte -5) "byte -5"
++                      "other"))]
++      (is (= "other" (test-fn 5)))
++      (is (= "byte -5" (test-fn (byte -5)))))))
+-- 
+1.8.4
+

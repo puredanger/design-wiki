@@ -1,0 +1,184 @@
+From 333942a8375ab9da2a9e3a49b65e3e237d54f2bd Mon Sep 17 00:00:00 2001
+From: Andy Fingerhut <andy_fingerhut@alum.wustl.edu>
+Date: Mon, 28 May 2012 00:57:02 -0700
+Subject: [PATCH] Proof of concept implementation of special form
+ compile-time-let
+
+---
+ src/jvm/clojure/lang/Compiler.java |  146 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 146 insertions(+)
+
+diff --git a/src/jvm/clojure/lang/Compiler.java b/src/jvm/clojure/lang/Compiler.java
+index 0898f07..1811d44 100644
+--- a/src/jvm/clojure/lang/Compiler.java
++++ b/src/jvm/clojure/lang/Compiler.java
+@@ -42,6 +42,7 @@ static final Symbol RECUR = Symbol.intern("recur");
+ static final Symbol IF = Symbol.intern("if");
+ static final Symbol LET = Symbol.intern("let*");
+ static final Symbol LETFN = Symbol.intern("letfn*");
++static final Symbol COMPILE_TIME_LET = Symbol.intern("compile-time-let");
+ static final Symbol DO = Symbol.intern("do");
+ static final Symbol FN = Symbol.intern("fn*");
+ static final Symbol QUOTE = Symbol.intern("quote");
+@@ -106,6 +107,7 @@ static final public IPersistentMap specials = PersistentHashMap.create(
+ 		CASE, new CaseExpr.Parser(),
+ 		LET, new LetExpr.Parser(),
+ 		LETFN, new LetFnExpr.Parser(),
++		COMPILE_TIME_LET, new CompileTimeLetExpr.Parser(),
+ 		DO, new BodyExpr.Parser(),
+ 		FN, null,
+ 		QUOTE, new ConstantExpr.Parser(),
+@@ -5675,6 +5677,150 @@ public static class BodyExpr implements Expr, MaybePrimitiveExpr{
+ 	}
+ }
+ 
++// This is copy of BodyExpr class definition from Compiler.java,
++// modified to implement compile-time-let
++
++public static class CompileTimeLetExpr implements Expr, MaybePrimitiveExpr{
++	PersistentVector exprs;
++
++	public final PersistentVector exprs(){
++		return exprs;
++	}
++
++	public CompileTimeLetExpr(PersistentVector exprs){
++		this.exprs = exprs;
++	}
++
++	static class Parser implements IParser{
++		public Expr parse(C context, Object frms) {
++			ISeq forms = (ISeq) frms;
++			if(Util.equals(RT.first(forms), COMPILE_TIME_LET))
++				forms = RT.next(forms);
++			// Parse compile-time-let bindings
++			if(!(RT.first(forms) instanceof IPersistentVector))
++				throw new IllegalArgumentException("Bad binding form, expected vector");
++			IPersistentVector bindings = (IPersistentVector) RT.first(forms);
++			if((bindings.count() % 2) != 0)
++				throw new IllegalArgumentException("Bad binding form, expected matched symbol expression pairs");
++			IPersistentMap compileTimeBindings = PersistentHashMap.EMPTY;
++			// beginning of code copied-then-modified from LetExpr to process let* bindings
++			for(int i = 0; i < bindings.count(); i += 2)
++				{
++				if(!(bindings.nth(i) instanceof Symbol))
++					throw new IllegalArgumentException(
++							"Bad binding form, expected symbol, got: " + bindings.nth(i));
++				Symbol sym = (Symbol) bindings.nth(i);
++				//System.out.println("CompileTimeLetExpr.parse sym.getName()='" + sym.getName() + "'");
++				if(sym.getNamespace() != null)
++					throw Util.runtimeException("Can't compile-time-let qualified name: " + sym);
++				Object o = resolve(sym);
++				if(o instanceof Var)
++					{
++					if(o == RT.WARN_ON_REFLECTION)
++						{
++						//System.out.println("CompileTimeLetExpr.parse resolve(sym)=RT.WARN_ON_REFLECTION");
++						}
++					else if(o == RT.UNCHECKED_MATH)
++						{
++						//System.out.println("CompileTimeLetExpr.parse resolve(sym)=RT.UNCHECKED_MATH");
++						}
++					else
++						{
++						throw new IllegalArgumentException("compile-time-let binding must be to compiler var, got: " + bindings.nth(i));
++						}
++					}
++				else
++					{
++					throw new IllegalArgumentException(
++						"Bad binding form, expected symbol that resolves to var, got: " + bindings.nth(i));
++					}
++				// TBD: Throw error if the symbol is
++				// not one of the few that are used at
++				// compile time such as
++				// *warn-on-reflection*,
++				// *unchecked-math*, etc?  What is the
++				// complete set of such compile-time
++				// vars?
++				Expr init = analyze(C.EXPRESSION, bindings.nth(i + 1), sym.name);
++				Object val = init.eval();
++				//System.out.println("val.getClass()='" + val.getClass() + "'  val='" + val.toString() + "'");
++				// TBD: Somehow check that init has a
++				// compile-time constant value?
++				// TBD: Should we try to verify that
++				// the value is of the proper type for
++				// the symbol it is bound to?
++				// Probably not.  Let that be checked
++				// if/when the value is used.
++				compileTimeBindings = compileTimeBindings.assoc((Var) o, val);
++				}
++			// end of code copied-then-modified from LetExpr to process let* bindings
++			Var.pushThreadBindings(compileTimeBindings);
++
++			forms = RT.next(forms);
++			PersistentVector exprs = PersistentVector.EMPTY;
++			for(; forms != null; forms = forms.next())
++				{
++				Expr e = (context != C.EVAL &&
++				          (context == C.STATEMENT || forms.next() != null)) ?
++				         analyze(C.STATEMENT, forms.first())
++				                                                            :
++				         analyze(context, forms.first());
++				exprs = exprs.cons(e);
++				}
++			if(exprs.count() == 0)
++				exprs = exprs.cons(NIL_EXPR);
++			Var.popThreadBindings();
++			return new CompileTimeLetExpr(exprs);
++		}
++	}
++
++	public Object eval() {
++		Object ret = null;
++		for(Object o : exprs)
++			{
++			Expr e = (Expr) o;
++			ret = e.eval();
++			}
++		return ret;
++	}
++
++	public boolean canEmitPrimitive(){
++		return lastExpr() instanceof MaybePrimitiveExpr && ((MaybePrimitiveExpr)lastExpr()).canEmitPrimitive();
++	}
++
++	public void emitUnboxed(C context, ObjExpr objx, GeneratorAdapter gen){
++		for(int i = 0; i < exprs.count() - 1; i++)
++			{
++			Expr e = (Expr) exprs.nth(i);
++			e.emit(C.STATEMENT, objx, gen);
++			}
++		MaybePrimitiveExpr last = (MaybePrimitiveExpr) exprs.nth(exprs.count() - 1);
++		last.emitUnboxed(context, objx, gen);
++	}
++
++	public void emit(C context, ObjExpr objx, GeneratorAdapter gen){
++		for(int i = 0; i < exprs.count() - 1; i++)
++			{
++			Expr e = (Expr) exprs.nth(i);
++			e.emit(C.STATEMENT, objx, gen);
++			}
++		Expr last = (Expr) exprs.nth(exprs.count() - 1);
++		last.emit(context, objx, gen);
++	}
++
++	public boolean hasJavaClass() {
++		return lastExpr().hasJavaClass();
++	}
++
++	public Class getJavaClass() {
++		return lastExpr().getJavaClass();
++	}
++
++	private Expr lastExpr(){
++		return (Expr) exprs.nth(exprs.count() - 1);
++	}
++}
++
+ public static class BindingInit{
+ 	LocalBinding binding;
+ 	Expr init;
+-- 
+1.7.10
+

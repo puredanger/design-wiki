@@ -1,0 +1,125 @@
+/* Search Containers */
+#space-search {
+    float: right;
+}
+
+#space-search-title-bar {
+    margin: 0.4em 10px 0;
+}
+
+#space-search-title-bar h2 {
+    margin-top: 0;
+    display: inline;
+    color: #000;
+}
+
+#space-search-query.placeholded {
+    color: #666;
+}
+
+#space-search-form {
+    float: left;
+}
+
+.loading-throbber {
+    float: left;
+    width: 24px;
+    height: 24px;
+    padding-right: 5px;
+}
+
+/* Search results */
+#space-search-result {
+    min-height: 300px;
+    z-index: 0;
+}
+
+#space-list, .space-item ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#space-list ul.list-container {
+    margin: 10px;
+}
+
+#space-list a {
+    text-decoration: none;
+}
+
+#space-list a:hover {
+    text-decoration: underline;
+}
+
+#space-list .space-list-item .entity-icon img {
+    width: 32px;
+    height: 32px;
+}
+
+/* Define column widths */
+.space-list-item .space-name {
+    width: 25%;
+}
+
+.space-list-item .space-logo {
+    width: 25px;
+}
+
+.space-list-item .space-labels {
+    width: 25%;
+}
+
+/* Space Names */
+.space-list-item .space-name a {
+    font-weight: bold;
+}
+
+/* Space labels */
+.space-list-item .space-labels .space-label,
+.space-list-item .space-labels .space-label-ellipsis {
+    display: inline;
+}
+
+.space-list-item .space-labels .space-label span {
+    color: #003366;
+    background-color: #d0dfee;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.space-list-item .space-labels .space-label span:hover {
+    border: 1px solid #326CA6;
+}
+
+.space-list-item .space-labels .space-label span,
+.space-list-item .space-labels .space-label-ellipsis span{
+    padding: 2px 5px;
+}
+
+/* Pagination */
+div.pagination {
+    clear: both;
+}
+
+.no-results {
+    text-align: center;
+}
+
+/* Help */
+#space-directory-help {
+    margin: 0 0 0 11em;
+    padding: 3px 0 0 5px;
+    color: #666666;
+}
+
+/* Errors */
+#aui-message-bar {
+    margin-top: 15px;
+}
+
+.icon-create-space-bw span {
+    background: url("../../../images/icons/add_space_bw_16.png") no-repeat 0 50%;
+}

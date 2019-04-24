@@ -1,0 +1,955 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Macro Grammars - Clojure Design - Clojure Development</title>
+
+        
+
+                        
+    
+
+            <meta http-equiv="X-UA-Compatible" content="IE=EDGE">
+<meta charset="UTF-8">
+<!-- Deprecated since 3.4. To be removed in a future version of Confluence; use AJS.Confluence.getContextPath() -->
+<meta id="confluence-context-path" name="confluence-context-path" content="">
+<meta id="confluence-base-url" name="confluence-base-url" content="https://dev.clojure.org">
+
+<meta id="atlassian-token" name="atlassian-token" content="30041c830a95ce9c95d0b58cb377def6b96aa6d2">
+
+<meta id="confluence-space-key" name="confluence-space-key" content="design">
+<script type="text/javascript">
+    // Deprecated global variables. To be removed in a future version of Confluence.
+    var contextPath = '';
+</script>
+
+    
+
+<!-- include system css resources -->
+
+
+    <link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/55/_/download/superbatch/css/batch.css" media="all">
+<!--[if lt IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/_/download/superbatch/css/batch.css?conditionalComment=lt+IE+9" media="all">
+<![endif]-->
+<!--[if IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/_/download/superbatch/css/batch.css?conditionalComment=IE+9" media="all">
+<![endif]-->
+<!--[if lte IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/_/download/superbatch/css/batch.css?conditionalComment=lte+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/55/_/download/superbatch/css/batch-media=print.css" media="print">
+<!--[if lt IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/_/download/contextbatch/css/page/batch.css?conditionalComment=lt+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/_/download/contextbatch/css/page/batch.css" media="all">
+<!--[if lt IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/_/download/contextbatch/css/viewcontent,main/batch.css?conditionalComment=lt+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/_/download/contextbatch/css/viewcontent,main/batch.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.6/_/download/batch/com.atlassian.confluence.ext.newcode-macro-plugin-syntaxhighlighter/com.atlassian.confluence.ext.newcode-macro-plugin-syntaxhighlighter.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.6/_/download/batch/com.atlassian.confluence.ext.newcode-macro-plugin-sh-theme-confluence/com.atlassian.confluence.ext.newcode-macro-plugin-sh-theme-confluence.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.1/_/download/batch/com.atlassian.confluence.plugins.pagetree-pagetree-resources/com.atlassian.confluence.plugins.pagetree-pagetree-resources.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/3/_/styles/colors-spaceKey=design.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.5/_/download/resources/com.atlassian.confluence.plugins.doctheme-documentation/default-theme.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.5/_/download/resources/com.atlassian.confluence.plugins.doctheme-documentation/splitter.css" media="all">
+
+<!-- end system css resources -->
+
+    <meta name="confluence-request-time" content="1556129004809">
+            <meta name="ajs-page-id" content="12845194">
+            <meta name="ajs-parent-page-id" content="12845098">
+            <meta name="ajs-space-key" content="design">
+            <meta name="ajs-space-name" content="Clojure Design">
+            <meta name="ajs-page-title" content="Macro Grammars">
+            <meta name="ajs-parent-page-title" content="Release.zFuture">
+            <meta name="ajs-from-page-title" content="">
+            <meta name="ajs-context-path" content="">
+            <meta name="ajs-version-number" content="4.0">
+            <meta name="ajs-build-number" content="3047">
+            <meta name="ajs-remote-user" content="">
+            <meta name="ajs-static-resource-url-prefix" content="/s/en_GB/3047/3/_">
+            <meta name="ajs-global-settings-attachment-max-size" content="10485760">
+            <meta name="ajs-user-locale" content="en_GB">
+            <meta name="ajs-enabled-dark-features" content="">
+            <meta name="ajs-atl-token" content="30041c830a95ce9c95d0b58cb377def6b96aa6d2">
+            
+            <meta name="ajs-keyboardshortcut-hash" content="7b95af54c6deada096af1f28fdd0f413">
+            <meta name="ajs-use-keyboard-shortcuts" content="true">
+    <!-- Deprecated since 3.4. To be removed in a future version of Confluence; use atl.header -->
+        
+            <script type="text/x-template" title="share-content-popup">
+    <form action="#" method="post" class="aui share-content-popup">
+        <fieldset>
+            <label for="users">User name or email</label>
+            <div class="autocomplete-user-target">
+                <input class="text autocomplete-sharepage" id="users" data-max="10" data-dropdown-target=".autocomplete-user-target" data-none-message="No matching user or email found"/>
+            </div>
+            <ol class="recipients">
+            </ol>
+            <div><label for="note">Note</label></div>
+            <textarea class="textarea" id="note" placeholder="Add an optional note"/>
+        </fieldset>
+        <div class="button-panel">
+            <div class="progress-messages-icon"></div>
+            <div class="progress-messages">
+            </div>
+            <input class="button submit" type="submit" value="Share" disabled/>
+            <a class="close-dialog" href="#">Cancel</a>
+        </div>
+    </form>
+</script>
+
+<script type="text/x-template" title="share-content-popup-recipient-username">
+    <li data-username="{username}" style="display: none">
+        <span>
+            <img src="{thumbnailLink.href}" title="{title}">
+            <span>{title}</span>
+            <span class="remove-recipient"/>
+        </span>
+    </li>
+</script>
+
+<script type="text/x-template" title="share-content-popup-recipient-email">
+    <li data-email="{email}" style="display: none">
+        <span>
+            <img src="{icon}" title="{email}">
+            <span>{email}</span>
+            <span class="remove-recipient"/>
+        </span>
+    </li>
+</script>
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="icon" type="image/png" href="../../s/en_GB/3047/3/_/images/logo/confluence_16.png">
+
+<link rel="search" type="application/opensearchdescription+xml" href="../../opensearch/osd.action.xml" title="Clojure Development"/>
+
+        <!-- include system javascript resources -->
+                        
+    
+    <script type="text/javascript" src="../../s/en_GB/3047/3/55/_/download/superbatch/js/batch.js" ></script>
+<!--[if lte IE 8]>
+<script type="text/javascript" src="/s/en_GB/3047/3/55/_/download/superbatch/js/batch.js?conditionalComment=lte+IE+8" ></script>
+<![endif]-->
+<script type="text/javascript" src="../../s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/_/download/contextbatch/js/page/batch.js" ></script>
+<script type="text/javascript" src="../../s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/_/download/contextbatch/js/viewcontent,main/batch.js" ></script>
+<script type="text/javascript" src="../../s/en_GB/3047/3/2.0.6/_/download/batch/com.atlassian.confluence.ext.newcode-macro-plugin-syntaxhighlighter/com.atlassian.confluence.ext.newcode-macro-plugin-syntaxhighlighter.js" ></script>
+<script type="text/javascript" src="../../s/en_GB/3047/3/2.0.6/_/download/batch/com.atlassian.confluence.ext.newcode-macro-plugin-syntaxhighlighter-brushes/com.atlassian.confluence.ext.newcode-macro-plugin-syntaxhighlighter-brushes.js" ></script>
+<script type="text/javascript" src="../../s/en_GB/3047/3/2.0.1/_/download/batch/com.atlassian.confluence.plugins.pagetree-pagetree-resources/com.atlassian.confluence.plugins.pagetree-pagetree-resources.js" ></script>
+
+    
+    <!-- end system javascript resources -->
+
+    
+
+    
+    <link rel="canonical" href="Macro+Grammars.html">
+    <link rel="shortlink" href="Macro+Grammars.html">
+    <meta name="wikilink" content="[design:Macro Grammars]">
+    <meta name="page-version" content="11">
+
+</head>
+
+<body             onload="placeFocus()"
+     id="com-atlassian-confluence" class="theme-documentation ">
+<div id="full-height-container">
+    <div id="header-precursor">
+        
+        
+                </div>
+
+<div id="header" class="sectionbottom ">
+        <form id="quick-search" class="quick-search" method="get" action="../../dosearchsite.action.html">
+                <fieldset>
+            <input type="hidden" name="spaceSearch" value="false"/>
+        </fieldset>
+        <fieldset>
+            <legend>Quick Search</legend>
+            <input class="quick-search-query" id="quick-search-query" type="text" accessKey="search-pages-action.accesskey" autocomplete="off" name="queryString" size="25"/>
+            <input class="quick-search-submit" id="quick-search-submit" type="submit"  value="Search Confluence" />
+            <div class="aui-dd-parent quick-nav-drop-down"><!-- Quick nav appears here --></div>
+        </fieldset>
+        <fieldset class="hidden parameters">
+            <input type="hidden" id="quickNavEnabled" value="true" />
+                    </fieldset>
+    </form>
+
+    <ul id="header-menu-bar" class="ajs-menu-bar">
+                    
+        
+            <li class="normal ajs-menu-item">
+        <a id="browse-menu-link" class="browse trigger ajs-menu-title" href="#"><span><span>Browse</span></span></a>         <div class="assistive ajs-drop-down">
+                        <ul  id="browse-menu-link-leading"                 class="section-leading first">
+                                        <li>
+    
+        
+    
+    <a  id="space-pages-link" href="../../pages/recentlyupdated.action-key=design.html"  class=""   title="Browse pages in the Clojure Design space">
+                   <span>Pages</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-blogposts-link" href="../../pages/viewrecentblogposts.action-key=design.html"  class=""   title="Browse blogs in the Clojure Design space">
+                   <span>Blog</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-labels-link" href="../../labels/listlabels-heatmap.action-key=design.html"  class=""   title="Browse labels in the Clojure Design space">
+                   <span>Labels</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-attachments-link" href="../../spaces/listattachmentsforspace.action-key=design.html"  class=""   title="Browse attachments in the Clojure Design space">
+                   <span>Attachments</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-mail-link" href="../../spaces/viewmailarchive.action-key=design.html"  class=""   title="Browse mail in the Clojure Design space">
+                   <span>Mail</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-advanced-link" href="../../spaces/viewspacesummary.action-key=design.html"  class=""   title="Browse additional space functions in the Clojure Design space">
+                   <span>Advanced</span></a>        </li>
+                            </ul>
+                        <ul  id="browse-menu-link-global"                 class="section-global">
+                                        <li>
+    
+        
+    
+    <a  id="whats-new-menu-link" href="http://docs.atlassian.com/confluence/docs-40/whatsnew/iframe"  class=""   title="">
+                   <span>What’s New</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-directory-link" href="../../spacedirectory/view.action.html"  class=""   title="Browse the Confluence space directory">
+                   <span>Space Directory</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="feed-builder-link" href="../../dashboard/configurerssfeed.action.html"  class=""   title="Create your custom RSS feed.">
+                   <span>Feed Builder</span></a>        </li>
+                                        <li>
+    
+            
+    
+    <a  id="keyboard-shortcuts-link" href="#"  class=""   title="View available keyboard shortcuts">
+                   <span>Keyboard Shortcuts</span></a>        </li>
+                                        <li>
+    
+            
+    
+    <a  id="gadget-directory-link" href="#"  class="user-item administration-link"   title="Browse gadgets provided by Confluence">
+                   <span>Confluence Gadgets</span></a>        </li>
+                            </ul>
+                    </div>
+    </li>
+        
+                                                         <li class="ajs-menu-item normal">
+        
+        
+    
+    <a  id="login-link" href="../../login.action-os_destination=-display-design-Macro+Grammars.html"  class="user-item login-link"   title="">
+                   <span>Log In</span></a>        </li>
+                            <li class="ajs-menu-item normal">
+    
+        
+    
+    <a  id="signup-link" href="../../signup.action.html"  class="user-item signup-link"   title="">
+                   <span>Sign Up</span></a>        </li>
+                                <li class="normal ajs-menu-item">
+            <div id="splitter-button" class="hidden" title="Show or hide sidebar"></div>
+        </li>
+
+    </ul>
+    
+    
+    <ol id="breadcrumbs">
+                    
+                        
+        <li class="first" >
+                                    <span><a href="../../dashboard.action.html" title="Go to Dashboard">Dashboard</a></span>
+                </li>
+                    
+                
+        <li>
+                                    <span><a href="Home-jsessionid=3A56E29DA520B75101350BA4484B9990.html">Clojure Design</a></span>
+                </li>
+                                        <li id="ellipsis" title="Show all breadcrumbs"><span><strong>&#8230;</strong></span></li>
+                                    
+                
+        <li class="hidden-crumb" >
+                                    <span><a href="Home.html">Home</a></span>
+                </li>
+                                
+                
+        <li class="hidden-crumb" >
+                                    <span><a href="Release+Planning.html">Release Planning</a></span>
+                </li>
+                                
+                
+        <li class="hidden-crumb" >
+                                    <span><a href="Release.zFuture.html">Release.zFuture</a></span>
+                </li>
+                    
+                
+        <li>
+                                    <span><a href="Macro+Grammars.html">Macro Grammars</a></span>
+                </li>
+        </ol>
+
+</div>
+
+    <div id="splitter">
+    <div id="splitter-sidebar" >
+        
+
+                    
+        
+    
+
+<div class="plugin_pagetree">
+
+                <div id="pagetreesearch">
+            <form method="POST" action="../../dosearchsite.action-searchQuery.queryString=&amp;searchQuery.spaceKey=conf_all.html" name="pagetreesearchform">
+                                    <input type="hidden" name="ancestorId" value="458775">
+                                <input type="hidden" name="spaceKey" value="design">
+                <input type="text"  size="20" name="queryString">
+                <input type="submit" value="Search">
+            </form>
+        </div>
+    
+        
+    <ul class="plugin_pagetree_children_list plugin_pagetree_children_list_noleftspace">
+        <div class="plugin_pagetree_children">
+        </div>
+    </ul>
+
+    <fieldset class="hidden">
+        <input type="hidden" name="treeId" value="">
+        <input type="hidden" name="treeRequestId" value="/plugins/pagetree/naturalchildren.action?decorator=none&amp;excerpt=false&amp;sort=position&amp;reverse=false&amp;disableLinks=false">
+        <input type="hidden" name="treePageId" value="12845194">
+
+        <input type="hidden" name="noRoot" value="false">
+        <input type="hidden" name="rootPageId" value="458775">
+
+        <input type="hidden" name="rootPage" value="">
+        <input type="hidden" name="startDepth" value="0">
+        <input type="hidden" name="spaceKey" value="design" >
+
+        <input type="hidden" name="i18n-pagetree.loading" value="Loading...">
+        <input type="hidden" name="i18n-pagetree.error.permission" value="Unable to load page tree. It seems that you do not have permission to view the root page.">
+        <input type="hidden" name="i18n-pagetree.eeror.general" value="There was a problem retrieving the page tree. Please check the server log file for more information.">
+        <input type="hidden" name="loginUrl" value="/login.action?os_destination=%2Fdisplay%2Fdesign%2FMacro%2BGrammars">
+
+                <fieldset class="hidden">
+                                                <input type="hidden" name="ancestorId" value="12845098">
+                                    <input type="hidden" name="ancestorId" value="5767475">
+                                    <input type="hidden" name="ancestorId" value="458775">
+                                    </fieldset>
+    </fieldset>
+</div>
+
+
+
+            </div>
+    <div id="splitter-content">
+
+                    <script type="text/javascript" src="../../s/en_GB/3047/3/2.0.5/_/download/resources/com.atlassian.confluence.plugins.doctheme-resources/doc-theme.js"></script>
+    
+            
+    
+<div id="main" >
+    <div id="main-header">
+	    
+	    
+    <div id="navigation" class="content-navigation view">
+                    <ul class="ajs-menu-bar">
+                                
+                        
+            <li class="normal ajs-menu-item">
+        <a id="action-menu-link" class="action trigger ajs-menu-title" href="#"><span><span>Tools</span></span></a>         <div class="assistive ajs-drop-down">
+                        <ul  id="action-menu-link-primary"                 class="section-primary first">
+                                        <li>
+    
+        
+    
+    <a  id="view-attachments-link" href="../../pages/viewpageattachments.action-pageId=12845194.html"  class="action-view-attachments"  accessKey="a"  title="View Attachments">
+                   <span><u>A</u>ttachments (0)</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="action-view-history-link" href="../../pages/viewpreviousversions.action-pageId=12845194.html"  class="action-view-history"   title="">
+                   <span>Page History</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="action-page-permissions-link" href="../../pages/viewinfo.action-pageId=12845194.html"  class="action-page-permissions"   title="Edit restrictions">
+                   <span>Restrictions</span></a>        </li>
+                            </ul>
+                        <ul  id="action-menu-link-secondary"                 class="section-secondary">
+                                        <li>
+    
+        
+    
+    <a  id="view-page-info-link" href="../../pages/viewinfo.action-pageId=12845194.html"  class="action-view-info"   title="">
+                   <span>Info</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="link-to-page-link" href="../../pages/viewinfo.action-pageId=12845194.html"  class=""   title="Link to this Page">
+                   <span>Link to this Page&hellip;</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="view-in-hierarchy-link" href="../../pages/listpages-dirview.action-key=design&amp;openId=12845194.html#selectedPageInHierarchy"  class=""   title="">
+                   <span>View in Hierarchy</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="action-view-source-link" href="../../plugins/viewsource/viewpagesrc.action-pageId=12845194.html"  class="action-view-source popup-link"   title="">
+                   <span>View Source</span></a>        </li>
+                            </ul>
+                    </div>
+    </li>
+            </ul>
+    </div>
+
+	    
+	    <h1 id="title-heading" class="pagetitle">
+	        	            <a href="Home-jsessionid=3A56E29DA520B75101350BA4484B9990.html"><img class="logo global custom" src="../../download/attachments/131074/global.logo.png" alt=""></a>	        	
+			<span id="title-text">
+							            <a href="Macro+Grammars.html">Macro Grammars</a>
+    						</span>
+	    </h1>
+	</div>
+
+    
+
+    
+    
+    
+    
+    
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+        
+    
+    
+                    
+    
+
+    
+
+
+<div id="content" class="page view">
+    
+
+
+
+                
+<script type="text/x-template" title="movePageDialog">
+    <div class="row information">
+        <div class="inner">
+            <div class="element">
+                Specify the new parent page for this page and its children by space and title.
+            </div>
+        </div>
+    </div>
+    <div class="form">
+        <fieldset>
+                
+
+    <legend class="assistive"><span>Change the Parent Page to a Known Page</span></legend>
+            <div class="row">
+                <label for="new-space">New space:</label>
+                <div class="value new-space-value">
+                    <input id="new-space-key" name="new-space-key" type="hidden" value="design">
+                                            <span class="space-input">
+                            <input id="new-space" name="new-space" value="Clojure Design" disabled="disabled">
+                        </span>
+                        <span class="description warning">You cannot move this page to another space because you do not have permission to remove it from this space.</span>
+                                        <div class="new-space-dropdown aui-dd-parent autocomplete"></div>
+                </div>
+            </div>
+            <div class="row">
+                <label for="new-parent-page">New parent page:</label>
+                <div class="value new-parent-page-value">
+                    <span class="page-input">
+                        <input id="new-parent-page" name="new-parent-page" value="Release.zFuture">
+                    </span>
+                    <span class="description">Start typing a page title to see a list of suggestions.</span>
+                    <div class="new-parent-page-dropdown aui-dd-parent autocomplete"></div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <div class="location-info">
+        <div class="row">
+            <label>Current location:</label>
+            <div class="value breadcrumbs-container">
+                <div class="breadcrumbs-line">
+                    <ul id="current-parent-breadcrumbs" class="breadcrumbs">
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <label>New location:</label>
+            <div class="value breadcrumbs-container">
+                <div class="breadcrumbs-line">
+                    <ul id="new-parent-breadcrumbs" class="breadcrumbs">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/x-template" title="movePageSearchPanel">
+    <div class="row information">
+        <div class="inner">
+            <div class="element">
+                Search for and select the new parent page for this page and its children.
+            </div>
+        </div>
+    </div>
+    <div id="move-page-search-container" class="row">
+        <div class="search-form">
+            <fieldset>
+                    
+
+    <legend class="assistive"><span>Search for a New Parent Page</span></legend>
+                    
+
+    <label  for="move-page-search-query" class="assistive">Search keywords</label>
+                <input class="search-query" id="move-page-search-query">
+                    
+
+    <label  for="move-page-search-space" class="assistive">Search in space</label>
+                                    <select id="move-page-search-space" class="search-space" disabled="disabled">
+                        <option value="design" selected="selected">Clojure Design</option>
+                    </select>
+                                <input type="button" value="Search">
+                                    <div class="description warning">You cannot move this page to another space because you do not have permission to remove it from this space.</div>
+                            </fieldset>
+        </div>
+        <div class="search-results">
+        </div>
+    </div>
+</script>
+<script type="text/x-template" title="searchResultsGrid">
+    <table>
+        <thead>
+            <tr class="header">
+                <th class="search-result-title">Page Title</th>
+                <th class="search-result-space">Space</th>
+                <th class="search-result-date">Updated</th>
+            </tr>
+        </thead>
+    </table>
+</script>
+<script type="text/x-template" title="searchResultsGridCount">
+    <p class="search-result-count">{0}</p>
+</script>
+<script type="text/x-template" title="searchResultsGridRow">
+    <tr class="search-result">
+        <th class="search-result-title"><a href="{1}" class="content-type-{2}"><span>{0}</span></a></th>
+        <td class="search-result-space"><a class="space" href="/display/{4}/" title="{3}">{3}</a></td>
+        <td class="search-result-date"><span class="date" title="{6}">{5}</span></td>
+    </tr>
+</script><!-- Start restrictions section -->
+<script type="text/x-template" title="page-permissions-div">
+<div id="page-permissions-div">
+    <div id="page-permissions-editor-form">
+
+                <div id="page-permissions-error-div" class="hidden">
+            <a href="#" id="permissions-error-div-close">Ok</a>
+            <div></div>
+        </div>
+
+                <div id="page-permissions-type-radios" class="page-permissions-label-rows">
+            <div>
+                <input id="restrictViewRadio" type="radio" checked="checked" name="pagePermissionTypeRadio" value="view"/>
+                <label for="restrictViewRadio">Restrict viewing of this page</label>
+                <input id="restrictEditRadio" type="radio" name="pagePermissionTypeRadio" value="edit"/>
+                <label for="restrictEditRadio">Restrict editing of this page</label>
+            </div>
+        </div>
+        <div id="page-permissions-input" class="page-permissions-label-rows">
+            <div class="page-permissions-label">To:</div>
+            <div id="page-permissions-chooser-box">
+                                <span id="page-permissions-choose-user" class="ajs-button">
+                    
+
+
+
+    
+
+
+
+<a href="#" id='userpicker-popup-link-image' onClick="var picker = window.open('/spaces/openuserpicker.action?key=design&amp;startIndex=0&amp;onPopupSubmit=AJS.PagePermissions.addUserPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=700,height=680,scrollbars=yes'); picker.focus(); return false;"><img src="/s/en_GB/3047/3/_/images/icons/user_16.gif" height=16 width=16 border=0 align="absmiddle"  title="Choose users" /></a>
+<a href="#" id='userpicker-popup-link-text' onClick="var picker = window.open('/spaces/openuserpicker.action?key=design&amp;startIndex=0&amp;onPopupSubmit=AJS.PagePermissions.addUserPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=700,height=680,scrollbars=yes'); picker.focus(); return false;">Person...</a>
+
+
+                </span>
+                <span id="page-permissions-choose-group" class="ajs-button">
+                    
+
+
+
+    
+
+ 
+
+<a href="#" id='grouppicker-popup-link-image' onClick="var picker = window.open('/spaces/opengrouppicker.action?key=design&amp;startIndex=0&amp;actionName=dosearchgroups.action&amp;onPopupSubmit=AJS.PagePermissions.addGroupPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=580,height=550,scrollbars=yes'); picker.focus(); return false;"><img src="/s/en_GB/3047/3/_/images/icons/group_16.gif" height=16 width=16 border=0 align="absmiddle"  title="Choose groups" /></a>
+<a href="#" id='grouppicker-popup-link-text' onClick="var picker = window.open('/spaces/opengrouppicker.action?key=design&amp;startIndex=0&amp;actionName=dosearchgroups.action&amp;onPopupSubmit=AJS.PagePermissions.addGroupPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=580,height=550,scrollbars=yes'); picker.focus(); return false;">Group...</a>
+
+
+                </span>
+            </div>
+            <div id="page-permissions-input-box">
+                <input type="text" id="page-permissions-names-input" name="permissionNames"
+                    placeholder="Enter user or group name" class="autocomplete-user"
+                    data-max="10" data-none-message="No matches"
+                    data-target="#page-permissions-names-hidden" data-template="{username}"
+                    data-dropdown-target="#page-perms-name-dropdown-wrapper" data-resize-to-input="true"
+                    size="30"/>
+                <input
+    type="hidden"
+                            id="page-permissions-names-hidden"           />                <img height="16px" width="1px" src="/s/en_GB/3047/3/_/images/border/spacer.gif"/>
+                <input type="button" id="add-typed-names" value="Restrict">
+                <div id="page-perms-name-dropdown-wrapper" class="aui-dd-parent autocomplete"></div>
+            </div>
+        </div>
+    </div>
+    <div id="page-permissions-tables">
+        <div id="page-permissions-table-div">
+                        <table id="page-permissions-table" class="page-permissions-table">
+                <tr id="page-permissions-no-views" class="marker-row">
+                    <td colspan="3" class="page-permissions-marker-cell"><span>No view restrictions are defined for this page</span></td>
+                </tr>
+                <tr id="page-permissions-no-edits" class="marker-row">
+                    <td colspan="3" class="page-permissions-marker-cell"><span>No edit restrictions are defined for this page</span></td>
+                </tr>
+            </table>
+        </div>
+        <div id="page-inherited-permissions-table-div" class="hidden">
+            <span id="page-inherited-permissions-table-desc">
+                <a class="icon twisty-closed">Show/Hide</a>
+                <a id="toggle-inherited-permissions" title="Click to see inherited restrictions">This page has restricted parent pages. It can only be seen by users who can see those parent pages.</a>
+            </span>
+            <div id="page-inherited-permissions-tables" class="hidden page-inheritance-togglable"></div>
+        </div>
+    </div>
+</div>
+</script>
+
+<!-- End restrictions section -->
+
+        
+    
+    
+        <fieldset class="hidden parameters">
+            <input type="hidden" title="parentPageId" value="12845098">
+        </fieldset>
+
+        
+                            
+    
+
+                    
+
+        
+        <a href="#page-metadata-end" class="assistive">Skip to end of metadata</a>
+<div id="page-metadata-start" class="assistive"></div>
+
+    <div class="page-metadata">
+        <ul>
+                            <li class="page-metadata-item noprint">
+    
+            
+    
+    <a  id="content-metadata-page-restrictions" href="#"  class="page-metadata-icon page-restrictions hidden"   title="Page restrictions apply. Click the lock icon to view or edit the restriction.">
+                   <span>Page restrictions apply</span></a>        </li>
+                        <li class="page-metadata-modification-info">
+                                    Added by <a href="../../login.action-os_destination=-display-~alexmiller.html"
+                          class="url fn"
+                   >Alex Miller</a>, last edited by <a href="../../login.action-os_destination=-display-~alexmiller.html"
+                          class="url fn"
+                   >Alex Miller</a> on Feb 15, 2016
+                                                                <span class="noprint">&nbsp;(<a id="view-change-link" href="../../pages/diffpages.action-pageId=12845194&amp;originalId=12845265.html">view change</a>)</span>
+                                                </li>
+                    </ul>
+                </div>
+
+
+<a href="#page-metadata-start" class="assistive">Go to start of metadata</a>
+<div id="page-metadata-end" class="assistive"></div>
+        
+        <fieldset class="hidden parameters">
+                        <input type="hidden" title="browsePageTreeMode" value="view">
+        </fieldset>
+
+        <div class="wiki-content">
+                           <h2 id="MacroGrammars-Problem">Problem</h2><p>Macros are compiler extensions (really, mini compilers themselves) that translate from a Clojure-like syntax (s-expressions) into Clojure syntax (s-expressions). Most macros contains aspects of these stages:</p><ol><li>Parsing and validating the input syntax structure</li><li>Transforming the structure</li><li>Outputting new structure (often by quoting or syntax quoting new forms)</li></ol><p>The first step is effectively a hand-written parser. This leads to the following problems with macro definitions:</p><ul><li>Validation is usually incomplete, checking only for the most common syntactic errors</li><li>Error messages occur inside the macro rather than inside the user's original syntax</li><li>Syntax documentation is hand-written and can thus be at odds with the parser</li></ul><p>Due to the above problems, macros are often hard to write and hard to maintain, especially when more attention is paid to validation and error messages.</p><h2 id="MacroGrammars-Proposal">Proposal</h2><p>Instead, define a standard grammar to describe the input syntax for a grammar and a generic parser facility that can validate the input according to the grammar. In the case of an error, the parser should automatically produce an error message describing what was provided as input, what the grammar expected, and what was found instead.</p><p>The facility provided for macro writers should be similar in spirit to the existing destructure macro - that is, given an input form and a grammar: produce a binding set. In the case of a failure, this function should provide either an error message and/or data describing where the parse failed.</p><h2 id="MacroGrammars-Whatdogrammarsneedtodescribe">What do grammars need to describe?</h2><p>Grammars are conceptually similar to a regex. Like regexes, the grammar should describe both the macro structure to parse (&quot;is this valid?&quot;) and also capture values as the parsing occurs for later use.</p><p>Additionally, we wish to produce (as automatically as possible) informative and useful error messages. Some extra information may need to be provided to assist.</p><ul><li>Terminals - keywords, symbols, strings (literal or regex?), characters, numbers, booleans, vectors, sets, maps, lists, sequentials</li><li>Composition<ul><li><span style="font-size: 10.0pt;line-height: 13.0pt;">concatenation</span></li><li><span style="font-size: 10.0pt;line-height: 13.0pt;">alternation</span></li><li><span style="font-size: 10.0pt;line-height: 13.0pt;">optional (0 or 1)</span></li><li><span style="font-size: 10.0pt;line-height: 13.0pt;">one or more</span></li><li><span style="font-size: 10.0pt;line-height: 13.0pt;">zero or more</span></li><li><span style="font-size: 10.0pt;line-height: 13.0pt;">repeat - fixed number in any order</span></li><li><span style="font-size: 10.0pt;line-height: 13.0pt;">negative lookahead (NOT this branch)</span></li></ul></li><li><span style="font-size: 10.0pt;line-height: 13.0pt;">Capture</span><ul><li><span style="font-size: 10.0pt;line-height: 13.0pt;">mark beginnning</span></li><li><span style="font-size: 10.0pt;line-height: 13.0pt;">mark ending</span></li><li><span style="font-size: 10.0pt;line-height: 13.0pt;">create new binding</span></li><li><span style="font-size: 10.0pt;line-height: 13.0pt;">update existing binding</span></li></ul></li><li><span style="font-size: 10.0pt;line-height: 13.0pt;">Error message production</span><ul><li><span style="font-size: 10.0pt;line-height: 13.0pt;">user-friendly rule names (for use in errors)</span></li><li>custom validation and errors (for when that's needed)</li></ul></li></ul><h3 id="MacroGrammars-Possibleparsers"><span style="font-size: 10.0pt;line-height: 13.0pt;">Possible parsers</span></h3><p>Questions to consider:</p><ul><li>What are the dependency constraints?</li><li>What are the parsing capabilities?</li><li>What are the capture capabilities?</li><li>What are the error messages like when errors occur? Are there ways to customize?</li><li>Are grammars composable? Nameable?</li><li>Performance? (not a key driver, but worst case may be important)</li></ul><p>Parsers:</p><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh"> </th><th class="confluenceTh">error-test</th><th class="confluenceTh"><a href="https://github.com/jclaggett/seqex" class="external-link" rel="nofollow">seqex</a></th><th class="confluenceTh"><a href="https://github.com/Engelberg/instaparse" class="external-link" rel="nofollow">Instaparse</a></th></tr><tr><td class="confluenceTd">Deps</td><td class="confluenceTd"><span>no external</span><br /><span>c.string/replace</span><br /><span><a href="http://c.set/union" class="external-link" rel="nofollow">c.set/union</a></span></td><td class="confluenceTd"><span>no external</span><br /><span>c.string/join</span><br /><span><a href="http://c.set/union" class="external-link" rel="nofollow">c.set/union</a>, difference, intersection, subset? </span></td><td class="confluenceTd"><span>no external</span><br /><span>c.string/replace, join</span></td></tr><tr><td class="confluenceTd">Parsing</td><td class="confluenceTd">all above</td><td class="confluenceTd"><span>all above</span></td><td class="confluenceTd">most of above, but in terms of string matching at the bottom, not Clojure forms</td></tr><tr><td class="confluenceTd">Capture</td><td class="confluenceTd"><span>Create or update binding set during parse</span></td><td class="confluenceTd"><span>cap/recap + arbitrary functions to build custom capture</span></td><td class="confluenceTd"><span>Produces AST, with some control for post-processing</span></td></tr><tr><td class="confluenceTd">Error messages</td><td class="confluenceTd"><span>Generates error based on expected vs found allows for custom names.</span></td><td class="confluenceTd"><span>Generates error based on expected vs found, allows for custom names.</span></td><td class="confluenceTd">?</td></tr><tr><td class="confluenceTd">Composable</td><td class="confluenceTd"><span>Yes, can build up rules.</span></td><td class="confluenceTd"><span>Yes, can build up models.</span></td><td class="confluenceTd">?</td></tr><tr><td class="confluenceTd">Perf</td><td class="confluenceTd"><span>?</span></td><td class="confluenceTd"><span>?</span></td><td class="confluenceTd"><span>?</span></td></tr><tr><td class="confluenceTd">Docs</td><td class="confluenceTd"><span>?</span></td><td class="confluenceTd"><span>?</span></td><td class="confluenceTd"><span>?</span></td></tr><tr><td colspan="1" class="confluenceTd">Size</td><td colspan="1" class="confluenceTd">small</td><td colspan="1" class="confluenceTd">medium</td><td colspan="1" class="confluenceTd">medium (not all needed though)</td></tr><tr><td colspan="1" class="confluenceTd">Where is it used?</td><td colspan="1" class="confluenceTd">Cursive</td><td colspan="1" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"> </td></tr></tbody></table></div><p>Some others:</p><ul><li><a href="https://github.com/ericnormand/squarepeg" class="external-link" rel="nofollow">squarepeg</a></li><li><a href="https://github.com/ghadishayban/pex" class="external-link" rel="nofollow">pex</a></li></ul><h3 id="MacroGrammars-Errormessageconsiderations">Error message considerations</h3><ul><li>How do we tie macro errors back to the point where user provided incorrect input?</li><li>Does the reader need to provide more information to produce good error location information?</li></ul><h3 id="MacroGrammars-Integration">Integration</h3><p>New function: <code>destructure-parse</code></p><ul><li>How early during core.clj bootstrap can we integrate destructure-parse?</li></ul><p><br />Produce grammars for existing macros/macro-parts in Clojure core:</p><ul><li>destructuring</li><li>parameters (with and without rest)</li><li>declare</li><li>def* body</li><li>arities</li><li>defn</li><li>fn</li><li>letfn</li><li>local-binding</li><li>for</li><li>defmethod</li><li>gen-class</li><li>ns</li><li>in-ns</li><li>defprotocol</li><li>deftype</li><li>defclass</li><li>reify</li><li>extend-type, extend-protocol</li><li>proxy</li><li>definterface</li><li>condp</li><li>case</li></ul><h2 id="MacroGrammars-Grammarexamples">Grammar examples</h2><p>seqex let example:</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[(declare binding-form)
+(defrule binding-vec
+  (vec-form (cat (rep* (delay binding-form))
+                 (opt (cat '&amp; symbol))
+                 (opt (cat :as symbol)))))
+(defrule binding-form
+  (alt symbol binding-vec binding-map))
+(def binding-pair
+  (rule 'binding-pair (cat binding-form form)))
+(defsyntax let
+  (cat (vec-form (rep* binding-pair))
+       (rep* form)))]]></script>
+</div></div><p>error-test example:</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[(def destructuring 
+ (mark
+   (alt
+     (symbol :not-matching &amp; :into :targets)
+     (vector
+       (repeat invoke)
+       (opt [(symbol :matching &amp; :resolves? false)
+             (capture (any :as :rest))
+             invoke])
+       (opt [(keyword :matching :as)
+             (symbol :into :targets)]))
+     (map
+       (repeat
+         (alt
+           [(keyword :matching :keys)
+            (vector
+              (repeat
+                (alt (symbol :into :targets)
+                     (keyword :into :targets))))]
+           [(alt (keyword :matching :strs)
+                 (keyword :matching :syms))
+            (vector
+              (repeat
+                (symbol :into :targets)))]
+           [(keyword :matching :or)
+            (map
+              (repeat [(symbol :into :or-symbols)
+                       any]))]
+           [(keyword :matching :as)
+            (symbol :into :targets)]
+           [(alt (keyword :into :targets)
+                 invoke)
+            any])))))]]></script>
+</div></div><p> </p><h2 id="MacroGrammars-Examplebugsthatcouldberesolvedbymacrogrammars">Example bugs that could be resolved by macro grammars</h2><p>These are some open bugs that require additional validation in a core macro that could be caught automatically if the macros were defined with a grammar:</p><ul><li><a href="http://dev.clojure.org/jira/browse/CLJ-1630" class="external-link" rel="nofollow">http://dev.clojure.org/jira/browse/CLJ-1630</a> - destructuring</li><li><a href="http://dev.clojure.org/jira/browse/CLJ-5" class="external-link" rel="nofollow">http://dev.clojure.org/jira/browse/CLJ-5</a> - destructuring</li><li><a href="http://dev.clojure.org/jira/browse/CLJ-1473" class="external-link" rel="nofollow">http://dev.clojure.org/jira/browse/CLJ-1473</a> - defn</li><li><a href="http://dev.clojure.org/jira/browse/CLJ-1629" class="external-link" rel="nofollow">http://dev.clojure.org/jira/browse/CLJ-1629</a> - defn</li><li><a href="http://dev.clojure.org/jira/browse/CLJ-888" class="external-link" rel="nofollow">http://dev.clojure.org/jira/browse/CLJ-888</a> - defprotocol</li><li><a href="http://dev.clojure.org/jira/browse/CLJ-1029" class="external-link" rel="nofollow">http://dev.clojure.org/jira/browse/CLJ-1029</a> - ns</li><li><a href="http://dev.clojure.org/jira/browse/CLJ-1149" class="external-link" rel="nofollow">http://dev.clojure.org/jira/browse/CLJ-1149</a> - ns</li></ul><p>Example defn problems:</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[;; missing arglist
+(defn foo (arg1 arg2))
+
+;; arity body outside arity definition 
+(defn foo ([a] 1) [a b])
+
+;; defn instead of def
+(defn foo a)
+
+;; docstring before fn name
+(defn &quot;bad docstring&quot; testname [arg1 arg2])
+
+;; missing arglist
+(defn testname)
+
+;; combination of the above
+(defn a &quot;asdf&quot; ([a] 1) {:a :b} ([] 1))
+
+;; precondition not in a vector
+(fn [x] {:pre (pos? x)} x)]]></script>
+</div></div><p>Example ns problems:</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[;; quoted import list
+(ns test (:import '(java.util.Date)))
+ClassNotFoundException quote.(java.util.Date) 
+
+;; import vector with class - no error, but nothing imported
+(ns test2 (:import [java.util.Date]))
+
+;; empty directive 
+(ns foo ())
+NullPointerException
+
+;; arbitrary code execution during ns
+(ns test3 (:println &quot;abc&quot;))
+abc]]></script>
+</div></div><p>Example let/destructuring problems:</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[;; bind to a keyword
+(let [:x 1] x)
+Unsupported binding form: :x
+
+;; extra symbols after :as  
+(let [[a :as b c] [1 2 3]] c) 
+Unable to resolve symbol: c]]></script>
+</div></div><p> </p><p> </p><h2 id="MacroGrammars-References">References</h2><ul><li>&quot;Macros-by-Example&quot; - Kohlbecker &amp; Wand - <a href="ftp://www.cs.indiana.edu/pub/techreports/TR206.pdf" class="external-link" rel="nofollow">ftp://www.cs.indiana.edu/pub/techreports/TR206.pdf</a></li><li>&quot;Fortifying Macros&quot; - Culpepper &amp; Felleisen - <a href="http://www.ccs.neu.edu/racket/pubs/icfp10-cf.pdf" class="external-link" rel="nofollow">http://www.ccs.neu.edu/racket/pubs/icfp10-cf.pdf</a></li><li>&quot;Illuminated Macros&quot; - Houser &amp; Claggett - <a href="https://www.youtube.com/watch?v=o75g9ZRoLaw" class="external-link" rel="nofollow">https://www.youtube.com/watch?v=o75g9ZRoLaw</a></li><li>&quot;Improving Clojure's Error Messages with Grammars&quot; - Fleming - <a href="https://www.youtube.com/watch?v=kt4haSH2xcs" class="external-link" rel="nofollow">https://www.youtube.com/watch?v=kt4haSH2xcs</a></li><li>&quot;Compiler Errors for Humans&quot; - Czaplicki - <a href="http://elm-lang.org/blog/compiler-errors-for-humans" class="external-link" rel="nofollow">http://elm-lang.org/blog/compiler-errors-for-humans</a></li></ul><h2 id="MacroGrammars-Otherpossibleuses">Other possible uses</h2><p>These are not primary goals of this effort, but perhaps lie nearby:</p><ul><li>Tool for printing the syntax of a macro</li><li>Using the same syntax for documenting the grammar of *functions*</li><li>Tool for &quot;grammar expanding&quot; a macro, seeing what gets matched, backtracking, etc</li></ul>
+    
+        </div>
+
+        <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="https://dev.clojure.org/display/design/Macro+Grammars"
+    dc:identifier="https://dev.clojure.org/display/design/Macro+Grammars"
+    dc:title="Macro Grammars"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/12845194"/>
+</rdf:RDF>
+-->
+
+        <script type="text/x-template" title="labels-dialog-div">
+
+    
+    <div id="labels-dialog">
+        <div class="labels-editor">
+            <span class="errorMessage error" id="errorSpan"></span>
+            <form method="GET" action="" id="add-labels-form">
+                <div id="labelOperationErrorContainer">
+                    <span class="error"><span class="errorMessage" id="labelOperationErrorMessage"></span></span>
+                </div>
+    
+                <div class="caption">Enter labels to add to this page:</div>
+                <div id="label-input-fields">
+                    <input autocomplete="off" id="labelsString" name="labelsString" value="">
+                    <input id="add-labels-editor-button" type="submit" class="add-labels" value="Add">
+                </div>
+                <div id="labelsAutocompleteList" class="aui-dd-parent resize-to-input" style="width: 417px"></div>
+                <div id="dialog-label-list">
+                    <span id="labels-section-title-none" class="no-labels-message" >
+None
+</span>
+<ul class="label-list">
+</ul>
+                </div>
+                <div id="waitImageAndStatus">
+                    <img class="waiting" alt="Please wait" src="/s/en_GB/3047/3/_/images/icons/wait.gif">&nbsp;
+                    <span id="labelOperationStatus" class="smalltext"></span>
+                </div>
+                <div class="labels-tip"></div>
+            </form>
+        </div>
+    </div>
+</script>
+            
+    
+
+
+<div id="labels-section" class="pageSection group">
+    <div class="labels-editor">
+        <span id="labels-section-title" class="label-title">Labels:</span>
+        <div id="labels-section-content" class="content-column">
+            <span id="labels-section-title-none" class="no-labels-message" >
+None
+</span>
+<ul class="label-list">
+</ul>
+
+                            <a id="labels-edit" href="#" class="show-labels-editor editor-icon" title="Edit Labels">
+                    <span class="icon icon-edit">Edit Labels</span>
+                </a>
+                    </div>
+    </div>
+</div>
+
+            
+            
+
+
+
+
+            
+    
+
+
+
+
+
+
+
+<div id="comments-section" class="pageSection group">
+    
+    
+    
+    
+    </div>
+
+
+            
+</div>
+
+
+    
+
+
+
+    
+    
+
+    
+    
+    
+
+
+    
+
+
+
+    <br class="clear">
+</div>
+  
+    </div>
+</div>
+
+<div id="footer">
+                                                <p class="license license-opensource">
+                  Powered by a free <b>Atlassian Confluence Open Source Project License</b> granted to Clojure. <a href="http://www.atlassian.com/c/conf/11461">Evaluate Confluence today</a>.<br>
+                </p>
+                        
+    <ul id="poweredby">
+        <li class="noprint">Powered by <a href="http://www.atlassian.com/software/confluence" class="hover-footer-link">Atlassian Confluence</a> <span id='footer-build-information'>4.0</span>, the <a href="http://www.atlassian.com/software/confluence/tour/enterprise-wiki.jsp" class="hover-footer-link">Enterprise Wiki</a></li>
+        <li class="print-only">Printed by Atlassian Confluence 4.0, the Enterprise Wiki.</li>        
+        <li class="noprint"> &nbsp; |&nbsp; <a href="http://jira.atlassian.com/secure/BrowseProject.jspa?id=10470" class="hover-footer-link">Report a bug</a></li>
+        <li class="noprint"> &nbsp;|&nbsp; <a href="http://www.atlassian.com/about/connected.jsp?s_kwcid=Confluence-stayintouch" class="hover-footer-link">Atlassian News</a></li>
+    </ul>
+
+    
+
+            <div><span style="">Site support by</span><a href="http://contegix.com"> <img style="vertical-align:middle" src="../../download/attachments/459015/contegix.jpg.html"/></a></div>
+    </div></div>
+</body>
+</html>

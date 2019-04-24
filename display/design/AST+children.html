@@ -1,0 +1,1184 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AST children - Clojure Design - Clojure Development</title>
+
+        
+
+                        
+    
+
+            <meta http-equiv="X-UA-Compatible" content="IE=EDGE">
+<meta charset="UTF-8">
+<!-- Deprecated since 3.4. To be removed in a future version of Confluence; use AJS.Confluence.getContextPath() -->
+<meta id="confluence-context-path" name="confluence-context-path" content="">
+<meta id="confluence-base-url" name="confluence-base-url" content="https://dev.clojure.org">
+
+<meta id="atlassian-token" name="atlassian-token" content="30041c830a95ce9c95d0b58cb377def6b96aa6d2">
+
+<meta id="confluence-space-key" name="confluence-space-key" content="design">
+<script type="text/javascript">
+    // Deprecated global variables. To be removed in a future version of Confluence.
+    var contextPath = '';
+</script>
+
+    
+
+<!-- include system css resources -->
+
+
+    <link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/55/_/download/superbatch/css/batch.css" media="all">
+<!--[if lt IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/_/download/superbatch/css/batch.css?conditionalComment=lt+IE+9" media="all">
+<![endif]-->
+<!--[if IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/_/download/superbatch/css/batch.css?conditionalComment=IE+9" media="all">
+<![endif]-->
+<!--[if lte IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/_/download/superbatch/css/batch.css?conditionalComment=lte+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/55/_/download/superbatch/css/batch-media=print.css" media="print">
+<!--[if lt IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/_/download/contextbatch/css/page/batch.css?conditionalComment=lt+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/_/download/contextbatch/css/page/batch.css" media="all">
+<!--[if lt IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/_/download/contextbatch/css/viewcontent,main/batch.css?conditionalComment=lt+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/_/download/contextbatch/css/viewcontent,main/batch.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.1/_/download/batch/com.atlassian.confluence.plugins.pagetree-pagetree-resources/com.atlassian.confluence.plugins.pagetree-pagetree-resources.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/3/_/styles/colors-spaceKey=design.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.5/_/download/resources/com.atlassian.confluence.plugins.doctheme-documentation/default-theme.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.5/_/download/resources/com.atlassian.confluence.plugins.doctheme-documentation/splitter.css" media="all">
+
+<!-- end system css resources -->
+
+    <meta name="confluence-request-time" content="1556129042747">
+            <meta name="ajs-page-id" content="5767211">
+            <meta name="ajs-parent-page-id" content="2424919">
+            <meta name="ajs-space-key" content="design">
+            <meta name="ajs-space-name" content="Clojure Design">
+            <meta name="ajs-page-title" content="AST children">
+            <meta name="ajs-parent-page-title" content="ClojureScript">
+            <meta name="ajs-from-page-title" content="">
+            <meta name="ajs-context-path" content="">
+            <meta name="ajs-version-number" content="4.0">
+            <meta name="ajs-build-number" content="3047">
+            <meta name="ajs-remote-user" content="">
+            <meta name="ajs-static-resource-url-prefix" content="/s/en_GB/3047/3/_">
+            <meta name="ajs-global-settings-attachment-max-size" content="10485760">
+            <meta name="ajs-user-locale" content="en_GB">
+            <meta name="ajs-enabled-dark-features" content="">
+            <meta name="ajs-atl-token" content="30041c830a95ce9c95d0b58cb377def6b96aa6d2">
+            
+            <meta name="ajs-keyboardshortcut-hash" content="7b95af54c6deada096af1f28fdd0f413">
+            <meta name="ajs-use-keyboard-shortcuts" content="true">
+    <!-- Deprecated since 3.4. To be removed in a future version of Confluence; use atl.header -->
+        
+            <script type="text/x-template" title="share-content-popup">
+    <form action="#" method="post" class="aui share-content-popup">
+        <fieldset>
+            <label for="users">User name or email</label>
+            <div class="autocomplete-user-target">
+                <input class="text autocomplete-sharepage" id="users" data-max="10" data-dropdown-target=".autocomplete-user-target" data-none-message="No matching user or email found"/>
+            </div>
+            <ol class="recipients">
+            </ol>
+            <div><label for="note">Note</label></div>
+            <textarea class="textarea" id="note" placeholder="Add an optional note"/>
+        </fieldset>
+        <div class="button-panel">
+            <div class="progress-messages-icon"></div>
+            <div class="progress-messages">
+            </div>
+            <input class="button submit" type="submit" value="Share" disabled/>
+            <a class="close-dialog" href="#">Cancel</a>
+        </div>
+    </form>
+</script>
+
+<script type="text/x-template" title="share-content-popup-recipient-username">
+    <li data-username="{username}" style="display: none">
+        <span>
+            <img src="{thumbnailLink.href}" title="{title}">
+            <span>{title}</span>
+            <span class="remove-recipient"/>
+        </span>
+    </li>
+</script>
+
+<script type="text/x-template" title="share-content-popup-recipient-email">
+    <li data-email="{email}" style="display: none">
+        <span>
+            <img src="{icon}" title="{email}">
+            <span>{email}</span>
+            <span class="remove-recipient"/>
+        </span>
+    </li>
+</script>
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="icon" type="image/png" href="../../s/en_GB/3047/3/_/images/logo/confluence_16.png">
+
+<link rel="search" type="application/opensearchdescription+xml" href="../../opensearch/osd.action.xml" title="Clojure Development"/>
+
+        <!-- include system javascript resources -->
+                        
+    
+    <script type="text/javascript" src="../../s/en_GB/3047/3/55/_/download/superbatch/js/batch.js" ></script>
+<!--[if lte IE 8]>
+<script type="text/javascript" src="/s/en_GB/3047/3/55/_/download/superbatch/js/batch.js?conditionalComment=lte+IE+8" ></script>
+<![endif]-->
+<script type="text/javascript" src="../../s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/_/download/contextbatch/js/page/batch.js" ></script>
+<script type="text/javascript" src="../../s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/_/download/contextbatch/js/viewcontent,main/batch.js" ></script>
+<script type="text/javascript" src="../../s/en_GB/3047/3/2.0.1/_/download/batch/com.atlassian.confluence.plugins.pagetree-pagetree-resources/com.atlassian.confluence.plugins.pagetree-pagetree-resources.js" ></script>
+
+    
+    <!-- end system javascript resources -->
+
+    
+
+    
+    <link rel="canonical" href="AST+children.html">
+    <link rel="shortlink" href="AST+children.html">
+    <meta name="wikilink" content="[design:AST children]">
+    <meta name="page-version" content="10">
+
+</head>
+
+<body             onload="placeFocus()"
+     id="com-atlassian-confluence" class="theme-documentation ">
+<div id="full-height-container">
+    <div id="header-precursor">
+        
+        
+                </div>
+
+<div id="header" class="sectionbottom ">
+        <form id="quick-search" class="quick-search" method="get" action="../../dosearchsite.action.html">
+                <fieldset>
+            <input type="hidden" name="spaceSearch" value="false"/>
+        </fieldset>
+        <fieldset>
+            <legend>Quick Search</legend>
+            <input class="quick-search-query" id="quick-search-query" type="text" accessKey="search-pages-action.accesskey" autocomplete="off" name="queryString" size="25"/>
+            <input class="quick-search-submit" id="quick-search-submit" type="submit"  value="Search Confluence" />
+            <div class="aui-dd-parent quick-nav-drop-down"><!-- Quick nav appears here --></div>
+        </fieldset>
+        <fieldset class="hidden parameters">
+            <input type="hidden" id="quickNavEnabled" value="true" />
+                    </fieldset>
+    </form>
+
+    <ul id="header-menu-bar" class="ajs-menu-bar">
+                    
+        
+            <li class="normal ajs-menu-item">
+        <a id="browse-menu-link" class="browse trigger ajs-menu-title" href="#"><span><span>Browse</span></span></a>         <div class="assistive ajs-drop-down">
+                        <ul  id="browse-menu-link-leading"                 class="section-leading first">
+                                        <li>
+    
+        
+    
+    <a  id="space-pages-link" href="../../pages/recentlyupdated.action-key=design.html"  class=""   title="Browse pages in the Clojure Design space">
+                   <span>Pages</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-blogposts-link" href="../../pages/viewrecentblogposts.action-key=design.html"  class=""   title="Browse blogs in the Clojure Design space">
+                   <span>Blog</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-labels-link" href="../../labels/listlabels-heatmap.action-key=design.html"  class=""   title="Browse labels in the Clojure Design space">
+                   <span>Labels</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-attachments-link" href="../../spaces/listattachmentsforspace.action-key=design.html"  class=""   title="Browse attachments in the Clojure Design space">
+                   <span>Attachments</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-mail-link" href="../../spaces/viewmailarchive.action-key=design.html"  class=""   title="Browse mail in the Clojure Design space">
+                   <span>Mail</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-advanced-link" href="../../spaces/viewspacesummary.action-key=design.html"  class=""   title="Browse additional space functions in the Clojure Design space">
+                   <span>Advanced</span></a>        </li>
+                            </ul>
+                        <ul  id="browse-menu-link-global"                 class="section-global">
+                                        <li>
+    
+        
+    
+    <a  id="whats-new-menu-link" href="http://docs.atlassian.com/confluence/docs-40/whatsnew/iframe"  class=""   title="">
+                   <span>What’s New</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-directory-link" href="../../spacedirectory/view.action.html"  class=""   title="Browse the Confluence space directory">
+                   <span>Space Directory</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="feed-builder-link" href="../../dashboard/configurerssfeed.action.html"  class=""   title="Create your custom RSS feed.">
+                   <span>Feed Builder</span></a>        </li>
+                                        <li>
+    
+            
+    
+    <a  id="keyboard-shortcuts-link" href="#"  class=""   title="View available keyboard shortcuts">
+                   <span>Keyboard Shortcuts</span></a>        </li>
+                                        <li>
+    
+            
+    
+    <a  id="gadget-directory-link" href="#"  class="user-item administration-link"   title="Browse gadgets provided by Confluence">
+                   <span>Confluence Gadgets</span></a>        </li>
+                            </ul>
+                    </div>
+    </li>
+        
+                                                         <li class="ajs-menu-item normal">
+        
+        
+    
+    <a  id="login-link" href="../../login.action-os_destination=-display-design-AST+children.html"  class="user-item login-link"   title="">
+                   <span>Log In</span></a>        </li>
+                            <li class="ajs-menu-item normal">
+    
+        
+    
+    <a  id="signup-link" href="../../signup.action.html"  class="user-item signup-link"   title="">
+                   <span>Sign Up</span></a>        </li>
+                                <li class="normal ajs-menu-item">
+            <div id="splitter-button" class="hidden" title="Show or hide sidebar"></div>
+        </li>
+
+    </ul>
+    
+    
+    <ol id="breadcrumbs">
+                    
+                        
+        <li class="first" >
+                                    <span><a href="../../dashboard.action.html" title="Go to Dashboard">Dashboard</a></span>
+                </li>
+                    
+                
+        <li>
+                                    <span><a href="Home-jsessionid=3A56E29DA520B75101350BA4484B9990.html">Clojure Design</a></span>
+                </li>
+                                        <li id="ellipsis" title="Show all breadcrumbs"><span><strong>&#8230;</strong></span></li>
+                                    
+                
+        <li class="hidden-crumb" >
+                                    <span><a href="Home.html">Home</a></span>
+                </li>
+                                
+                
+        <li class="hidden-crumb" >
+                                    <span><a href="Idea+Hammock.html">Idea Hammock</a></span>
+                </li>
+                                
+                
+        <li class="hidden-crumb" >
+                                    <span><a href="ClojureScript.html">ClojureScript</a></span>
+                </li>
+                    
+                
+        <li>
+                                    <span><a href="AST+children.html">AST children</a></span>
+                </li>
+        </ol>
+
+</div>
+
+    <div id="splitter">
+    <div id="splitter-sidebar" >
+        
+
+                    
+        
+    
+
+<div class="plugin_pagetree">
+
+                <div id="pagetreesearch">
+            <form method="POST" action="../../dosearchsite.action-searchQuery.queryString=&amp;searchQuery.spaceKey=conf_all.html" name="pagetreesearchform">
+                                    <input type="hidden" name="ancestorId" value="458775">
+                                <input type="hidden" name="spaceKey" value="design">
+                <input type="text"  size="20" name="queryString">
+                <input type="submit" value="Search">
+            </form>
+        </div>
+    
+        
+    <ul class="plugin_pagetree_children_list plugin_pagetree_children_list_noleftspace">
+        <div class="plugin_pagetree_children">
+        </div>
+    </ul>
+
+    <fieldset class="hidden">
+        <input type="hidden" name="treeId" value="">
+        <input type="hidden" name="treeRequestId" value="/plugins/pagetree/naturalchildren.action?decorator=none&amp;excerpt=false&amp;sort=position&amp;reverse=false&amp;disableLinks=false">
+        <input type="hidden" name="treePageId" value="5767211">
+
+        <input type="hidden" name="noRoot" value="false">
+        <input type="hidden" name="rootPageId" value="458775">
+
+        <input type="hidden" name="rootPage" value="">
+        <input type="hidden" name="startDepth" value="0">
+        <input type="hidden" name="spaceKey" value="design" >
+
+        <input type="hidden" name="i18n-pagetree.loading" value="Loading...">
+        <input type="hidden" name="i18n-pagetree.error.permission" value="Unable to load page tree. It seems that you do not have permission to view the root page.">
+        <input type="hidden" name="i18n-pagetree.eeror.general" value="There was a problem retrieving the page tree. Please check the server log file for more information.">
+        <input type="hidden" name="loginUrl" value="/login.action?os_destination=%2Fdisplay%2Fdesign%2FAST%2Bchildren">
+
+                <fieldset class="hidden">
+                                                <input type="hidden" name="ancestorId" value="2424919">
+                                    <input type="hidden" name="ancestorId" value="8192213">
+                                    <input type="hidden" name="ancestorId" value="458775">
+                                    </fieldset>
+    </fieldset>
+</div>
+
+
+
+            </div>
+    <div id="splitter-content">
+
+                    <script type="text/javascript" src="../../s/en_GB/3047/3/2.0.5/_/download/resources/com.atlassian.confluence.plugins.doctheme-resources/doc-theme.js"></script>
+    
+            
+    
+<div id="main" >
+    <div id="main-header">
+	    
+	    
+    <div id="navigation" class="content-navigation view">
+                    <ul class="ajs-menu-bar">
+                                
+                        
+            <li class="normal ajs-menu-item">
+        <a id="action-menu-link" class="action trigger ajs-menu-title" href="#"><span><span>Tools</span></span></a>         <div class="assistive ajs-drop-down">
+                        <ul  id="action-menu-link-primary"                 class="section-primary first">
+                                        <li>
+    
+        
+    
+    <a  id="view-attachments-link" href="../../pages/viewpageattachments.action-pageId=5767211.html"  class="action-view-attachments"  accessKey="a"  title="View Attachments">
+                   <span><u>A</u>ttachments (0)</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="action-view-history-link" href="../../pages/viewpreviousversions.action-pageId=5767211.html"  class="action-view-history"   title="">
+                   <span>Page History</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="action-page-permissions-link" href="../../pages/viewinfo.action-pageId=5767211.html"  class="action-page-permissions"   title="Edit restrictions">
+                   <span>Restrictions</span></a>        </li>
+                            </ul>
+                        <ul  id="action-menu-link-secondary"                 class="section-secondary">
+                                        <li>
+    
+        
+    
+    <a  id="view-page-info-link" href="../../pages/viewinfo.action-pageId=5767211.html"  class="action-view-info"   title="">
+                   <span>Info</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="link-to-page-link" href="../../pages/viewinfo.action-pageId=5767211.html"  class=""   title="Link to this Page">
+                   <span>Link to this Page&hellip;</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="view-in-hierarchy-link" href="../../pages/listpages-dirview.action-key=design&amp;openId=5767211.html#selectedPageInHierarchy"  class=""   title="">
+                   <span>View in Hierarchy</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="action-view-source-link" href="../../plugins/viewsource/viewpagesrc.action-pageId=5767211.html"  class="action-view-source popup-link"   title="">
+                   <span>View Source</span></a>        </li>
+                            </ul>
+                    </div>
+    </li>
+            </ul>
+    </div>
+
+	    
+	    <h1 id="title-heading" class="pagetitle">
+	        	            <a href="Home-jsessionid=3A56E29DA520B75101350BA4484B9990.html"><img class="logo global custom" src="../../download/attachments/131074/global.logo.png" alt=""></a>	        	
+			<span id="title-text">
+							            <a href="AST+children.html">AST children</a>
+    						</span>
+	    </h1>
+	</div>
+
+    
+
+    
+    
+    
+    
+    
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+        
+    
+    
+                    
+    
+
+    
+
+
+<div id="content" class="page view">
+    
+
+
+
+                
+<script type="text/x-template" title="movePageDialog">
+    <div class="row information">
+        <div class="inner">
+            <div class="element">
+                Specify the new parent page for this page and its children by space and title.
+            </div>
+        </div>
+    </div>
+    <div class="form">
+        <fieldset>
+                
+
+    <legend class="assistive"><span>Change the Parent Page to a Known Page</span></legend>
+            <div class="row">
+                <label for="new-space">New space:</label>
+                <div class="value new-space-value">
+                    <input id="new-space-key" name="new-space-key" type="hidden" value="design">
+                                            <span class="space-input">
+                            <input id="new-space" name="new-space" value="Clojure Design" disabled="disabled">
+                        </span>
+                        <span class="description warning">You cannot move this page to another space because you do not have permission to remove it from this space.</span>
+                                        <div class="new-space-dropdown aui-dd-parent autocomplete"></div>
+                </div>
+            </div>
+            <div class="row">
+                <label for="new-parent-page">New parent page:</label>
+                <div class="value new-parent-page-value">
+                    <span class="page-input">
+                        <input id="new-parent-page" name="new-parent-page" value="ClojureScript">
+                    </span>
+                    <span class="description">Start typing a page title to see a list of suggestions.</span>
+                    <div class="new-parent-page-dropdown aui-dd-parent autocomplete"></div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <div class="location-info">
+        <div class="row">
+            <label>Current location:</label>
+            <div class="value breadcrumbs-container">
+                <div class="breadcrumbs-line">
+                    <ul id="current-parent-breadcrumbs" class="breadcrumbs">
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <label>New location:</label>
+            <div class="value breadcrumbs-container">
+                <div class="breadcrumbs-line">
+                    <ul id="new-parent-breadcrumbs" class="breadcrumbs">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/x-template" title="movePageSearchPanel">
+    <div class="row information">
+        <div class="inner">
+            <div class="element">
+                Search for and select the new parent page for this page and its children.
+            </div>
+        </div>
+    </div>
+    <div id="move-page-search-container" class="row">
+        <div class="search-form">
+            <fieldset>
+                    
+
+    <legend class="assistive"><span>Search for a New Parent Page</span></legend>
+                    
+
+    <label  for="move-page-search-query" class="assistive">Search keywords</label>
+                <input class="search-query" id="move-page-search-query">
+                    
+
+    <label  for="move-page-search-space" class="assistive">Search in space</label>
+                                    <select id="move-page-search-space" class="search-space" disabled="disabled">
+                        <option value="design" selected="selected">Clojure Design</option>
+                    </select>
+                                <input type="button" value="Search">
+                                    <div class="description warning">You cannot move this page to another space because you do not have permission to remove it from this space.</div>
+                            </fieldset>
+        </div>
+        <div class="search-results">
+        </div>
+    </div>
+</script>
+<script type="text/x-template" title="searchResultsGrid">
+    <table>
+        <thead>
+            <tr class="header">
+                <th class="search-result-title">Page Title</th>
+                <th class="search-result-space">Space</th>
+                <th class="search-result-date">Updated</th>
+            </tr>
+        </thead>
+    </table>
+</script>
+<script type="text/x-template" title="searchResultsGridCount">
+    <p class="search-result-count">{0}</p>
+</script>
+<script type="text/x-template" title="searchResultsGridRow">
+    <tr class="search-result">
+        <th class="search-result-title"><a href="{1}" class="content-type-{2}"><span>{0}</span></a></th>
+        <td class="search-result-space"><a class="space" href="/display/{4}/" title="{3}">{3}</a></td>
+        <td class="search-result-date"><span class="date" title="{6}">{5}</span></td>
+    </tr>
+</script><!-- Start restrictions section -->
+<script type="text/x-template" title="page-permissions-div">
+<div id="page-permissions-div">
+    <div id="page-permissions-editor-form">
+
+                <div id="page-permissions-error-div" class="hidden">
+            <a href="#" id="permissions-error-div-close">Ok</a>
+            <div></div>
+        </div>
+
+                <div id="page-permissions-type-radios" class="page-permissions-label-rows">
+            <div>
+                <input id="restrictViewRadio" type="radio" checked="checked" name="pagePermissionTypeRadio" value="view"/>
+                <label for="restrictViewRadio">Restrict viewing of this page</label>
+                <input id="restrictEditRadio" type="radio" name="pagePermissionTypeRadio" value="edit"/>
+                <label for="restrictEditRadio">Restrict editing of this page</label>
+            </div>
+        </div>
+        <div id="page-permissions-input" class="page-permissions-label-rows">
+            <div class="page-permissions-label">To:</div>
+            <div id="page-permissions-chooser-box">
+                                <span id="page-permissions-choose-user" class="ajs-button">
+                    
+
+
+
+    
+
+
+
+<a href="#" id='userpicker-popup-link-image' onClick="var picker = window.open('/spaces/openuserpicker.action?key=design&amp;startIndex=0&amp;onPopupSubmit=AJS.PagePermissions.addUserPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=700,height=680,scrollbars=yes'); picker.focus(); return false;"><img src="/s/en_GB/3047/3/_/images/icons/user_16.gif" height=16 width=16 border=0 align="absmiddle"  title="Choose users" /></a>
+<a href="#" id='userpicker-popup-link-text' onClick="var picker = window.open('/spaces/openuserpicker.action?key=design&amp;startIndex=0&amp;onPopupSubmit=AJS.PagePermissions.addUserPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=700,height=680,scrollbars=yes'); picker.focus(); return false;">Person...</a>
+
+
+                </span>
+                <span id="page-permissions-choose-group" class="ajs-button">
+                    
+
+
+
+    
+
+ 
+
+<a href="#" id='grouppicker-popup-link-image' onClick="var picker = window.open('/spaces/opengrouppicker.action?key=design&amp;startIndex=0&amp;actionName=dosearchgroups.action&amp;onPopupSubmit=AJS.PagePermissions.addGroupPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=580,height=550,scrollbars=yes'); picker.focus(); return false;"><img src="/s/en_GB/3047/3/_/images/icons/group_16.gif" height=16 width=16 border=0 align="absmiddle"  title="Choose groups" /></a>
+<a href="#" id='grouppicker-popup-link-text' onClick="var picker = window.open('/spaces/opengrouppicker.action?key=design&amp;startIndex=0&amp;actionName=dosearchgroups.action&amp;onPopupSubmit=AJS.PagePermissions.addGroupPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=580,height=550,scrollbars=yes'); picker.focus(); return false;">Group...</a>
+
+
+                </span>
+            </div>
+            <div id="page-permissions-input-box">
+                <input type="text" id="page-permissions-names-input" name="permissionNames"
+                    placeholder="Enter user or group name" class="autocomplete-user"
+                    data-max="10" data-none-message="No matches"
+                    data-target="#page-permissions-names-hidden" data-template="{username}"
+                    data-dropdown-target="#page-perms-name-dropdown-wrapper" data-resize-to-input="true"
+                    size="30"/>
+                <input
+    type="hidden"
+                            id="page-permissions-names-hidden"           />                <img height="16px" width="1px" src="/s/en_GB/3047/3/_/images/border/spacer.gif"/>
+                <input type="button" id="add-typed-names" value="Restrict">
+                <div id="page-perms-name-dropdown-wrapper" class="aui-dd-parent autocomplete"></div>
+            </div>
+        </div>
+    </div>
+    <div id="page-permissions-tables">
+        <div id="page-permissions-table-div">
+                        <table id="page-permissions-table" class="page-permissions-table">
+                <tr id="page-permissions-no-views" class="marker-row">
+                    <td colspan="3" class="page-permissions-marker-cell"><span>No view restrictions are defined for this page</span></td>
+                </tr>
+                <tr id="page-permissions-no-edits" class="marker-row">
+                    <td colspan="3" class="page-permissions-marker-cell"><span>No edit restrictions are defined for this page</span></td>
+                </tr>
+            </table>
+        </div>
+        <div id="page-inherited-permissions-table-div" class="hidden">
+            <span id="page-inherited-permissions-table-desc">
+                <a class="icon twisty-closed">Show/Hide</a>
+                <a id="toggle-inherited-permissions" title="Click to see inherited restrictions">This page has restricted parent pages. It can only be seen by users who can see those parent pages.</a>
+            </span>
+            <div id="page-inherited-permissions-tables" class="hidden page-inheritance-togglable"></div>
+        </div>
+    </div>
+</div>
+</script>
+
+<!-- End restrictions section -->
+
+        
+    
+    
+        <fieldset class="hidden parameters">
+            <input type="hidden" title="parentPageId" value="2424919">
+        </fieldset>
+
+        
+                            
+    
+
+                    
+
+        
+        <a href="#page-metadata-end" class="assistive">Skip to end of metadata</a>
+<div id="page-metadata-start" class="assistive"></div>
+
+    <div class="page-metadata">
+        <ul>
+                            <li class="page-metadata-item noprint">
+    
+            
+    
+    <a  id="content-metadata-page-restrictions" href="#"  class="page-metadata-icon page-restrictions hidden"   title="Page restrictions apply. Click the lock icon to view or edit the restriction.">
+                   <span>Page restrictions apply</span></a>        </li>
+                        <li class="page-metadata-modification-info">
+                                    Added by <a href="../../login.action-os_destination=-display-~brandon@brandonbloom.name.html"
+                          class="url fn"
+                   >Brandon Bloom</a>, last edited by <a href="../../login.action-os_destination=-display-~aaron@assonance.org.html"
+                          class="url fn"
+                   >Aaron Cohen</a> on Mar 12, 2013
+                                                                <span class="noprint">&nbsp;(<a id="view-change-link" href="../../pages/diffpages.action-pageId=5767211&amp;originalId=6390106.html">view change</a>)</span>
+                                                </li>
+                    </ul>
+                </div>
+
+
+<a href="#page-metadata-start" class="assistive">Go to start of metadata</a>
+<div id="page-metadata-end" class="assistive"></div>
+        
+        <fieldset class="hidden parameters">
+                        <input type="hidden" title="browsePageTreeMode" value="view">
+        </fieldset>
+
+        <div class="wiki-content">
+                           <h1 id="ASTchildren-Problem">Problem</h1><p>The AST nodes produced by the ClojureScript analyzer have a :children key to allow generic traversals. Unfortunately, this key is currently a denormalized view of child ast nodes.</p><p>For example, an :if node has :test, :then, and :else keys whose values are also contained in :children. This presents some difficulty when writing AST transformations because every transform function must be aware of this duplication. To correctly replace the :test of an :if node, you must also replace the first element of the :children vector.</p><h1 id="ASTchildren-Discussion">Discussion</h1><ul><li><a href="https://groups.google.com/d/topic/clojure-dev/vZLVKmKX0oc/discussion" class="external-link" rel="nofollow">https://groups.google.com/d/topic/clojure-dev/vZLVKmKX0oc/discussion</a></li><li><a href="https://docs.google.com/document/d/1DRN-tBIqhqVVyoHIDs7CMkduBFk-vqd_958ojeIBLHQ/edit" class="external-link" rel="nofollow">https://docs.google.com/document/d/1DRN-tBIqhqVVyoHIDs7CMkduBFk-vqd_958ojeIBLHQ/edit</a></li><li><a href="../../jira/browse/CLJS-289.html" class="external-link" rel="nofollow">http://dev.clojure.org/jira/browse/CLJS-289</a></li></ul><h1 id="ASTchildren-Design">Design</h1><ul><li>Solution must retain &quot;AST is just data&quot; property. ie No API should be required to interpret it</li><li>Idea: store :children as keys into the AST map<ul><li>would be nice: (defn children [ast] ((apply juxt (:children ast)) ast))<ul><li>but need to handle implicit do blocks: (defn children [ast](mapcat #(if (coll? %) % [%]) ((apply juxt (:children ast)) ast)))</li></ul></li><li>ticket: <a href="../../jira/browse/CLJS-289.html" class="external-link" rel="nofollow">http://dev.clojure.org/jira/browse/CLJS-289</a></li><li>outstanding issue: interleaved bindings</li></ul></li><li>Alternate idea: all child nodes are moved from the top level into a map in :children<ul><li>For &quot;if&quot; this would change<span style="color: rgb(34,34,34);"> {:op :if :env {env} :test test-expr :then then-expr :else else-expr :</span><span class="il" style="color: rgb(34,34,34);">children</span><span style="color: rgb(34,34,34);"> [test-expr then-expr else-expr]} </span><span style="color: rgb(34,34,34);">into {:op :if :env {env} :</span><span class="il" style="color: rgb(34,34,34);">children</span><span style="color: rgb(34,34,34);"> {:test test-expr :then then-expr :else else-expr}} </span></li><ul><li><span style="color: rgb(34,34,34);">This idea doesn't address blocks or bindings.</span></li><li><span style="color: rgb(34,34,34);">dnolen: </span><span style="font-size: 10.0pt;line-height: 13.0pt;font-style: italic;">What about forms like let where :children is a bit complex?</span></li></ul><li><div class="h7 hn "><div class="Bk"><div class="G3 G2 afm" style="margin-left: 0.0px;"><div class="adn ads"><div class="gs" style="margin-left: 44.0px;"><div class="ii gt adP adO"><div class="gmail_quote"><blockquote class="gmail_quote"><div class="gmail_quote"><div class="im"><div> </div><div>:children (into (vec (map :init bes))</div><div>                     (conj (vec statements) ret)) </div><div> </div><div> </div></div></div></blockquote><div>acohen: I think that should become: {:op :let :children {:init [inits] :statements [statements] :ret ret}</div><div><span style="font-size: 10.0pt;line-height: 13.0pt;"> We might want to discuss whether the inits are truly a child here, at the moment I think they are though.</span></div><div class="yj6qo ajU"><div class="ajR"><img class="confluence-embedded-image ajT confluence-external-resource" src="https://mail.google.com/mail/u/0/images/cleardot.gif" data-image-src="https://mail.google.com/mail/u/0/images/cleardot.gif"></div></div></div></div><div class="hi"> </div></div><div class="ajx"> </div></div></div></div></div><div class="h7  "><div class="Bk"><div class="G3 G2 afm" style="margin-left: 0.0px;"><div class="adn ads"><div class="gs" style="margin-left: 44.0px;"><div class="ii gt adP adO"><div class="gmail_quote"><div>dnolen: So if a :children value entry is a vector it's something you need to iterate over? What about :ret? So you'll always need to look at :children if you want to know :ret?</div><div class="yj6qo ajU"><div class="ajR"><img class="confluence-embedded-image ajT confluence-external-resource" src="https://mail.google.com/mail/u/0/images/cleardot.gif" data-image-src="https://mail.google.com/mail/u/0/images/cleardot.gif"></div></div></div></div><div class="hi"><span style="font-size: 10.0pt;line-height: 13.0pt;"> </span><span style="font-size: 10.0pt;line-height: 13.0pt;"> </span></div></div></div></div></div></div><div class="h7  "><div class="Bk"><div class="G3 G2 afm" style="margin-left: 0.0px;"><div class="adn ads"><div class="gs" style="margin-left: 44.0px;"><div class="ii gt adP adO"><div class="gmail_quote"><div>acohen: Yes, if :children entry is a seq, it must be a seq of nodes. For :let, I forgot that this is something else I changed in CinC. I made bindings an :op.</div><div>So it should actually look like:</div><div><div>{:op :let </div><div> :children {:inits [{:op :binding :name x :children {:init init-expr}} </div><div>                    ...] </div><div>            :statements [{...} ...] </div><div>            :ret ret}}</div></div><div> </div><div>dnolen: <span style="font-size: 10.0pt;font-style: italic;line-height: 13.0pt;">What about :ret? So you'll always need to look at :children if you want to know :ret?</span></div><div><div class="im"><div> </div><div>acohen: <span style="font-size: 10.0pt;line-height: 13.0pt;">Yep, that's right. Tree traversal would _always_ go through :children, rather than having this separation of &quot;syntax-aware walkers go through the nodes that they know the names of&quot; and &quot;generic walkers go through :children&quot;</span></div><div><span style="font-size: 10.0pt;line-height: 13.0pt;"><br /></span></div><div><span style="font-size: 10.0pt;line-height: 13.0pt;">bbloom: I think this approach suffers another issue: Generic walkers might need to know evaluation order. I should be able to post-walk the :childrens nodes to get a strict top-to-bottom, inside-out, left-to-right sequence of nodes, ignoring conditional and repeated evaluation. Otherwise, I need knowledge of nodes to tell if side effects from :init may happen before those from :statements</span></div><div><span style="font-size: 10.0pt;line-height: 13.0pt;"><br /></span></div><div><span style="font-size: 10.0pt;line-height: 13.0pt;">acohen: Can we mandate that the children map be a map-like structure that preserves order?</span></div><div><span style="font-size: 10.0pt;line-height: 13.0pt;"><br /></span></div><div><span style="font-size: 10.0pt;line-height: 13.0pt;">bbloom: I don't think that's reasonable unless core gets such a map-like structure.</span></div></div></div><div><div> </div></div></div></div></div></div></div></div></div></li></ul></li></ul>
+    
+        </div>
+
+        <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="https://dev.clojure.org/display/design/AST+children"
+    dc:identifier="https://dev.clojure.org/display/design/AST+children"
+    dc:title="AST children"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/5767211"/>
+</rdf:RDF>
+-->
+
+        <script type="text/x-template" title="labels-dialog-div">
+
+    
+    <div id="labels-dialog">
+        <div class="labels-editor">
+            <span class="errorMessage error" id="errorSpan"></span>
+            <form method="GET" action="" id="add-labels-form">
+                <div id="labelOperationErrorContainer">
+                    <span class="error"><span class="errorMessage" id="labelOperationErrorMessage"></span></span>
+                </div>
+    
+                <div class="caption">Enter labels to add to this page:</div>
+                <div id="label-input-fields">
+                    <input autocomplete="off" id="labelsString" name="labelsString" value="">
+                    <input id="add-labels-editor-button" type="submit" class="add-labels" value="Add">
+                </div>
+                <div id="labelsAutocompleteList" class="aui-dd-parent resize-to-input" style="width: 417px"></div>
+                <div id="dialog-label-list">
+                    <span id="labels-section-title-none" class="no-labels-message" >
+None
+</span>
+<ul class="label-list">
+</ul>
+                </div>
+                <div id="waitImageAndStatus">
+                    <img class="waiting" alt="Please wait" src="/s/en_GB/3047/3/_/images/icons/wait.gif">&nbsp;
+                    <span id="labelOperationStatus" class="smalltext"></span>
+                </div>
+                <div class="labels-tip"></div>
+            </form>
+        </div>
+    </div>
+</script>
+            
+    
+
+
+<div id="labels-section" class="pageSection group">
+    <div class="labels-editor">
+        <span id="labels-section-title" class="label-title">Labels:</span>
+        <div id="labels-section-content" class="content-column">
+            <span id="labels-section-title-none" class="no-labels-message" >
+None
+</span>
+<ul class="label-list">
+</ul>
+
+                            <a id="labels-edit" href="#" class="show-labels-editor editor-icon" title="Edit Labels">
+                    <span class="icon icon-edit">Edit Labels</span>
+                </a>
+                    </div>
+    </div>
+</div>
+
+            
+            
+
+
+
+
+            
+    
+
+
+
+
+
+
+
+<div id="comments-section" class="pageSection group">
+    
+            <div class="section-header ">
+            <h2 id="comments-section-title" class="section-title">
+                <a href="#" class="comments-show-hide comments-showing" name="comments">
+                                            7 Comments
+                                    </a>
+            </h2>
+            <a title="Hide/Show Comments" href="#" 
+               class="comments-show-hide icon comments-showing icon-section-opened">
+                Hide/Show Comments
+            </a>
+        </div>
+    
+    
+                            <ol class="comment-threads top-level " id="page-comments">
+                        <li id="comment-thread-5767212" class="comment-thread">
+                                <div class="comment  " id="comment-5767212">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: brandon@brandonbloom.name" title="brandon@brandonbloom.name">                </p>
+                <p class="date" title="Aug 29, 2012 00:08">
+                    Aug 29, 2012
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~brandon@brandonbloom.name.html"
+                          class="url fn"
+                   >Brandon Bloom</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>I'm interested in re-invigorating this discussion. I'm currently working on robust ANF/CPS transforms and running into various complexity caused by this. It's impossible for any AST transformer to know if a down-stream compiler phase will use :children or not. The first issue I hit was modifying :items in the :vector op. Turns out that the emit phase looks at :children instead of :items. Whoops! I've been resorting to building a form and then calling analyze on that.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="AST+children-focusedCommentId=5767212.html#comment-5767212"
+                id="comment-permalink-5767212"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="AST+children-focusedCommentId=5767212.html#comment-5767212"
+    dc:identifier="AST+children-focusedCommentId=5767212.html#comment-5767212"
+    dc:title="AST children"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/5767212"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-6390073" class="comment-thread">
+                                <div class="comment  " id="comment-6390073">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: ambrosebs" title="ambrosebs">                </p>
+                <p class="date" title="Mar 09, 2013 09:10">
+                    Mar 09, 2013
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~ambrosebs.html"
+                          class="url fn"
+                   >Ambrose Bonnaire-Sergeant</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>Is there really enough utility in :children to build it into the AST spec? What's wrong with providing a `children` multimethod for people to use when needed?</p><p>We obviously need to completely eliminate redundancies. Redundant :children simply makes all but the most trivial code transformations nearly impossible to perform correctly. I have no idea how I'd start handling the subtleties of :children in a hygienic AST transformation, which is a simple transformation compared to CPS.</p><p>I think it would be a difficult task to include the children keys in each :op. There are at least three different types of children expressions: single expressions, sequence of expressions (implicit do) and local-binding inits. Distinguishing them would most likely result in a convoluted interface for children. Even if we found a solution, do we expect each consumer of an AST to define their own `children` function? Is this any better than just providing a multimethod to :refer as needed?</p><p>In my (biased) opinion: children are strictly convenience and they hinder much more than they help.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="AST+children-focusedCommentId=6390073.html#comment-6390073"
+                id="comment-permalink-6390073"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="AST+children-focusedCommentId=6390073.html#comment-6390073"
+    dc:identifier="AST+children-focusedCommentId=6390073.html#comment-6390073"
+    dc:title="AST children"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/6390073"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-6390087" class="comment-thread">
+                                <div class="comment  " id="comment-6390087">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: aaron@assonance.org" title="aaron@assonance.org">                </p>
+                <p class="date" title="Mar 12, 2013 12:20">
+                    Mar 12, 2013
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~aaron@assonance.org.html"
+                          class="url fn"
+                   >Aaron Cohen</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>I'm trying to be guided by principles that Rich outlined in the email thread <a href="https://groups.google.com/forum/?fromgroups=#!msg/clojure-dev/vZLVKmKX0oc/C8iaqgDAYo0J" class="external-link" rel="nofollow">here</a>: </p><p> </p><blockquote><p><span style="color: rgb(34,34,34);">:children is admittedly half-baked, but remember all things that are baked were once half-baked :)</span><br /><br /><span style="color: rgb(34,34,34);">Here are the objectives:</span><br /><br /><span style="color: rgb(34,34,34);">1) The AST as data. Full stop. That is part of the CLJS experiment. We've seen enough code- and API-based expression tree libraries.</span><br /><br /><span style="color: rgb(34,34,34);">2) Supporting generic code walkers. Code walking has traditionally been a difficult and brittle thing, as everyone encodes the primitives. Thus, adding a new primitive becomes impossible. Plus, that encoded knowledge itself is quite complex and duplicated between code walkers. Given that the AST data is a mix of things that would need to be walked and other details, there needs to be a mechanism to distinguish them. While a multimethod is one way to do make it an open system, it means that to manipulate your new AST node I don't just need the AST, I need your code. What about code walkers and </span><span class="il" style="color: rgb(34,34,34);">analyzers</span><span style="color: rgb(34,34,34);"> etc as a service?</span><br /><br /><span style="color: rgb(34,34,34);">So, the problems I see with what we currently have vs these objectives are:</span><br /><br /><span style="color: rgb(34,34,34);">a) Inconsistency in the contents and use of :children.</span><br /><span style="color: rgb(34,34,34);">b) Duplication</span><br /><br /><span style="color: rgb(34,34,34);">I wonder somewhat about (b). Given they are just values, in memory at least, they are shared. But yes, when printed or otherwise reified it's a bear.</span><br /><br /><span style="color: rgb(34,34,34);">:children as a vector of keys seems promising. Next steps in that direction would be to propose a standard way to do that, determine what that would imply for each construct we currently have, and assess the sufficiency for generic code walking. Along the way, consider what other semantic clues the AST might need to provide as data. Only then, implement for what we have.</span></p></blockquote>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="AST+children-focusedCommentId=6390087.html#comment-6390087"
+                id="comment-permalink-6390087"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="AST+children-focusedCommentId=6390087.html#comment-6390087"
+    dc:identifier="AST+children-focusedCommentId=6390087.html#comment-6390087"
+    dc:title="AST children"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/6390087"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-6390091" class="comment-thread">
+                                <div class="comment  " id="comment-6390091">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: brandon@brandonbloom.name" title="brandon@brandonbloom.name">                </p>
+                <p class="date" title="Mar 12, 2013 12:22">
+                    Mar 12, 2013
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~brandon@brandonbloom.name.html"
+                          class="url fn"
+                   >Brandon Bloom</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>At first, I was in favor of :children as a vector of keys, but now I'm not so sure.</p><p>Transformations inherently involve creating new nodes. &quot;assoc&quot; is useless in the presence of :env, :children, or other synthesized, non-essential attributes, since you need to get out the essential fields and re-analyze that new AST node or re-analyze a raw form. Any cruft data from a previous analyze call is inherently a bug in an AST transformation, if you change an essential attribute. So this means that when constructing new nodes, you have three choices:</p><ol><li>(analyze-ast {:op foo :x y :z w})</li><li>(analyze-form '(foo y w))</li><li>(make-foo y w)</li></ol><p>But #3 is just gonna delegate to analyze anyway, since the result is a map, not some object with accessor methods. So that's right out. Given this reality, I think it's perfectly fine to include full copies of :children instead of going with a vector of keys. It's a little ugly for printing, but a helper function that strips out non-essential attributes.</p><p>Day dreaming for a moment: I wish that I could have a map that had representational and computed attributes, such that if you update a representational key via assoc or whatever, all the computed attributes get thrown out.</p><p>Ideally: The only API methods would be analyze-ast and analyze-form. The analyze-ast function should, optionally, validate that the ast passed in only contains essential attributes. Both analyze methods should be configurable for what passes and data to include. Children should be one such flag, just like type hints could be another such flag. The default would be &quot;include everything!&quot; such that the average client only needs to know a single API call: (analyze-form top-level)</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="AST+children-focusedCommentId=6390091.html#comment-6390091"
+                id="comment-permalink-6390091"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="AST+children-focusedCommentId=6390091.html#comment-6390091"
+    dc:identifier="AST+children-focusedCommentId=6390091.html#comment-6390091"
+    dc:title="AST children"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/6390091"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-6390094" class="comment-thread">
+                                <div class="comment  " id="comment-6390094">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: brandon@brandonbloom.name" title="brandon@brandonbloom.name">                </p>
+                <p class="date" title="Mar 12, 2013 12:36">
+                    Mar 12, 2013
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~brandon@brandonbloom.name.html"
+                          class="url fn"
+                   >Brandon Bloom</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>I should note that I've written a working ANF transform and an incomplete CPS transform. My experience has shown:</p><ol><li>:children is in fact useful:<br /><a href="https://github.com/brandonbloom/cljs-cps/blob/2c8b9e9f5980aff5e62ea0922c9f30101584fcf9/src/cps.clj#L54-L59" class="external-link" rel="nofollow">https://github.com/brandonbloom/cljs-cps/blob/2c8b9e9f5980aff5e62ea0922c9f30101584fcf9/src/cps.clj#L54-L59</a></li><li>For non-identity transformations, (analyze-form env ...) in in nearly every single tail position</li><li>analyze-form can be (comp my-pass clojure.core/analyze) if my-pass is idempotent</li><li>I badly want the ability to interleave my pass with the standard analyze logic</li></ol>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="AST+children-focusedCommentId=6390094.html#comment-6390094"
+                id="comment-permalink-6390094"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="AST+children-focusedCommentId=6390094.html#comment-6390094"
+    dc:identifier="AST+children-focusedCommentId=6390094.html#comment-6390094"
+    dc:title="AST children"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/6390094"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                                        <li id="comment-thread-6390099" class="comment-thread">
+                                <div class="comment  " id="comment-6390099">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: aaron@assonance.org" title="aaron@assonance.org">                </p>
+                <p class="date" title="Mar 12, 2013 12:55">
+                    Mar 12, 2013
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~aaron@assonance.org.html"
+                          class="url fn"
+                   >Aaron Cohen</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>Hmm, assoc being useless doesn't match my experience.</p><p>My big use-case in CinC is making several passes over the AST doing nothing more than adding attributes to the tree. (:box tells me if I need to emit a cast, :type tells me the java type of this expression)</p><p>The need for those attributes to be propagated up and down the tree correctly is what causes the current :children redundancy to make me pull my hair out so much. There's no way for me to put the attributes in the correct place if I don't know which child is which.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="AST+children-focusedCommentId=6390099.html#comment-6390099"
+                id="comment-permalink-6390099"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="AST+children-focusedCommentId=6390099.html#comment-6390099"
+    dc:identifier="AST+children-focusedCommentId=6390099.html#comment-6390099"
+    dc:title="AST children"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/6390099"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-6390105" class="comment-thread">
+                                <div class="comment  " id="comment-6390105">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: brandon@brandonbloom.name" title="brandon@brandonbloom.name">                </p>
+                <p class="date" title="Mar 12, 2013 12:58">
+                    Mar 12, 2013
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~brandon@brandonbloom.name.html"
+                          class="url fn"
+                   >Brandon Bloom</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>assoc is useful for adding analysis results, but is useless for &quot;changing&quot; nodes.</p><p>The only valid way to &quot;change&quot; a node is to create a completely new node and re-analyze it.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="AST+children-focusedCommentId=6390105.html#comment-6390105"
+                id="comment-permalink-6390105"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="AST+children-focusedCommentId=6390105.html#comment-6390105"
+    dc:identifier="AST+children-focusedCommentId=6390105.html#comment-6390105"
+    dc:title="AST children"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/6390105"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                                </ol>
+                        </li>
+                                </ol>
+                        </li>
+                                </ol>
+                        </li>
+                                </ol>
+                        </li>
+                                </ol>
+                        </li>
+                </ol>
+    
+    </div>
+
+
+            
+</div>
+
+
+    
+
+
+
+    
+    
+
+    
+    
+    
+
+
+    
+
+
+
+    <br class="clear">
+</div>
+  
+    </div>
+</div>
+
+<div id="footer">
+                                                <p class="license license-opensource">
+                  Powered by a free <b>Atlassian Confluence Open Source Project License</b> granted to Clojure. <a href="http://www.atlassian.com/c/conf/11461">Evaluate Confluence today</a>.<br>
+                </p>
+                        
+    <ul id="poweredby">
+        <li class="noprint">Powered by <a href="http://www.atlassian.com/software/confluence" class="hover-footer-link">Atlassian Confluence</a> <span id='footer-build-information'>4.0</span>, the <a href="http://www.atlassian.com/software/confluence/tour/enterprise-wiki.jsp" class="hover-footer-link">Enterprise Wiki</a></li>
+        <li class="print-only">Printed by Atlassian Confluence 4.0, the Enterprise Wiki.</li>        
+        <li class="noprint"> &nbsp; |&nbsp; <a href="http://jira.atlassian.com/secure/BrowseProject.jspa?id=10470" class="hover-footer-link">Report a bug</a></li>
+        <li class="noprint"> &nbsp;|&nbsp; <a href="http://www.atlassian.com/about/connected.jsp?s_kwcid=Confluence-stayintouch" class="hover-footer-link">Atlassian News</a></li>
+    </ul>
+
+    
+
+            <div><span style="">Site support by</span><a href="http://contegix.com"> <img style="vertical-align:middle" src="../../download/attachments/459015/contegix.jpg.html"/></a></div>
+    </div></div>
+</body>
+</html>

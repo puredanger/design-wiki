@@ -1,0 +1,157 @@
+diff --git a/src/jvm/clojure/lang/Compiler.java b/src/jvm/clojure/lang/Compiler.java
+index d4d96d1..64b620a 100644
+--- a/src/jvm/clojure/lang/Compiler.java
++++ b/src/jvm/clojure/lang/Compiler.java
+@@ -90,6 +90,8 @@ static final String COMPILE_STUB_PREFIX = "compile__stub";
+ static final Keyword protocolKey = Keyword.intern(null, "protocol");
+ static final Keyword onKey = Keyword.intern(null, "on");
+ static Keyword dynamicKey = Keyword.intern("dynamic");
++static final Keyword warnOnReflectionKey = Keyword.intern(null, "warn-on-reflection");
++static final Keyword uncheckedMathKey = Keyword.intern(null, "unchecked-math");
+ 
+ static final Symbol NS = Symbol.intern("ns");
+ static final Symbol IN_NS = Symbol.intern("in-ns");
+@@ -6224,10 +6226,38 @@ public static Expr analyze(C context, Object form) {
+ 	return analyze(context, form, null);
+ }
+ 
++private static IPersistentMap assocUnlessNull(IPersistentMap m, Object k, Object v) {
++	return (v == null) ? m : m.assoc(k, v);
++}
++
++private static boolean pushCompilerOptionBindings(Object form) {
++	if ((form != null) && (form instanceof IMeta))
++		{
++		IPersistentMap m = ((IMeta) form).meta();
++		if (m != null)
++			{
++			IPersistentMap b = PersistentHashMap.EMPTY;
++			b = assocUnlessNull(b, RT.WARN_ON_REFLECTION,
++					    RT.get(m, warnOnReflectionKey));
++			b = assocUnlessNull(b, RT.UNCHECKED_MATH,
++					    RT.get(m, uncheckedMathKey));
++			// TBD: Any others?  Perhaps those in COMPILER_OPTIONS?
++			if (b != PersistentHashMap.EMPTY)
++				{
++				Var.pushThreadBindings(b);
++				return true;
++				}
++			}
++		}
++	return false;
++}
++
+ private static Expr analyze(C context, Object form, String name) {
+ 	//todo symbol macro expansion?
++	boolean bindingsPushed = false;
+ 	try
+ 		{
++		bindingsPushed = pushCompilerOptionBindings(form);
+ 		if(form instanceof LazySeq)
+ 			{
+ 			form = RT.seq(form);
+@@ -6283,6 +6313,11 @@ private static Expr analyze(C context, Object form, String name) {
+ 		else
+ 			throw (CompilerException) e;
+ 		}
++	finally
++		{
++		if (bindingsPushed)
++			Var.popThreadBindings();
++		}
+ }
+ 
+ static public class CompilerException extends RuntimeException{
+@@ -6506,6 +6541,7 @@ public static Object eval(Object form) {
+ }
+ 
+ public static Object eval(Object form, boolean freshLoader) {
++	boolean bindingsPushed = false;
+ 	boolean createdLoader = false;
+ 	if(true)//!LOADER.isBound())
+ 		{
+@@ -6514,6 +6550,7 @@ public static Object eval(Object form, boolean freshLoader) {
+ 		}
+ 	try
+ 		{
++		bindingsPushed = pushCompilerOptionBindings(form);
+ 		Integer line = (Integer) LINE.deref();
+ 		if(RT.meta(form) != null && RT.meta(form).containsKey(RT.LINE_KEY))
+ 			line = (Integer) RT.meta(form).valAt(RT.LINE_KEY);
+@@ -6558,6 +6595,8 @@ public static Object eval(Object form, boolean freshLoader) {
+ 
+ 	finally
+ 		{
++		if (bindingsPushed)
++			Var.popThreadBindings();
+ 		if(createdLoader)
+ 			Var.popThreadBindings();
+ 		}
+diff --git a/test/clojure/test_clojure/rt.clj b/test/clojure/test_clojure/rt.clj
+index a70df2d..1dd19f2 100644
+--- a/test/clojure/test_clojure/rt.clj
++++ b/test/clojure/test_clojure/rt.clj
+@@ -47,6 +47,44 @@
+      #"Reflection warning, .*:\d+ - call to java.lang.String ctor can't be resolved\.\r?\n"
+      (defn foo [] (String. 1 2 3)))))
+ 
++(deftest locally-disable-reflection-warnings
++  (testing "locally disabled reflection warning"
++    (should-not-reflect
++     (defn foo [x] ^{:warn-on-reflection false} (.blah x))))
++  (testing "locally disabled reflection warning 2"
++    (should-not-reflect
++     (defn foo [x]
++       (if x
++         ^{:warn-on-reflection false} (Integer/valueOf #"boom")
++         (+ x 5)))))
++  (testing "locally disabled nested reflection warning"
++    (should-not-reflect
++     (defn foo [x]
++       ^{:warn-on-reflection true}
++       (if x
++         ^{:warn-on-reflection false}
++         (String. 1 2 3)
++         (+ x 5)))))
++  (testing "some reflection warnings locally disabled, others not"
++    (should-print-multiple-err-messages
++     2 #"Reflection warning"
++     (defn foo [x]
++       ^{:warn-on-reflection true}
++       (if (Integer/valueOf #"boom")
++         ^{:warn-on-reflection false}
++         (String. 1 2 3)
++         ^{:warn-on-reflection true}
++         (.blah x)))))
++  (testing "some reflection warnings locally disabled, others not 2"
++    (should-print-multiple-err-messages
++     1 #"Reflection warning"
++     (defn foo [x]
++       ^{:warn-on-reflection false}
++       (if (Integer/valueOf #"boom")
++         ^{:warn-on-reflection true}
++         (String. 1 2 3)
++         (.blah x))))))
++
+ (def example-var)
+ (deftest binding-root-clears-macro-metadata
+   (alter-meta! #'example-var assoc :macro true)
+diff --git a/test/clojure/test_helper.clj b/test/clojure/test_helper.clj
+index 2e8ba94..29926c6 100644
+--- a/test/clojure/test_helper.clj
++++ b/test/clojure/test_helper.clj
+@@ -123,6 +123,14 @@
+     (is (re-matches ~msg-re (with-err-string-writer (eval-in-temp-ns ~form))))
+     (is (re-matches ~msg-re (with-err-print-writer (eval-in-temp-ns ~form))))))
+ 
++(defmacro should-print-multiple-err-messages
++  "Turn on all warning flags, and test that error message prints
++   correctly n times for all semi-reasonable bindings of *err*."
++  [n msg-re form]
++  `(binding [*warn-on-reflection* true]
++     (is (= ~n (count (re-seq ~msg-re (with-err-string-writer (eval-in-temp-ns ~form))))))
++     (is (= ~n (count (re-seq ~msg-re (with-err-print-writer (eval-in-temp-ns ~form))))))))
++
+ (defmacro should-not-reflect
+   "Turn on all warning flags, and test that reflection does not occur
+    (as identified by messages to *err*)."

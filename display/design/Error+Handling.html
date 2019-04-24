@@ -1,0 +1,1780 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Error Handling - Clojure Design - Clojure Development</title>
+
+        
+
+                        
+    
+
+            <meta http-equiv="X-UA-Compatible" content="IE=EDGE">
+<meta charset="UTF-8">
+<!-- Deprecated since 3.4. To be removed in a future version of Confluence; use AJS.Confluence.getContextPath() -->
+<meta id="confluence-context-path" name="confluence-context-path" content="">
+<meta id="confluence-base-url" name="confluence-base-url" content="https://dev.clojure.org">
+
+<meta id="atlassian-token" name="atlassian-token" content="30041c830a95ce9c95d0b58cb377def6b96aa6d2">
+
+<meta id="confluence-space-key" name="confluence-space-key" content="design">
+<script type="text/javascript">
+    // Deprecated global variables. To be removed in a future version of Confluence.
+    var contextPath = '';
+</script>
+
+    
+
+<!-- include system css resources -->
+
+
+    <link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/55/_/download/superbatch/css/batch.css" media="all">
+<!--[if lt IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/_/download/superbatch/css/batch.css?conditionalComment=lt+IE+9" media="all">
+<![endif]-->
+<!--[if IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/_/download/superbatch/css/batch.css?conditionalComment=IE+9" media="all">
+<![endif]-->
+<!--[if lte IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/_/download/superbatch/css/batch.css?conditionalComment=lte+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/55/_/download/superbatch/css/batch-media=print.css" media="print">
+<!--[if lt IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/_/download/contextbatch/css/page/batch.css?conditionalComment=lt+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/_/download/contextbatch/css/page/batch.css" media="all">
+<!--[if lt IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/_/download/contextbatch/css/viewcontent,main/batch.css?conditionalComment=lt+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/_/download/contextbatch/css/viewcontent,main/batch.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.1/_/download/batch/com.atlassian.confluence.plugins.pagetree-pagetree-resources/com.atlassian.confluence.plugins.pagetree-pagetree-resources.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/3/_/styles/colors-spaceKey=design.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.5/_/download/resources/com.atlassian.confluence.plugins.doctheme-documentation/default-theme.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.5/_/download/resources/com.atlassian.confluence.plugins.doctheme-documentation/splitter.css" media="all">
+
+<!-- end system css resources -->
+
+    <meta name="confluence-request-time" content="1556128982251">
+            <meta name="ajs-page-id" content="950768">
+            <meta name="ajs-parent-page-id" content="950459">
+            <meta name="ajs-space-key" content="design">
+            <meta name="ajs-space-name" content="Clojure Design">
+            <meta name="ajs-page-title" content="Error Handling">
+            <meta name="ajs-parent-page-title" content="Core">
+            <meta name="ajs-from-page-title" content="">
+            <meta name="ajs-context-path" content="">
+            <meta name="ajs-version-number" content="4.0">
+            <meta name="ajs-build-number" content="3047">
+            <meta name="ajs-remote-user" content="">
+            <meta name="ajs-static-resource-url-prefix" content="/s/en_GB/3047/3/_">
+            <meta name="ajs-global-settings-attachment-max-size" content="10485760">
+            <meta name="ajs-user-locale" content="en_GB">
+            <meta name="ajs-enabled-dark-features" content="">
+            <meta name="ajs-atl-token" content="30041c830a95ce9c95d0b58cb377def6b96aa6d2">
+            
+            <meta name="ajs-keyboardshortcut-hash" content="7b95af54c6deada096af1f28fdd0f413">
+            <meta name="ajs-use-keyboard-shortcuts" content="true">
+    <!-- Deprecated since 3.4. To be removed in a future version of Confluence; use atl.header -->
+        
+            <script type="text/x-template" title="share-content-popup">
+    <form action="#" method="post" class="aui share-content-popup">
+        <fieldset>
+            <label for="users">User name or email</label>
+            <div class="autocomplete-user-target">
+                <input class="text autocomplete-sharepage" id="users" data-max="10" data-dropdown-target=".autocomplete-user-target" data-none-message="No matching user or email found"/>
+            </div>
+            <ol class="recipients">
+            </ol>
+            <div><label for="note">Note</label></div>
+            <textarea class="textarea" id="note" placeholder="Add an optional note"/>
+        </fieldset>
+        <div class="button-panel">
+            <div class="progress-messages-icon"></div>
+            <div class="progress-messages">
+            </div>
+            <input class="button submit" type="submit" value="Share" disabled/>
+            <a class="close-dialog" href="#">Cancel</a>
+        </div>
+    </form>
+</script>
+
+<script type="text/x-template" title="share-content-popup-recipient-username">
+    <li data-username="{username}" style="display: none">
+        <span>
+            <img src="{thumbnailLink.href}" title="{title}">
+            <span>{title}</span>
+            <span class="remove-recipient"/>
+        </span>
+    </li>
+</script>
+
+<script type="text/x-template" title="share-content-popup-recipient-email">
+    <li data-email="{email}" style="display: none">
+        <span>
+            <img src="{icon}" title="{email}">
+            <span>{email}</span>
+            <span class="remove-recipient"/>
+        </span>
+    </li>
+</script>
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="icon" type="image/png" href="../../s/en_GB/3047/3/_/images/logo/confluence_16.png">
+
+<link rel="search" type="application/opensearchdescription+xml" href="../../opensearch/osd.action.xml" title="Clojure Development"/>
+
+        <!-- include system javascript resources -->
+                        
+    
+    <script type="text/javascript" src="../../s/en_GB/3047/3/55/_/download/superbatch/js/batch.js" ></script>
+<!--[if lte IE 8]>
+<script type="text/javascript" src="/s/en_GB/3047/3/55/_/download/superbatch/js/batch.js?conditionalComment=lte+IE+8" ></script>
+<![endif]-->
+<script type="text/javascript" src="../../s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/_/download/contextbatch/js/page/batch.js" ></script>
+<script type="text/javascript" src="../../s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/_/download/contextbatch/js/viewcontent,main/batch.js" ></script>
+<script type="text/javascript" src="../../s/en_GB/3047/3/2.0.1/_/download/batch/com.atlassian.confluence.plugins.pagetree-pagetree-resources/com.atlassian.confluence.plugins.pagetree-pagetree-resources.js" ></script>
+
+    
+    <!-- end system javascript resources -->
+
+    
+
+    
+    <link rel="canonical" href="Error+Handling.html">
+    <link rel="shortlink" href="Error+Handling.html">
+    <meta name="wikilink" content="[design:Error Handling]">
+    <meta name="page-version" content="8">
+
+</head>
+
+<body             onload="placeFocus()"
+     id="com-atlassian-confluence" class="theme-documentation ">
+<div id="full-height-container">
+    <div id="header-precursor">
+        
+        
+                </div>
+
+<div id="header" class="sectionbottom ">
+        <form id="quick-search" class="quick-search" method="get" action="../../dosearchsite.action.html">
+                <fieldset>
+            <input type="hidden" name="spaceSearch" value="false"/>
+        </fieldset>
+        <fieldset>
+            <legend>Quick Search</legend>
+            <input class="quick-search-query" id="quick-search-query" type="text" accessKey="search-pages-action.accesskey" autocomplete="off" name="queryString" size="25"/>
+            <input class="quick-search-submit" id="quick-search-submit" type="submit"  value="Search Confluence" />
+            <div class="aui-dd-parent quick-nav-drop-down"><!-- Quick nav appears here --></div>
+        </fieldset>
+        <fieldset class="hidden parameters">
+            <input type="hidden" id="quickNavEnabled" value="true" />
+                    </fieldset>
+    </form>
+
+    <ul id="header-menu-bar" class="ajs-menu-bar">
+                    
+        
+            <li class="normal ajs-menu-item">
+        <a id="browse-menu-link" class="browse trigger ajs-menu-title" href="#"><span><span>Browse</span></span></a>         <div class="assistive ajs-drop-down">
+                        <ul  id="browse-menu-link-leading"                 class="section-leading first">
+                                        <li>
+    
+        
+    
+    <a  id="space-pages-link" href="../../pages/recentlyupdated.action-key=design.html"  class=""   title="Browse pages in the Clojure Design space">
+                   <span>Pages</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-blogposts-link" href="../../pages/viewrecentblogposts.action-key=design.html"  class=""   title="Browse blogs in the Clojure Design space">
+                   <span>Blog</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-labels-link" href="../../labels/listlabels-heatmap.action-key=design.html"  class=""   title="Browse labels in the Clojure Design space">
+                   <span>Labels</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-attachments-link" href="../../spaces/listattachmentsforspace.action-key=design.html"  class=""   title="Browse attachments in the Clojure Design space">
+                   <span>Attachments</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-mail-link" href="../../spaces/viewmailarchive.action-key=design.html"  class=""   title="Browse mail in the Clojure Design space">
+                   <span>Mail</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-advanced-link" href="../../spaces/viewspacesummary.action-key=design.html"  class=""   title="Browse additional space functions in the Clojure Design space">
+                   <span>Advanced</span></a>        </li>
+                            </ul>
+                        <ul  id="browse-menu-link-global"                 class="section-global">
+                                        <li>
+    
+        
+    
+    <a  id="whats-new-menu-link" href="http://docs.atlassian.com/confluence/docs-40/whatsnew/iframe"  class=""   title="">
+                   <span>What’s New</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-directory-link" href="../../spacedirectory/view.action.html"  class=""   title="Browse the Confluence space directory">
+                   <span>Space Directory</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="feed-builder-link" href="../../dashboard/configurerssfeed.action.html"  class=""   title="Create your custom RSS feed.">
+                   <span>Feed Builder</span></a>        </li>
+                                        <li>
+    
+            
+    
+    <a  id="keyboard-shortcuts-link" href="#"  class=""   title="View available keyboard shortcuts">
+                   <span>Keyboard Shortcuts</span></a>        </li>
+                                        <li>
+    
+            
+    
+    <a  id="gadget-directory-link" href="#"  class="user-item administration-link"   title="Browse gadgets provided by Confluence">
+                   <span>Confluence Gadgets</span></a>        </li>
+                            </ul>
+                    </div>
+    </li>
+        
+                                                         <li class="ajs-menu-item normal">
+        
+        
+    
+    <a  id="login-link" href="../../login.action-os_destination=-display-design-Error+Handling.html"  class="user-item login-link"   title="">
+                   <span>Log In</span></a>        </li>
+                            <li class="ajs-menu-item normal">
+    
+        
+    
+    <a  id="signup-link" href="../../signup.action.html"  class="user-item signup-link"   title="">
+                   <span>Sign Up</span></a>        </li>
+                                <li class="normal ajs-menu-item">
+            <div id="splitter-button" class="hidden" title="Show or hide sidebar"></div>
+        </li>
+
+    </ul>
+    
+    
+    <ol id="breadcrumbs">
+                    
+                        
+        <li class="first" >
+                                    <span><a href="../../dashboard.action.html" title="Go to Dashboard">Dashboard</a></span>
+                </li>
+                    
+                
+        <li>
+                                    <span><a href="Home-jsessionid=3A56E29DA520B75101350BA4484B9990.html">Clojure Design</a></span>
+                </li>
+                                        <li id="ellipsis" title="Show all breadcrumbs"><span><strong>&#8230;</strong></span></li>
+                                    
+                
+        <li class="hidden-crumb" >
+                                    <span><a href="Home.html">Home</a></span>
+                </li>
+                                
+                
+        <li class="hidden-crumb" >
+                                    <span><a href="Idea+Hammock.html">Idea Hammock</a></span>
+                </li>
+                                
+                
+        <li class="hidden-crumb" >
+                                    <span><a href="Core.html">Core</a></span>
+                </li>
+                    
+                
+        <li>
+                                    <span><a href="Error+Handling.html">Error Handling</a></span>
+                </li>
+        </ol>
+
+</div>
+
+    <div id="splitter">
+    <div id="splitter-sidebar" >
+        
+
+                    
+        
+    
+
+<div class="plugin_pagetree">
+
+                <div id="pagetreesearch">
+            <form method="POST" action="../../dosearchsite.action-searchQuery.queryString=&amp;searchQuery.spaceKey=conf_all.html" name="pagetreesearchform">
+                                    <input type="hidden" name="ancestorId" value="458775">
+                                <input type="hidden" name="spaceKey" value="design">
+                <input type="text"  size="20" name="queryString">
+                <input type="submit" value="Search">
+            </form>
+        </div>
+    
+        
+    <ul class="plugin_pagetree_children_list plugin_pagetree_children_list_noleftspace">
+        <div class="plugin_pagetree_children">
+        </div>
+    </ul>
+
+    <fieldset class="hidden">
+        <input type="hidden" name="treeId" value="">
+        <input type="hidden" name="treeRequestId" value="/plugins/pagetree/naturalchildren.action?decorator=none&amp;excerpt=false&amp;sort=position&amp;reverse=false&amp;disableLinks=false">
+        <input type="hidden" name="treePageId" value="950768">
+
+        <input type="hidden" name="noRoot" value="false">
+        <input type="hidden" name="rootPageId" value="458775">
+
+        <input type="hidden" name="rootPage" value="">
+        <input type="hidden" name="startDepth" value="0">
+        <input type="hidden" name="spaceKey" value="design" >
+
+        <input type="hidden" name="i18n-pagetree.loading" value="Loading...">
+        <input type="hidden" name="i18n-pagetree.error.permission" value="Unable to load page tree. It seems that you do not have permission to view the root page.">
+        <input type="hidden" name="i18n-pagetree.eeror.general" value="There was a problem retrieving the page tree. Please check the server log file for more information.">
+        <input type="hidden" name="loginUrl" value="/login.action?os_destination=%2Fdisplay%2Fdesign%2FError%2BHandling">
+
+                <fieldset class="hidden">
+                                                <input type="hidden" name="ancestorId" value="950459">
+                                    <input type="hidden" name="ancestorId" value="8192213">
+                                    <input type="hidden" name="ancestorId" value="458775">
+                                    </fieldset>
+    </fieldset>
+</div>
+
+
+
+            </div>
+    <div id="splitter-content">
+
+                    <script type="text/javascript" src="../../s/en_GB/3047/3/2.0.5/_/download/resources/com.atlassian.confluence.plugins.doctheme-resources/doc-theme.js"></script>
+    
+            
+    
+<div id="main" >
+    <div id="main-header">
+	    
+	    
+    <div id="navigation" class="content-navigation view">
+                    <ul class="ajs-menu-bar">
+                                
+                        
+            <li class="normal ajs-menu-item">
+        <a id="action-menu-link" class="action trigger ajs-menu-title" href="#"><span><span>Tools</span></span></a>         <div class="assistive ajs-drop-down">
+                        <ul  id="action-menu-link-primary"                 class="section-primary first">
+                                        <li>
+    
+        
+    
+    <a  id="view-attachments-link" href="../../pages/viewpageattachments.action-pageId=950768.html"  class="action-view-attachments"  accessKey="a"  title="View Attachments">
+                   <span><u>A</u>ttachments (0)</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="action-view-history-link" href="../../pages/viewpreviousversions.action-pageId=950768.html"  class="action-view-history"   title="">
+                   <span>Page History</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="action-page-permissions-link" href="../../pages/viewinfo.action-pageId=950768.html"  class="action-page-permissions"   title="Edit restrictions">
+                   <span>Restrictions</span></a>        </li>
+                            </ul>
+                        <ul  id="action-menu-link-secondary"                 class="section-secondary">
+                                        <li>
+    
+        
+    
+    <a  id="view-page-info-link" href="../../pages/viewinfo.action-pageId=950768.html"  class="action-view-info"   title="">
+                   <span>Info</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="link-to-page-link" href="../../pages/viewinfo.action-pageId=950768.html"  class=""   title="Link to this Page">
+                   <span>Link to this Page&hellip;</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="view-in-hierarchy-link" href="../../pages/listpages-dirview.action-key=design&amp;openId=950768.html#selectedPageInHierarchy"  class=""   title="">
+                   <span>View in Hierarchy</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="action-view-source-link" href="../../plugins/viewsource/viewpagesrc.action-pageId=950768.html"  class="action-view-source popup-link"   title="">
+                   <span>View Source</span></a>        </li>
+                            </ul>
+                    </div>
+    </li>
+            </ul>
+    </div>
+
+	    
+	    <h1 id="title-heading" class="pagetitle">
+	        	            <a href="Home-jsessionid=3A56E29DA520B75101350BA4484B9990.html"><img class="logo global custom" src="../../download/attachments/131074/global.logo.png" alt=""></a>	        	
+			<span id="title-text">
+							            <a href="Error+Handling.html">Error Handling</a>
+    						</span>
+	    </h1>
+	</div>
+
+    
+
+    
+    
+    
+    
+    
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+        
+    
+    
+                    
+    
+
+    
+
+
+<div id="content" class="page view">
+    
+
+
+
+                
+<script type="text/x-template" title="movePageDialog">
+    <div class="row information">
+        <div class="inner">
+            <div class="element">
+                Specify the new parent page for this page and its children by space and title.
+            </div>
+        </div>
+    </div>
+    <div class="form">
+        <fieldset>
+                
+
+    <legend class="assistive"><span>Change the Parent Page to a Known Page</span></legend>
+            <div class="row">
+                <label for="new-space">New space:</label>
+                <div class="value new-space-value">
+                    <input id="new-space-key" name="new-space-key" type="hidden" value="design">
+                                            <span class="space-input">
+                            <input id="new-space" name="new-space" value="Clojure Design" disabled="disabled">
+                        </span>
+                        <span class="description warning">You cannot move this page to another space because you do not have permission to remove it from this space.</span>
+                                        <div class="new-space-dropdown aui-dd-parent autocomplete"></div>
+                </div>
+            </div>
+            <div class="row">
+                <label for="new-parent-page">New parent page:</label>
+                <div class="value new-parent-page-value">
+                    <span class="page-input">
+                        <input id="new-parent-page" name="new-parent-page" value="Core">
+                    </span>
+                    <span class="description">Start typing a page title to see a list of suggestions.</span>
+                    <div class="new-parent-page-dropdown aui-dd-parent autocomplete"></div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <div class="location-info">
+        <div class="row">
+            <label>Current location:</label>
+            <div class="value breadcrumbs-container">
+                <div class="breadcrumbs-line">
+                    <ul id="current-parent-breadcrumbs" class="breadcrumbs">
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <label>New location:</label>
+            <div class="value breadcrumbs-container">
+                <div class="breadcrumbs-line">
+                    <ul id="new-parent-breadcrumbs" class="breadcrumbs">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/x-template" title="movePageSearchPanel">
+    <div class="row information">
+        <div class="inner">
+            <div class="element">
+                Search for and select the new parent page for this page and its children.
+            </div>
+        </div>
+    </div>
+    <div id="move-page-search-container" class="row">
+        <div class="search-form">
+            <fieldset>
+                    
+
+    <legend class="assistive"><span>Search for a New Parent Page</span></legend>
+                    
+
+    <label  for="move-page-search-query" class="assistive">Search keywords</label>
+                <input class="search-query" id="move-page-search-query">
+                    
+
+    <label  for="move-page-search-space" class="assistive">Search in space</label>
+                                    <select id="move-page-search-space" class="search-space" disabled="disabled">
+                        <option value="design" selected="selected">Clojure Design</option>
+                    </select>
+                                <input type="button" value="Search">
+                                    <div class="description warning">You cannot move this page to another space because you do not have permission to remove it from this space.</div>
+                            </fieldset>
+        </div>
+        <div class="search-results">
+        </div>
+    </div>
+</script>
+<script type="text/x-template" title="searchResultsGrid">
+    <table>
+        <thead>
+            <tr class="header">
+                <th class="search-result-title">Page Title</th>
+                <th class="search-result-space">Space</th>
+                <th class="search-result-date">Updated</th>
+            </tr>
+        </thead>
+    </table>
+</script>
+<script type="text/x-template" title="searchResultsGridCount">
+    <p class="search-result-count">{0}</p>
+</script>
+<script type="text/x-template" title="searchResultsGridRow">
+    <tr class="search-result">
+        <th class="search-result-title"><a href="{1}" class="content-type-{2}"><span>{0}</span></a></th>
+        <td class="search-result-space"><a class="space" href="/display/{4}/" title="{3}">{3}</a></td>
+        <td class="search-result-date"><span class="date" title="{6}">{5}</span></td>
+    </tr>
+</script><!-- Start restrictions section -->
+<script type="text/x-template" title="page-permissions-div">
+<div id="page-permissions-div">
+    <div id="page-permissions-editor-form">
+
+                <div id="page-permissions-error-div" class="hidden">
+            <a href="#" id="permissions-error-div-close">Ok</a>
+            <div></div>
+        </div>
+
+                <div id="page-permissions-type-radios" class="page-permissions-label-rows">
+            <div>
+                <input id="restrictViewRadio" type="radio" checked="checked" name="pagePermissionTypeRadio" value="view"/>
+                <label for="restrictViewRadio">Restrict viewing of this page</label>
+                <input id="restrictEditRadio" type="radio" name="pagePermissionTypeRadio" value="edit"/>
+                <label for="restrictEditRadio">Restrict editing of this page</label>
+            </div>
+        </div>
+        <div id="page-permissions-input" class="page-permissions-label-rows">
+            <div class="page-permissions-label">To:</div>
+            <div id="page-permissions-chooser-box">
+                                <span id="page-permissions-choose-user" class="ajs-button">
+                    
+
+
+
+    
+
+
+
+<a href="#" id='userpicker-popup-link-image' onClick="var picker = window.open('/spaces/openuserpicker.action?key=design&amp;startIndex=0&amp;onPopupSubmit=AJS.PagePermissions.addUserPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=700,height=680,scrollbars=yes'); picker.focus(); return false;"><img src="/s/en_GB/3047/3/_/images/icons/user_16.gif" height=16 width=16 border=0 align="absmiddle"  title="Choose users" /></a>
+<a href="#" id='userpicker-popup-link-text' onClick="var picker = window.open('/spaces/openuserpicker.action?key=design&amp;startIndex=0&amp;onPopupSubmit=AJS.PagePermissions.addUserPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=700,height=680,scrollbars=yes'); picker.focus(); return false;">Person...</a>
+
+
+                </span>
+                <span id="page-permissions-choose-group" class="ajs-button">
+                    
+
+
+
+    
+
+ 
+
+<a href="#" id='grouppicker-popup-link-image' onClick="var picker = window.open('/spaces/opengrouppicker.action?key=design&amp;startIndex=0&amp;actionName=dosearchgroups.action&amp;onPopupSubmit=AJS.PagePermissions.addGroupPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=580,height=550,scrollbars=yes'); picker.focus(); return false;"><img src="/s/en_GB/3047/3/_/images/icons/group_16.gif" height=16 width=16 border=0 align="absmiddle"  title="Choose groups" /></a>
+<a href="#" id='grouppicker-popup-link-text' onClick="var picker = window.open('/spaces/opengrouppicker.action?key=design&amp;startIndex=0&amp;actionName=dosearchgroups.action&amp;onPopupSubmit=AJS.PagePermissions.addGroupPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=580,height=550,scrollbars=yes'); picker.focus(); return false;">Group...</a>
+
+
+                </span>
+            </div>
+            <div id="page-permissions-input-box">
+                <input type="text" id="page-permissions-names-input" name="permissionNames"
+                    placeholder="Enter user or group name" class="autocomplete-user"
+                    data-max="10" data-none-message="No matches"
+                    data-target="#page-permissions-names-hidden" data-template="{username}"
+                    data-dropdown-target="#page-perms-name-dropdown-wrapper" data-resize-to-input="true"
+                    size="30"/>
+                <input
+    type="hidden"
+                            id="page-permissions-names-hidden"           />                <img height="16px" width="1px" src="/s/en_GB/3047/3/_/images/border/spacer.gif"/>
+                <input type="button" id="add-typed-names" value="Restrict">
+                <div id="page-perms-name-dropdown-wrapper" class="aui-dd-parent autocomplete"></div>
+            </div>
+        </div>
+    </div>
+    <div id="page-permissions-tables">
+        <div id="page-permissions-table-div">
+                        <table id="page-permissions-table" class="page-permissions-table">
+                <tr id="page-permissions-no-views" class="marker-row">
+                    <td colspan="3" class="page-permissions-marker-cell"><span>No view restrictions are defined for this page</span></td>
+                </tr>
+                <tr id="page-permissions-no-edits" class="marker-row">
+                    <td colspan="3" class="page-permissions-marker-cell"><span>No edit restrictions are defined for this page</span></td>
+                </tr>
+            </table>
+        </div>
+        <div id="page-inherited-permissions-table-div" class="hidden">
+            <span id="page-inherited-permissions-table-desc">
+                <a class="icon twisty-closed">Show/Hide</a>
+                <a id="toggle-inherited-permissions" title="Click to see inherited restrictions">This page has restricted parent pages. It can only be seen by users who can see those parent pages.</a>
+            </span>
+            <div id="page-inherited-permissions-tables" class="hidden page-inheritance-togglable"></div>
+        </div>
+    </div>
+</div>
+</script>
+
+<!-- End restrictions section -->
+
+        
+    
+    
+        <fieldset class="hidden parameters">
+            <input type="hidden" title="parentPageId" value="950459">
+        </fieldset>
+
+        
+                            
+    
+
+                    
+
+        
+        <a href="#page-metadata-end" class="assistive">Skip to end of metadata</a>
+<div id="page-metadata-start" class="assistive"></div>
+
+    <div class="page-metadata">
+        <ul>
+                            <li class="page-metadata-item noprint">
+    
+            
+    
+    <a  id="content-metadata-page-restrictions" href="#"  class="page-metadata-icon page-restrictions hidden"   title="Page restrictions apply. Click the lock icon to view or edit the restriction.">
+                   <span>Page restrictions apply</span></a>        </li>
+                        <li class="page-metadata-modification-info">
+                                    Added by <a href="../../login.action-os_destination=-display-~stu.html"
+                          class="url fn"
+                   >Stuart Halloway</a>, last edited by <a href="../../login.action-os_destination=-display-~stu.html"
+                          class="url fn"
+                   >Stuart Halloway</a> on Jan 14, 2011
+                                                                <span class="noprint">&nbsp;(<a id="view-change-link" href="../../pages/diffpages.action-pageId=950768&amp;originalId=3309628.html">view change</a>)</span>
+                                                </li>
+                            <li class="show-hide-comment-link">
+                    <a id="show-version-comment" class="inline-control-link" href="#">show comment</a>
+                    <a id="hide-version-comment" class="inline-control-link" style="display:none;" href="#">hide comment</a>
+                </li>
+                    </ul>
+                <div id="version-comment" class="noteMacro">
+        <strong>Comment:</strong>
+        Migrated to Confluence 4.0<br />
+    </div>
+        </div>
+
+
+<a href="#page-metadata-start" class="assistive">Go to start of metadata</a>
+<div id="page-metadata-end" class="assistive"></div>
+        
+        <fieldset class="hidden parameters">
+                        <input type="hidden" title="browsePageTreeMode" value="view">
+        </fieldset>
+
+        <div class="wiki-content">
+                           <h3 id="ErrorHandling-Problems">Problems</h3>
+
+<ul>
+	<li>platform uses types for dispatch
+	<ul>
+		<li>only error handling is platform error handling</li>
+	</ul>
+	</li>
+	<li>want to carry data payloads
+	<ul>
+		<li>platform exceptions don't</li>
+	</ul>
+	</li>
+	<li>need out-of-band communication
+	<ul>
+		<li>for both ordinary and exceptional things!
+		<ul>
+			<li>exceptional things are ordinary during development</li>
+		</ul>
+		</li>
+		<li>and ways to discover the oob mechanisms</li>
+	</ul>
+	</li>
+	<li>can't deal with exception at point it happens
+	<ul>
+		<li>can't resume</li>
+	</ul>
+	</li>
+	<li>cannot manipulate exceptions as data</li>
+</ul>
+
+
+<h3 id="ErrorHandling-Symptoms">Symptoms</h3>
+
+<ul>
+	<li>new application problems beget new types
+	<ul>
+		<li>types are heavy</li>
+		<li>why don’t people use an existing type?
+		<ul>
+			<li>want to branch on it (flow control)</li>
+			<li>habit</li>
+			<li>carry data</li>
+		</ul>
+		</li>
+	</ul>
+	</li>
+	<li>new exception types lead to
+	<ul>
+		<li>gen-class (+ precompilation)</li>
+		<li>Java classes in Clojure projects</li>
+	</ul>
+	</li>
+	<li>use big things to solve small problems
+	<ul>
+		<li>condition library (e.g. <a href="https://github.com/clojure/clojure-contrib/blob/master/modules/condition/src/examples/clojure/examples/condition.clj" class="external-link" rel="nofollow">Contrib Condition</a>) when all you want is data</li>
+		<li>exceptions when all you want is control flow
+		<ul>
+			<li>idiomatic on many JVM languages</li>
+			<li>don't have composite returns or dynamic binding</li>
+		</ul>
+		</li>
+	</ul>
+	</li>
+	<li>can't troubleshoot problems
+	<ul>
+		<li>info is gone when call stack unwinds</li>
+	</ul>
+	</li>
+</ul>
+
+
+<h3 id="ErrorHandling-ExampleUseCases">Example Use Cases</h3>
+
+<ul>
+	<li>communicate ordinary things
+	<ul>
+		<li>recover from I/O failure</li>
+		<li>convey detailed information for reporting in test framework</li>
+	</ul>
+	</li>
+	<li>communicate exceptional things
+	<ul>
+		<li>program bugs</li>
+		<li>platform and hardware failures</li>
+	</ul>
+	</li>
+	<li>jump to debugger based on situation</li>
+	<li>add information to an exception
+	<ul>
+		<li>e.g. Alan's adorning macro arity example</li>
+	</ul>
+	</li>
+	<li>troubleshoot build failure that is only on Hudson</li>
+</ul>
+
+
+<h3 id="ErrorHandling-Constraints">Constraints</h3>
+
+<ul>
+	<li>dispatch should be fast
+	<ul>
+		<li>where exceptions are used for exceptional things, performance is not an issue</li>
+	</ul>
+	</li>
+	<li>error handling should unify at bottom with Java</li>
+	<li>neither ordinary nor exceptional things should have to pollute API for fns that don't care or can't respond
+	<ul>
+		<li>pay for what you need</li>
+	</ul>
+	</li>
+</ul>
+
+
+<h3 id="ErrorHandling-Aneven-moremodestproposal">An even-more modest proposal</h3>
+
+<p>I think we should implement</p>
+
+<ul>
+	<li>education on dynamic bindings</li>
+	<li>bindable <code>*assertion-handler*</code></li>
+	<li>(maybe) clj-stacktrace-like data-ification fns for exceptions</li>
+	<li>(maybe) data-carrying <code>*RuntimeException*</code> subclass</li>
+</ul>
+
+
+<p>All of these ideas, and several others not chosen, are documented below.</p>
+
+<h3 id="ErrorHandling-Someapproaches">Some approaches</h3>
+
+<p>Table of some approaches and how they address the problems above. Approaches described in more detail below. Some of the approaches are deliberately crazy for contrast (wonder if we will agree on which ones).</p>
+
+<div class="table-wrap"><table class="confluenceTable"><tbody>
+<tr>
+<th class="confluenceTh"><p> Approach </p></th>
+<th class="confluenceTh"><p> Type Dispatch </p></th>
+<th class="confluenceTh"><p> Data Payloads </p></th>
+<th class="confluenceTh"><p> Out-of-band Communication </p></th>
+<th class="confluenceTh"><p> Action at Point of Exception </p></th>
+<th class="confluenceTh"><p> Exceptions as Data </p></th>
+<th class="confluenceTh"><p> Notes </p></th>
+</tr>
+<tr>
+<td class="confluenceTd"><p> education on dynamic binding </p></td>
+<td class="confluenceTd"><p> <span style="color: rgb(0,0,255);"><strong>solves</strong></span> </p></td>
+<td class="confluenceTd"><p> n/a </p></td>
+<td class="confluenceTd"><p> <span style="color: rgb(0,0,255);"><strong>solves</strong></span> </p></td>
+<td class="confluenceTd"><p> could solve </p></td>
+<td class="confluenceTd"><p> n/a </p></td>
+<td class="confluenceTd"><p> </p></td>
+</tr>
+<tr>
+<td class="confluenceTd"><p> clj-stacktrace </p></td>
+<td class="confluenceTd"><p> should unify with dataification of exceptions, if any </p></td>
+<td class="confluenceTd"><p> n/a </p></td>
+<td class="confluenceTd"><p> n/a </p></td>
+<td class="confluenceTd"><p> n/a </p></td>
+<td class="confluenceTd"><p> <span style="color: rgb(0,0,255);"><strong>partially solves for non-Clojure types</strong></span> </p></td>
+<td class="confluenceTd"><p> </p></td>
+</tr>
+<tr>
+<td class="confluenceTd"><p> ad hoc conditions </p></td>
+<td class="confluenceTd"><p> worsens </p></td>
+<td class="confluenceTd"><p> could solve </p></td>
+<td class="confluenceTd"><p> worsens </p></td>
+<td class="confluenceTd"><p> solves </p></td>
+<td class="confluenceTd"><p> orthogonal <br class="atl-forced-newline" /> </p></td>
+<td class="confluenceTd"><p> worsens = replaces general mechanism with more specialized one </p></td>
+</tr>
+<tr>
+<td class="confluenceTd"><p> pattern-matching conditions </p></td>
+<td class="confluenceTd"><p> ? </p></td>
+<td class="confluenceTd"><p> could solve </p></td>
+<td class="confluenceTd"><p> worsens </p></td>
+<td class="confluenceTd"><p> solves </p></td>
+<td class="confluenceTd"><p> orthogonal </p></td>
+<td class="confluenceTd"><p> worsens = replaces general mechanism with more specialized one </p></td>
+</tr>
+<tr>
+<td class="confluenceTd"><p> data-carrying exception </p></td>
+<td class="confluenceTd"><p> could support pattern matching </p></td>
+<td class="confluenceTd"><p> <span style="color: rgb(0,0,255);"><strong>solves</strong></span> </p></td>
+<td class="confluenceTd"><p> n/a </p></td>
+<td class="confluenceTd"><p> n/a </p></td>
+<td class="confluenceTd"><p> <span style="color: rgb(0,0,255);"><strong>solves for Clojure types</strong></span> </p></td>
+<td class="confluenceTd"><p> </p></td>
+</tr>
+<tr>
+<td class="confluenceTd"><p> enrich exceptions with local context </p></td>
+<td class="confluenceTd"><p> n/a </p></td>
+<td class="confluenceTd"><p> enhanced </p></td>
+<td class="confluenceTd"><p> for errors only </p></td>
+<td class="confluenceTd"><p> n/a </p></td>
+<td class="confluenceTd"><p> enhanced </p></td>
+<td class="confluenceTd"><p> yuck: makes everybody pay for debug time support </p></td>
+</tr>
+<tr>
+<td class="confluenceTd"><p> bindable test/assertion handler </p></td>
+<td class="confluenceTd"><p> orthogonal </p></td>
+<td class="confluenceTd"><p> orthogonal <br class="atl-forced-newline" /> </p></td>
+<td class="confluenceTd"><p> <span style="color: rgb(0,0,255);"><strong>for assertions</strong></span> </p></td>
+<td class="confluenceTd"><p> <span style="color: rgb(0,0,255);"><strong>for assertions</strong></span> </p></td>
+<td class="confluenceTd"><p> n/a </p></td>
+<td class="confluenceTd"><p> </p></td>
+</tr>
+<tr>
+<td class="confluenceTd"><p> bindable throw handler </p></td>
+<td class="confluenceTd"><p> orthogonal <br class="atl-forced-newline" /> </p></td>
+<td class="confluenceTd"><p> orthogonal <br class="atl-forced-newline" /> </p></td>
+<td class="confluenceTd"><p> <span style="color: rgb(0,0,255);"><strong>for Clojure exceptions</strong></span> </p></td>
+<td class="confluenceTd"><p> <span style="color: rgb(0,0,255);"><strong>for Clojure exceptions</strong></span> </p></td>
+<td class="confluenceTd"><p> n/a </p></td>
+<td class="confluenceTd"><p> </p></td>
+</tr>
+<tr>
+<td class="confluenceTd"><p> platform-based handler </p></td>
+<td class="confluenceTd"><p> orthogonal <br class="atl-forced-newline" /> </p></td>
+<td class="confluenceTd"><p> orthogonal <br class="atl-forced-newline" /> </p></td>
+<td class="confluenceTd"><p> solves </p></td>
+<td class="confluenceTd"><p> solves </p></td>
+<td class="confluenceTd"><p> n/a </p></td>
+<td class="confluenceTd"><p> does it exist? </p></td>
+</tr>
+<tr>
+<td class="confluenceTd"><p> bindable edge handler </p></td>
+<td class="confluenceTd"><p> orthogonal <br class="atl-forced-newline" /> </p></td>
+<td class="confluenceTd"><p> orthogonal <br class="atl-forced-newline" /> </p></td>
+<td class="confluenceTd"><p> tries and fails </p></td>
+<td class="confluenceTd"><p> tries and fails </p></td>
+<td class="confluenceTd"><p> could help </p></td>
+<td class="confluenceTd"><p> yuck: perf, asymmetry, doesn't accomplish desired goal </p></td>
+</tr>
+<tr>
+<td class="confluenceTd"><p> wrap java exceptions </p></td>
+<td class="confluenceTd"><p> orthogonal <br class="atl-forced-newline" /> </p></td>
+<td class="confluenceTd"><p> orthogonal <br class="atl-forced-newline" /> </p></td>
+<td class="confluenceTd"><p> at Clojure boundary </p></td>
+<td class="confluenceTd"><p> n/a </p></td>
+<td class="confluenceTd"><p> could support </p></td>
+<td class="confluenceTd"><p> yuck; terrible perf, terrible asymmetry, or both </p></td>
+</tr>
+<tr>
+<td class="confluenceTd"><p> &quot;modest proposal&quot; above </p></td>
+<td class="confluenceTd"><p> <span style="color: rgb(0,0,255);"><strong>solves</strong></span>  <br class="atl-forced-newline" /> </p></td>
+<td class="confluenceTd"><p> <span style="color: rgb(0,0,255);"><strong>solves</strong></span>  <br class="atl-forced-newline" /> </p></td>
+<td class="confluenceTd"><p> <span style="color: rgb(0,0,255);"><strong>solves, with extra goodness for debug</strong></span><br class="atl-forced-newline" /> </p></td>
+<td class="confluenceTd"><p> <span style="color: rgb(0,0,255);"><strong>solves, with extra goodness for debug</strong></span><br class="atl-forced-newline" /> </p></td>
+<td class="confluenceTd"><p> <span style="color: rgb(0,0,255);"><strong>solves</strong></span> </p></td>
+<td class="confluenceTd"><p> what's not to like? see bottom of this page... </p></td>
+</tr>
+</tbody></table></div>
+
+
+<h3 id="ErrorHandling-EducationonDynamicBinding">Education on Dynamic Binding</h3>
+
+<p>Document dynamic binding as the &quot;Clojure Way&quot; to do out-of-band-control flow that is often done via exceptions on other JVM languages.</p>
+
+<ul>
+	<li>find likely place within Clojure or Contrib and implement examplar</li>
+	<li>write docs and tutorial</li>
+	<li>add &quot;control flow&quot; link from exception handling parts of Clojure docs</li>
+</ul>
+
+
+<h3 id="ErrorHandling-clj-stacktrace"><a href="https://github.com/mmcgrana/clj-stacktrace" class="external-link" rel="nofollow">clj-stacktrace</a></h3>
+
+<ul>
+	<li>define a standard vocabulary for data-izing the information in a clojure exception</li>
+	<li>package in fns
+	<ul>
+		<li>do not call these fns automatically</li>
+		<li>maybe provide REPL helpers that do</li>
+	</ul>
+	</li>
+	<li>other parts of clj-stactkrace (color printing etc.) should remain tool features</li>
+	<li>open questions
+	<ul>
+		<li>what do the REPL fns look like?</li>
+		<li>might start with the data and wait to see how they get used</li>
+	</ul>
+	</li>
+</ul>
+
+
+<h3 id="ErrorHandling-Adhocconditions">Ad hoc conditions</h3>
+
+<p>E.g. <a href="https://github.com/clojure/clojure-contrib/blob/master/modules/condition/src/examples/clojure/examples/condition.clj" class="external-link" rel="nofollow">Contrib Condition</a> or <a href="https://github.com/clojure/clojure-contrib/blob/master/modules/error-kit/src/main/clojure/clojure/contrib/error_kit.clj" class="external-link" rel="nofollow">Contrib Error-Kit</a>.</p>
+
+<ul>
+	<li>could unify with Java exceptions, or not</li>
+	<li>could include data-carrying exception, or not</li>
+</ul>
+
+
+<p>Not carrying this idea forward at this point.</p>
+
+<h3 id="ErrorHandling-PatternMatchingConditions">Pattern Matching Conditions</h3>
+
+<p>Pattern matching (a la <a href="https://github.com/dcolthorp/matchure" class="external-link" rel="nofollow">Matchure</a>), plus exceptions as data, plus dynamic binding.</p>
+
+<p>Not carrying this idea forward at this point.</p>
+
+<h3 id="ErrorHandling-Data-carryingexception">Data-carrying exception</h3>
+
+<p>Single exception type that can carry data, allowing clojure data tools to be used to process exceptions.</p>
+
+<ul>
+	<li>subclass RuntimeException?
+	<ul>
+		<li>or one new type for each family (error, runtime, assertion?)</li>
+	</ul>
+	</li>
+	<li>unify keys with clj-stackrace or equivalent if that is also done</li>
+	<li>open questions
+	<ul>
+		<li>what are the programmatic (non-interactive) uses of this data?</li>
+	</ul>
+	</li>
+</ul>
+
+
+<h3 id="ErrorHandling-Enrichexceptionswithlocalcontext">Enrich exceptions with local context</h3>
+
+<ul>
+	<li>add locals, bindings, kitchen sink to exceptions</li>
+	<li>could be debug-only</li>
+	<li>could be tied to throw, or only to assertions</li>
+</ul>
+
+
+<h3 id="ErrorHandling-Bindabletestassertionhandler">Bindable test/assertion handler</h3>
+
+<ul>
+	<li>Create a bindable <code>*assertion-handler*</code> that can run with full context at the point an assertion fails
+	<ul>
+		<li>application of dynamic binding to the problem &quot;Assertion fails where I can't get a debugger&quot; (e.g. Hudson)</li>
+		<li>default behavior is to raise the error</li>
+		<li>facilitates use of assertion as the primary/only mechanism for tests, instead of separate fns like <code>is</code></li>
+	</ul>
+	</li>
+	<li>implicitly debug-only through tie to assertions
+	<ul>
+		<li>once assertions are debug-only, anyway</li>
+	</ul>
+	</li>
+	<li>maybe assertions should never have been exceptions in the first place
+	<ul>
+		<li>more of a use case for handlers than for exceptions</li>
+		<li>unexpected errors are, ironically, <strong>expected</strong> errors during development</li>
+	</ul>
+	</li>
+	<li>making assertions handler-based solves my &quot;assertions are backwards&quot; rant
+	<ul>
+		<li>handler can do anything it needs to with local context</li>
+	</ul>
+	</li>
+	<li>also decouples the Java enablement issue
+	<ul>
+		<li>clojure binding controls initial reaction</li>
+		<li>Java -ea flag controls fallback behavior (assert or do nothing)</li>
+	</ul>
+	</li>
+	<li>open questions
+	<ul>
+		<li>encourage test frameworks to bottom out at assert, instead of their own ad-hoc things?</li>
+		<li>what does the fn take?
+		<ul>
+			<li>source code forms of the assertion</li>
+			<li>want access to locals</li>
+		</ul>
+		</li>
+	</ul>
+	</li>
+	<li>very useful on CI
+	<ul>
+		<li>dump everything you know</li>
+	</ul>
+	</li>
+</ul>
+
+
+<h3 id="ErrorHandling-Bindablethrowhandler">Bindable throw handler</h3>
+
+<ul>
+	<li>like the assertion handler, but tied to all (Clojure) throws</li>
+	<li><code>*throw-handler*</code> should be available (in effect?) only under debug mode
+	<ul>
+		<li>pay for what you need</li>
+	</ul>
+	</li>
+	<li>open questions
+	<ul>
+		<li>what does the fn take?
+		<ul>
+			<li>source code forms</li>
+			<li>access to locals</li>
+			<li>args to exception</li>
+		</ul>
+		</li>
+	</ul>
+	</li>
+	<li>very useful in CI
+	<ul>
+		<li>dump everything you know</li>
+	</ul>
+	</li>
+</ul>
+
+
+<h3 id="ErrorHandling-Platform-basedhandler">Platform-based handler</h3>
+
+<p>Is there JVM support for automating handlers like the assert handler or throw handler? If these exist, and are flexible and easy to deploy, could use them instead of extending Clojure.</p>
+
+<ul>
+	<li>not aware of any</li>
+	<li>Clojure versions would work on other platforms</li>
+</ul>
+
+
+<h3 id="ErrorHandling-Bindableedgehandler">Bindable edge handler</h3>
+
+<ul>
+	<li>try to make <strong>all</strong> exceptions handle-able by wrapping clojure/java boundary everywhere</li>
+	<li>when exception from Java land hits Clojure boundary, call the handler before propagating it</li>
+	<li>attempt here is to respond closer to the problem
+	<ul>
+		<li>but halfway between the problem and the outer handler isn't much better than a full stack unwind</li>
+		<li>nothing special about the Clojure/Java boundary</li>
+	</ul>
+	</li>
+	<li>pervasive implementation and performance issues</li>
+	<li>non-idiomatic wrapping</li>
+	<li>ok, this is a crazy idea</li>
+</ul>
+
+
+<h3 id="ErrorHandling-Weaknessesofthemodestproposal">Weaknesses of the modest proposal</h3>
+
+<ul>
+	<li>still no automatic way to discover relevant bindings
+	<ul>
+		<li>documentation, of course</li>
+		<li>but no programmatic way to discover relevant situation handlers</li>
+		<li>checked exceptions got this half-right</li>
+	</ul>
+	</li>
+	<li>Java/Clojure boundary visible on exceptions-as-data
+	<ul>
+		<li>Clojure exception can give you everything</li>
+		<li>with Java exception you have to ask by calling a fn</li>
+	</ul>
+	</li>
+	<li>Java/Clojure boundary visible on throw handler
+	<ul>
+		<li>no straigtforward way to sneak into Java</li>
+	</ul>
+	</li>
+	<li>if there is any commonality in how to write a bindable handler, it isn't captured here</li>
+	<li>nothing stops an exception from being unnecessarily data-ized multiple times</li>
+</ul>
+    
+        </div>
+
+        <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="https://dev.clojure.org/display/design/Error+Handling"
+    dc:identifier="https://dev.clojure.org/display/design/Error+Handling"
+    dc:title="Error Handling"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/950768"/>
+</rdf:RDF>
+-->
+
+        <script type="text/x-template" title="labels-dialog-div">
+
+    
+    <div id="labels-dialog">
+        <div class="labels-editor">
+            <span class="errorMessage error" id="errorSpan"></span>
+            <form method="GET" action="" id="add-labels-form">
+                <div id="labelOperationErrorContainer">
+                    <span class="error"><span class="errorMessage" id="labelOperationErrorMessage"></span></span>
+                </div>
+    
+                <div class="caption">Enter labels to add to this page:</div>
+                <div id="label-input-fields">
+                    <input autocomplete="off" id="labelsString" name="labelsString" value="">
+                    <input id="add-labels-editor-button" type="submit" class="add-labels" value="Add">
+                </div>
+                <div id="labelsAutocompleteList" class="aui-dd-parent resize-to-input" style="width: 417px"></div>
+                <div id="dialog-label-list">
+                    <span id="labels-section-title-none" class="no-labels-message" >
+None
+</span>
+<ul class="label-list">
+</ul>
+                </div>
+                <div id="waitImageAndStatus">
+                    <img class="waiting" alt="Please wait" src="/s/en_GB/3047/3/_/images/icons/wait.gif">&nbsp;
+                    <span id="labelOperationStatus" class="smalltext"></span>
+                </div>
+                <div class="labels-tip"></div>
+            </form>
+        </div>
+    </div>
+</script>
+            
+    
+
+
+<div id="labels-section" class="pageSection group">
+    <div class="labels-editor">
+        <span id="labels-section-title" class="label-title">Labels:</span>
+        <div id="labels-section-content" class="content-column">
+            <span id="labels-section-title-none" class="no-labels-message" >
+None
+</span>
+<ul class="label-list">
+</ul>
+
+                            <a id="labels-edit" href="#" class="show-labels-editor editor-icon" title="Edit Labels">
+                    <span class="icon icon-edit">Edit Labels</span>
+                </a>
+                    </div>
+    </div>
+</div>
+
+                    <div id="children-section" class="pageSection children-hidden group">
+                
+        <div class="section-header summary">
+            <h2 id="children-section-title" class="section-title">
+                <a href="Error+Handling-showChildren=true.html#children" class="children-show-hide">
+                                            6 Child Pages
+                                    </a>
+            </h2>
+
+            <a href="Error+Handling-showChildren=true.html#children" class="children-show-hide icon"></a>
+            <!--
+            <span class="noprint grey">
+                <a class="children-subtitle" href="/pages/listpages-dirview.action?key=design&amp;openId=950768#selectedPageInHierarchy">Reorder Pages</a>
+                            </span>
+            -->
+        </div>
+        <div id="page-children" class="pageSectionBody">
+                    </div>
+        </div>
+    
+            
+
+
+
+
+            
+    
+
+
+
+
+
+
+
+<div id="comments-section" class="pageSection group">
+    
+            <div class="section-header ">
+            <h2 id="comments-section-title" class="section-title">
+                <a href="#" class="comments-show-hide comments-showing" name="comments">
+                                            9 Comments
+                                    </a>
+            </h2>
+            <a title="Hide/Show Comments" href="#" 
+               class="comments-show-hide icon comments-showing icon-section-opened">
+                Hide/Show Comments
+            </a>
+        </div>
+    
+    
+                            <ol class="comment-threads top-level " id="page-comments">
+                        <li id="comment-thread-950799" class="comment-thread">
+                                <div class="comment  " id="comment-950799">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: richhickey" title="richhickey">                </p>
+                <p class="date" title="Jan 04, 2011 07:42">
+                    Jan 04, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~richhickey.html"
+                          class="url fn"
+                   >Rich Hickey</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>This needs so much more about the problems it intends to solve. I want... doesn't count.</p>
+
+<p>At a glance,</p>
+
+<p>I wonder about deriving from Throwable - you don't want to encourage people to catch Throwable.</p>
+
+<p>Why isA map vs composition?</p>
+
+<p>If REPL works only in terms of maps, means every possible exception must be caught and wrapped/transformed - bleh.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Error+Handling-focusedCommentId=950799.html#comment-950799"
+                id="comment-permalink-950799"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Error+Handling-focusedCommentId=950799.html#comment-950799"
+    dc:identifier="Error+Handling-focusedCommentId=950799.html#comment-950799"
+    dc:title="Error Handling"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/950799"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-950891" class="comment-thread">
+                                <div class="comment  " id="comment-950891">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: stu" title="stu">                </p>
+                <p class="date" title="Jan 13, 2011 21:09">
+                    Jan 13, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~stu.html"
+                          class="url fn"
+                   >Stuart Halloway</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <ul>
+	<li>not deriving from throwable, plan is to provide a few different types in the families people need (e.g. errors, runtimes, assertions)</li>
+	<li>don't care much about isA vs. composition at this point
+	<ul>
+		<li>either could work with pattern matching</li>
+	</ul>
+	</li>
+	<li>REPL could have raw APIs, but I think I will want cooked/wrapped ones as well</li>
+</ul>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Error+Handling-focusedCommentId=950891.html#comment-950891"
+                id="comment-permalink-950891"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Error+Handling-focusedCommentId=950891.html#comment-950891"
+    dc:identifier="Error+Handling-focusedCommentId=950891.html#comment-950891"
+    dc:title="Error Handling"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/950891"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                                </ol>
+                        </li>
+                        <li id="comment-thread-1572869" class="comment-thread">
+                                <div class="comment  " id="comment-1572869">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: richhickey" title="richhickey">                </p>
+                <p class="date" title="Jan 15, 2011 08:28">
+                    Jan 15, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~richhickey.html"
+                          class="url fn"
+                   >Rich Hickey</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>Thanks Stu!. You lose me at the grid. Anytime you have a grid dominated by orthogonal and n/a you have a problem. The problems and their possible solution should be considered separately. It will be a plus if a single solution solves multiple problems, but we need to decide which problems we want to tackle at all, and examine the strengths and weaknesses of solutions relative to each problem. We also need to pick apart some of those extant composite 'solutions', as they have many separate aspects. Having a grid that crosses spaces makes it seem like you have more alternatives per problem than you actually do.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Error+Handling-focusedCommentId=1572869.html#comment-1572869"
+                id="comment-permalink-1572869"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Error+Handling-focusedCommentId=1572869.html#comment-1572869"
+    dc:identifier="Error+Handling-focusedCommentId=1572869.html#comment-1572869"
+    dc:title="Error Handling"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/1572869"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-1572871" class="comment-thread">
+                                <div class="comment  " id="comment-1572871">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: stu" title="stu">                </p>
+                <p class="date" title="Jan 15, 2011 14:46">
+                    Jan 15, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~stu.html"
+                          class="url fn"
+                   >Stuart Halloway</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>I'll split them out in the next pass -- the grid is trying to do too many things at once. (Looking for a good way to (1) line up pros and cons of multiple approaches but also (2) not lose sight of interrelationships.) </p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Error+Handling-focusedCommentId=1572871.html#comment-1572871"
+                id="comment-permalink-1572871"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Error+Handling-focusedCommentId=1572871.html#comment-1572871"
+    dc:identifier="Error+Handling-focusedCommentId=1572871.html#comment-1572871"
+    dc:title="Error Handling"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/1572871"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                                </ol>
+                        </li>
+                        <li id="comment-thread-1572870" class="comment-thread">
+                                <div class="comment  " id="comment-1572870">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: richhickey" title="richhickey">                </p>
+                <p class="date" title="Jan 15, 2011 08:37">
+                    Jan 15, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~richhickey.html"
+                          class="url fn"
+                   >Rich Hickey</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>debug mode/debug-only needs to become a first class issue. The problems:</p>
+
+<ul>
+	<li>Some errors are expensive to detect, and we might want to presume don't exist in tested code so as not to incur the runtime overhead.</li>
+	<li>We have no sufficient way to control that right now</li>
+</ul>
+
+
+<p>If you are going to propose assertions for tests, you cross the line between ensuring correct use and ensuring correct implementation - these are different.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Error+Handling-focusedCommentId=1572870.html#comment-1572870"
+                id="comment-permalink-1572870"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Error+Handling-focusedCommentId=1572870.html#comment-1572870"
+    dc:identifier="Error+Handling-focusedCommentId=1572870.html#comment-1572870"
+    dc:title="Error Handling"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/1572870"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                        <li id="comment-thread-1573313" class="comment-thread">
+                                <div class="comment  " id="comment-1573313">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: hugoduncan" title="hugoduncan">                </p>
+                <p class="date" title="Apr 26, 2011 21:14">
+                    Apr 26, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~hugoduncan.html"
+                          class="url fn"
+                   >Hugo Duncan</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>In order to help with debugging, it could be useful for tooling to replace the throw form, enabling inspection of the local environment at the point of the exception.</p>
+
+<p>throw is a special form currently, so this is not possible.</p>
+
+<p>Obviously only helps with exceptions thrown from clojure code.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Error+Handling-focusedCommentId=1573313.html#comment-1573313"
+                id="comment-permalink-1573313"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Error+Handling-focusedCommentId=1573313.html#comment-1573313"
+    dc:identifier="Error+Handling-focusedCommentId=1573313.html#comment-1573313"
+    dc:title="Error Handling"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/1573313"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-1573324" class="comment-thread">
+                                <div class="comment  " id="comment-1573324">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: hiredman" title="hiredman">                </p>
+                <p class="date" title="Apr 27, 2011 01:03">
+                    Apr 27, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~hiredman.html"
+                          class="url fn"
+                   >Kevin Downey</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>some kind of compiler api that allowed 3rd party code to finesse the compilation of special forms like throw could also help with sandboxing </p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Error+Handling-focusedCommentId=1573324.html#comment-1573324"
+                id="comment-permalink-1573324"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Error+Handling-focusedCommentId=1573324.html#comment-1573324"
+    dc:identifier="Error+Handling-focusedCommentId=1573324.html#comment-1573324"
+    dc:title="Error Handling"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/1573324"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                                </ol>
+                        </li>
+                        <li id="comment-thread-5767175" class="comment-thread">
+                                <div class="comment  " id="comment-5767175">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: brandon@brandonbloom.name" title="brandon@brandonbloom.name">                </p>
+                <p class="date" title="Aug 16, 2012 00:08">
+                    Aug 16, 2012
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~brandon@brandonbloom.name.html"
+                          class="url fn"
+                   >Brandon Bloom</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>I just wanted to point out a particularly common case I'm running into in library code that I want to share between Clojure and ClojureScript: It is currently impossible to throw on the JVM without referring to a platform-specific type. You must do (throw (Exception. &quot;omg!&quot;)) otherwise you get a ClassCastException and your error message is replaced by &quot;java.lang.String cannot be cast to java.lang.Throwable&quot;</p><p>JavaScript allows you to throw strings, but you don't get the full context of a true Error object: (throw &quot;omg!&quot;) vs (throw (Error. &quot;omg!&quot;))</p><p>In my projects, I've been defining (defn raise [message] (throw ...)) per platform.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Error+Handling-focusedCommentId=5767175.html#comment-5767175"
+                id="comment-permalink-5767175"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Error+Handling-focusedCommentId=5767175.html#comment-5767175"
+    dc:identifier="Error+Handling-focusedCommentId=5767175.html#comment-5767175"
+    dc:title="Error Handling"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/5767175"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                        <li id="comment-thread-5767176" class="comment-thread">
+                                <div class="comment  " id="comment-5767176">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: brandon@brandonbloom.name" title="brandon@brandonbloom.name">                </p>
+                <p class="date" title="Aug 16, 2012 01:16">
+                    Aug 16, 2012
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~brandon@brandonbloom.name.html"
+                          class="url fn"
+                   >Brandon Bloom</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>One other thought: Could functions be enclosed in an implicit try? It seems like both Clojure and ClojureScript gracefully ignore try forms without catch or finally subforms.</p><p>Ruby functions have an implicit &quot;begin&quot; for exception handling. Consider the following irb session:</p><p style="margin-left: 30.0px;">irb(main):001:0&gt; def f(x)<br />irb(main):002:1&gt; x * 2<br />irb(main):003:1&gt; ensure<br />irb(main):004:1* p &quot;ensure!&quot;<br />irb(main):005:1&gt; end<br />nil<br />irb(main):006:0&gt; f 10<br />&quot;ensure!&quot;<br />20</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Error+Handling-focusedCommentId=5767176.html#comment-5767176"
+                id="comment-permalink-5767176"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Error+Handling-focusedCommentId=5767176.html#comment-5767176"
+    dc:identifier="Error+Handling-focusedCommentId=5767176.html#comment-5767176"
+    dc:title="Error Handling"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/5767176"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                </ol>
+    
+    </div>
+
+
+            
+</div>
+
+
+    
+
+
+
+    
+    
+
+    
+    
+    
+
+
+    
+
+
+
+    <br class="clear">
+</div>
+  
+    </div>
+</div>
+
+<div id="footer">
+                                                <p class="license license-opensource">
+                  Powered by a free <b>Atlassian Confluence Open Source Project License</b> granted to Clojure. <a href="http://www.atlassian.com/c/conf/11461">Evaluate Confluence today</a>.<br>
+                </p>
+                        
+    <ul id="poweredby">
+        <li class="noprint">Powered by <a href="http://www.atlassian.com/software/confluence" class="hover-footer-link">Atlassian Confluence</a> <span id='footer-build-information'>4.0</span>, the <a href="http://www.atlassian.com/software/confluence/tour/enterprise-wiki.jsp" class="hover-footer-link">Enterprise Wiki</a></li>
+        <li class="print-only">Printed by Atlassian Confluence 4.0, the Enterprise Wiki.</li>        
+        <li class="noprint"> &nbsp; |&nbsp; <a href="http://jira.atlassian.com/secure/BrowseProject.jspa?id=10470" class="hover-footer-link">Report a bug</a></li>
+        <li class="noprint"> &nbsp;|&nbsp; <a href="http://www.atlassian.com/about/connected.jsp?s_kwcid=Confluence-stayintouch" class="hover-footer-link">Atlassian News</a></li>
+    </ul>
+
+    
+
+            <div><span style="">Site support by</span><a href="http://contegix.com"> <img style="vertical-align:middle" src="../../download/attachments/459015/contegix.jpg.html"/></a></div>
+    </div></div>
+</body>
+</html>

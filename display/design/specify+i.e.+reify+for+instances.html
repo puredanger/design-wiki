@@ -1,0 +1,1237 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>specify i.e. reify for instances - Clojure Design - Clojure Development</title>
+
+        
+
+                        
+    
+
+            <meta http-equiv="X-UA-Compatible" content="IE=EDGE">
+<meta charset="UTF-8">
+<!-- Deprecated since 3.4. To be removed in a future version of Confluence; use AJS.Confluence.getContextPath() -->
+<meta id="confluence-context-path" name="confluence-context-path" content="">
+<meta id="confluence-base-url" name="confluence-base-url" content="https://dev.clojure.org">
+
+<meta id="atlassian-token" name="atlassian-token" content="30041c830a95ce9c95d0b58cb377def6b96aa6d2">
+
+<meta id="confluence-space-key" name="confluence-space-key" content="design">
+<script type="text/javascript">
+    // Deprecated global variables. To be removed in a future version of Confluence.
+    var contextPath = '';
+</script>
+
+    
+
+<!-- include system css resources -->
+
+
+    <link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/55/_/download/superbatch/css/batch.css" media="all">
+<!--[if lt IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/_/download/superbatch/css/batch.css?conditionalComment=lt+IE+9" media="all">
+<![endif]-->
+<!--[if IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/_/download/superbatch/css/batch.css?conditionalComment=IE+9" media="all">
+<![endif]-->
+<!--[if lte IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/_/download/superbatch/css/batch.css?conditionalComment=lte+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/55/_/download/superbatch/css/batch-media=print.css" media="print">
+<!--[if lt IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/_/download/contextbatch/css/page/batch.css?conditionalComment=lt+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/_/download/contextbatch/css/page/batch.css" media="all">
+<!--[if lt IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/_/download/contextbatch/css/viewcontent,main/batch.css?conditionalComment=lt+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/_/download/contextbatch/css/viewcontent,main/batch.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.6/_/download/batch/com.atlassian.confluence.ext.newcode-macro-plugin-syntaxhighlighter/com.atlassian.confluence.ext.newcode-macro-plugin-syntaxhighlighter.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.6/_/download/batch/com.atlassian.confluence.ext.newcode-macro-plugin-sh-theme-confluence/com.atlassian.confluence.ext.newcode-macro-plugin-sh-theme-confluence.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.1/_/download/batch/com.atlassian.confluence.plugins.pagetree-pagetree-resources/com.atlassian.confluence.plugins.pagetree-pagetree-resources.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/3/_/styles/colors-spaceKey=design.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.5/_/download/resources/com.atlassian.confluence.plugins.doctheme-documentation/default-theme.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.5/_/download/resources/com.atlassian.confluence.plugins.doctheme-documentation/splitter.css" media="all">
+
+<!-- end system css resources -->
+
+    <meta name="confluence-request-time" content="1556129497353">
+            <meta name="ajs-page-id" content="5767379">
+            <meta name="ajs-parent-page-id" content="2424919">
+            <meta name="ajs-space-key" content="design">
+            <meta name="ajs-space-name" content="Clojure Design">
+            <meta name="ajs-page-title" content="specify i.e. reify for instances">
+            <meta name="ajs-parent-page-title" content="ClojureScript">
+            <meta name="ajs-from-page-title" content="">
+            <meta name="ajs-context-path" content="">
+            <meta name="ajs-version-number" content="4.0">
+            <meta name="ajs-build-number" content="3047">
+            <meta name="ajs-remote-user" content="">
+            <meta name="ajs-static-resource-url-prefix" content="/s/en_GB/3047/3/_">
+            <meta name="ajs-global-settings-attachment-max-size" content="10485760">
+            <meta name="ajs-user-locale" content="en_GB">
+            <meta name="ajs-enabled-dark-features" content="">
+            <meta name="ajs-atl-token" content="30041c830a95ce9c95d0b58cb377def6b96aa6d2">
+            
+            <meta name="ajs-keyboardshortcut-hash" content="7b95af54c6deada096af1f28fdd0f413">
+            <meta name="ajs-use-keyboard-shortcuts" content="true">
+    <!-- Deprecated since 3.4. To be removed in a future version of Confluence; use atl.header -->
+        
+            <script type="text/x-template" title="share-content-popup">
+    <form action="#" method="post" class="aui share-content-popup">
+        <fieldset>
+            <label for="users">User name or email</label>
+            <div class="autocomplete-user-target">
+                <input class="text autocomplete-sharepage" id="users" data-max="10" data-dropdown-target=".autocomplete-user-target" data-none-message="No matching user or email found"/>
+            </div>
+            <ol class="recipients">
+            </ol>
+            <div><label for="note">Note</label></div>
+            <textarea class="textarea" id="note" placeholder="Add an optional note"/>
+        </fieldset>
+        <div class="button-panel">
+            <div class="progress-messages-icon"></div>
+            <div class="progress-messages">
+            </div>
+            <input class="button submit" type="submit" value="Share" disabled/>
+            <a class="close-dialog" href="#">Cancel</a>
+        </div>
+    </form>
+</script>
+
+<script type="text/x-template" title="share-content-popup-recipient-username">
+    <li data-username="{username}" style="display: none">
+        <span>
+            <img src="{thumbnailLink.href}" title="{title}">
+            <span>{title}</span>
+            <span class="remove-recipient"/>
+        </span>
+    </li>
+</script>
+
+<script type="text/x-template" title="share-content-popup-recipient-email">
+    <li data-email="{email}" style="display: none">
+        <span>
+            <img src="{icon}" title="{email}">
+            <span>{email}</span>
+            <span class="remove-recipient"/>
+        </span>
+    </li>
+</script>
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="icon" type="image/png" href="../../s/en_GB/3047/3/_/images/logo/confluence_16.png">
+
+<link rel="search" type="application/opensearchdescription+xml" href="../../opensearch/osd.action.xml" title="Clojure Development"/>
+
+        <!-- include system javascript resources -->
+                        
+    
+    <script type="text/javascript" src="../../s/en_GB/3047/3/55/_/download/superbatch/js/batch.js" ></script>
+<!--[if lte IE 8]>
+<script type="text/javascript" src="/s/en_GB/3047/3/55/_/download/superbatch/js/batch.js?conditionalComment=lte+IE+8" ></script>
+<![endif]-->
+<script type="text/javascript" src="../../s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/_/download/contextbatch/js/page/batch.js" ></script>
+<script type="text/javascript" src="../../s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/_/download/contextbatch/js/viewcontent,main/batch.js" ></script>
+<script type="text/javascript" src="../../s/en_GB/3047/3/2.0.6/_/download/batch/com.atlassian.confluence.ext.newcode-macro-plugin-syntaxhighlighter/com.atlassian.confluence.ext.newcode-macro-plugin-syntaxhighlighter.js" ></script>
+<script type="text/javascript" src="../../s/en_GB/3047/3/2.0.6/_/download/batch/com.atlassian.confluence.ext.newcode-macro-plugin-syntaxhighlighter-brushes/com.atlassian.confluence.ext.newcode-macro-plugin-syntaxhighlighter-brushes.js" ></script>
+<script type="text/javascript" src="../../s/en_GB/3047/3/2.0.1/_/download/batch/com.atlassian.confluence.plugins.pagetree-pagetree-resources/com.atlassian.confluence.plugins.pagetree-pagetree-resources.js" ></script>
+
+    
+    <!-- end system javascript resources -->
+
+    
+
+    
+    <link rel="canonical" href="specify+i.e.+reify+for+instances.html">
+    <link rel="shortlink" href="specify+i.e.+reify+for+instances.html">
+    <meta name="wikilink" content="[design:specify i.e. reify for instances]">
+    <meta name="page-version" content="38">
+
+</head>
+
+<body             onload="placeFocus()"
+     id="com-atlassian-confluence" class="theme-documentation ">
+<div id="full-height-container">
+    <div id="header-precursor">
+        
+        
+                </div>
+
+<div id="header" class="sectionbottom ">
+        <form id="quick-search" class="quick-search" method="get" action="../../dosearchsite.action.html">
+                <fieldset>
+            <input type="hidden" name="spaceSearch" value="false"/>
+        </fieldset>
+        <fieldset>
+            <legend>Quick Search</legend>
+            <input class="quick-search-query" id="quick-search-query" type="text" accessKey="search-pages-action.accesskey" autocomplete="off" name="queryString" size="25"/>
+            <input class="quick-search-submit" id="quick-search-submit" type="submit"  value="Search Confluence" />
+            <div class="aui-dd-parent quick-nav-drop-down"><!-- Quick nav appears here --></div>
+        </fieldset>
+        <fieldset class="hidden parameters">
+            <input type="hidden" id="quickNavEnabled" value="true" />
+                    </fieldset>
+    </form>
+
+    <ul id="header-menu-bar" class="ajs-menu-bar">
+                    
+        
+            <li class="normal ajs-menu-item">
+        <a id="browse-menu-link" class="browse trigger ajs-menu-title" href="#"><span><span>Browse</span></span></a>         <div class="assistive ajs-drop-down">
+                        <ul  id="browse-menu-link-leading"                 class="section-leading first">
+                                        <li>
+    
+        
+    
+    <a  id="space-pages-link" href="../../pages/recentlyupdated.action-key=design.html"  class=""   title="Browse pages in the Clojure Design space">
+                   <span>Pages</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-blogposts-link" href="../../pages/viewrecentblogposts.action-key=design.html"  class=""   title="Browse blogs in the Clojure Design space">
+                   <span>Blog</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-labels-link" href="../../labels/listlabels-heatmap.action-key=design.html"  class=""   title="Browse labels in the Clojure Design space">
+                   <span>Labels</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-attachments-link" href="../../spaces/listattachmentsforspace.action-key=design.html"  class=""   title="Browse attachments in the Clojure Design space">
+                   <span>Attachments</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-mail-link" href="../../spaces/viewmailarchive.action-key=design.html"  class=""   title="Browse mail in the Clojure Design space">
+                   <span>Mail</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-advanced-link" href="../../spaces/viewspacesummary.action-key=design.html"  class=""   title="Browse additional space functions in the Clojure Design space">
+                   <span>Advanced</span></a>        </li>
+                            </ul>
+                        <ul  id="browse-menu-link-global"                 class="section-global">
+                                        <li>
+    
+        
+    
+    <a  id="whats-new-menu-link" href="http://docs.atlassian.com/confluence/docs-40/whatsnew/iframe"  class=""   title="">
+                   <span>What’s New</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-directory-link" href="../../spacedirectory/view.action.html"  class=""   title="Browse the Confluence space directory">
+                   <span>Space Directory</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="feed-builder-link" href="../../dashboard/configurerssfeed.action.html"  class=""   title="Create your custom RSS feed.">
+                   <span>Feed Builder</span></a>        </li>
+                                        <li>
+    
+            
+    
+    <a  id="keyboard-shortcuts-link" href="#"  class=""   title="View available keyboard shortcuts">
+                   <span>Keyboard Shortcuts</span></a>        </li>
+                                        <li>
+    
+            
+    
+    <a  id="gadget-directory-link" href="#"  class="user-item administration-link"   title="Browse gadgets provided by Confluence">
+                   <span>Confluence Gadgets</span></a>        </li>
+                            </ul>
+                    </div>
+    </li>
+        
+                                                         <li class="ajs-menu-item normal">
+        
+        
+    
+    <a  id="login-link" href="https://dev.clojure.org/login.action?os_destination=%2Fdisplay%2Fdesign%2Fspecify%2Bi.e.%2Breify%2Bfor%2Binstances"  class="user-item login-link"   title="">
+                   <span>Log In</span></a>        </li>
+                            <li class="ajs-menu-item normal">
+    
+        
+    
+    <a  id="signup-link" href="../../signup.action.html"  class="user-item signup-link"   title="">
+                   <span>Sign Up</span></a>        </li>
+                                <li class="normal ajs-menu-item">
+            <div id="splitter-button" class="hidden" title="Show or hide sidebar"></div>
+        </li>
+
+    </ul>
+    
+    
+    <ol id="breadcrumbs">
+                    
+                        
+        <li class="first" >
+                                    <span><a href="../../dashboard.action.html" title="Go to Dashboard">Dashboard</a></span>
+                </li>
+                    
+                
+        <li>
+                                    <span><a href="Home-jsessionid=3A56E29DA520B75101350BA4484B9990.html">Clojure Design</a></span>
+                </li>
+                                        <li id="ellipsis" title="Show all breadcrumbs"><span><strong>&#8230;</strong></span></li>
+                                    
+                
+        <li class="hidden-crumb" >
+                                    <span><a href="Home.html">Home</a></span>
+                </li>
+                                
+                
+        <li class="hidden-crumb" >
+                                    <span><a href="Idea+Hammock.html">Idea Hammock</a></span>
+                </li>
+                                
+                
+        <li class="hidden-crumb" >
+                                    <span><a href="ClojureScript.html">ClojureScript</a></span>
+                </li>
+                    
+                
+        <li>
+                                    <span><a href="specify+i.e.+reify+for+instances.html">specify i.e. reify for instances</a></span>
+                </li>
+        </ol>
+
+</div>
+
+    <div id="splitter">
+    <div id="splitter-sidebar" >
+        
+
+                    
+        
+    
+
+<div class="plugin_pagetree">
+
+                <div id="pagetreesearch">
+            <form method="POST" action="../../dosearchsite.action-searchQuery.queryString=&amp;searchQuery.spaceKey=conf_all.html" name="pagetreesearchform">
+                                    <input type="hidden" name="ancestorId" value="458775">
+                                <input type="hidden" name="spaceKey" value="design">
+                <input type="text"  size="20" name="queryString">
+                <input type="submit" value="Search">
+            </form>
+        </div>
+    
+        
+    <ul class="plugin_pagetree_children_list plugin_pagetree_children_list_noleftspace">
+        <div class="plugin_pagetree_children">
+        </div>
+    </ul>
+
+    <fieldset class="hidden">
+        <input type="hidden" name="treeId" value="">
+        <input type="hidden" name="treeRequestId" value="/plugins/pagetree/naturalchildren.action?decorator=none&amp;excerpt=false&amp;sort=position&amp;reverse=false&amp;disableLinks=false">
+        <input type="hidden" name="treePageId" value="5767379">
+
+        <input type="hidden" name="noRoot" value="false">
+        <input type="hidden" name="rootPageId" value="458775">
+
+        <input type="hidden" name="rootPage" value="">
+        <input type="hidden" name="startDepth" value="0">
+        <input type="hidden" name="spaceKey" value="design" >
+
+        <input type="hidden" name="i18n-pagetree.loading" value="Loading...">
+        <input type="hidden" name="i18n-pagetree.error.permission" value="Unable to load page tree. It seems that you do not have permission to view the root page.">
+        <input type="hidden" name="i18n-pagetree.eeror.general" value="There was a problem retrieving the page tree. Please check the server log file for more information.">
+        <input type="hidden" name="loginUrl" value="/login.action?os_destination=%2Fdisplay%2Fdesign%2Fspecify%2Bi.e.%2Breify%2Bfor%2Binstances">
+
+                <fieldset class="hidden">
+                                                <input type="hidden" name="ancestorId" value="2424919">
+                                    <input type="hidden" name="ancestorId" value="8192213">
+                                    <input type="hidden" name="ancestorId" value="458775">
+                                    </fieldset>
+    </fieldset>
+</div>
+
+
+
+            </div>
+    <div id="splitter-content">
+
+                    <script type="text/javascript" src="../../s/en_GB/3047/3/2.0.5/_/download/resources/com.atlassian.confluence.plugins.doctheme-resources/doc-theme.js"></script>
+    
+            
+    
+<div id="main" >
+    <div id="main-header">
+	    
+	    
+    <div id="navigation" class="content-navigation view">
+                    <ul class="ajs-menu-bar">
+                                
+                        
+            <li class="normal ajs-menu-item">
+        <a id="action-menu-link" class="action trigger ajs-menu-title" href="#"><span><span>Tools</span></span></a>         <div class="assistive ajs-drop-down">
+                        <ul  id="action-menu-link-primary"                 class="section-primary first">
+                                        <li>
+    
+        
+    
+    <a  id="view-attachments-link" href="https://dev.clojure.org/pages/viewpageattachments.action?pageId=5767379"  class="action-view-attachments"  accessKey="a"  title="View Attachments">
+                   <span><u>A</u>ttachments (0)</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="action-view-history-link" href="https://dev.clojure.org/pages/viewpreviousversions.action?pageId=5767379"  class="action-view-history"   title="">
+                   <span>Page History</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="action-page-permissions-link" href="https://dev.clojure.org/pages/viewinfo.action?pageId=5767379"  class="action-page-permissions"   title="Edit restrictions">
+                   <span>Restrictions</span></a>        </li>
+                            </ul>
+                        <ul  id="action-menu-link-secondary"                 class="section-secondary">
+                                        <li>
+    
+        
+    
+    <a  id="view-page-info-link" href="https://dev.clojure.org/pages/viewinfo.action?pageId=5767379"  class="action-view-info"   title="">
+                   <span>Info</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="link-to-page-link" href="https://dev.clojure.org/pages/viewinfo.action?pageId=5767379"  class=""   title="Link to this Page">
+                   <span>Link to this Page&hellip;</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="view-in-hierarchy-link" href="../../pages/listpages-dirview.action-key=design&amp;openId=5767379.html#selectedPageInHierarchy"  class=""   title="">
+                   <span>View in Hierarchy</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="action-view-source-link" href="https://dev.clojure.org/plugins/viewsource/viewpagesrc.action?pageId=5767379"  class="action-view-source popup-link"   title="">
+                   <span>View Source</span></a>        </li>
+                            </ul>
+                    </div>
+    </li>
+            </ul>
+    </div>
+
+	    
+	    <h1 id="title-heading" class="pagetitle">
+	        	            <a href="Home-jsessionid=3A56E29DA520B75101350BA4484B9990.html"><img class="logo global custom" src="../../download/attachments/131074/global.logo.png" alt=""></a>	        	
+			<span id="title-text">
+							            <a href="specify+i.e.+reify+for+instances.html">specify i.e. reify for instances</a>
+    						</span>
+	    </h1>
+	</div>
+
+    
+
+    
+    
+    
+    
+    
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+        
+    
+    
+                    
+    
+
+    
+
+
+<div id="content" class="page view">
+    
+
+
+
+                
+<script type="text/x-template" title="movePageDialog">
+    <div class="row information">
+        <div class="inner">
+            <div class="element">
+                Specify the new parent page for this page and its children by space and title.
+            </div>
+        </div>
+    </div>
+    <div class="form">
+        <fieldset>
+                
+
+    <legend class="assistive"><span>Change the Parent Page to a Known Page</span></legend>
+            <div class="row">
+                <label for="new-space">New space:</label>
+                <div class="value new-space-value">
+                    <input id="new-space-key" name="new-space-key" type="hidden" value="design">
+                                            <span class="space-input">
+                            <input id="new-space" name="new-space" value="Clojure Design" disabled="disabled">
+                        </span>
+                        <span class="description warning">You cannot move this page to another space because you do not have permission to remove it from this space.</span>
+                                        <div class="new-space-dropdown aui-dd-parent autocomplete"></div>
+                </div>
+            </div>
+            <div class="row">
+                <label for="new-parent-page">New parent page:</label>
+                <div class="value new-parent-page-value">
+                    <span class="page-input">
+                        <input id="new-parent-page" name="new-parent-page" value="ClojureScript">
+                    </span>
+                    <span class="description">Start typing a page title to see a list of suggestions.</span>
+                    <div class="new-parent-page-dropdown aui-dd-parent autocomplete"></div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <div class="location-info">
+        <div class="row">
+            <label>Current location:</label>
+            <div class="value breadcrumbs-container">
+                <div class="breadcrumbs-line">
+                    <ul id="current-parent-breadcrumbs" class="breadcrumbs">
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <label>New location:</label>
+            <div class="value breadcrumbs-container">
+                <div class="breadcrumbs-line">
+                    <ul id="new-parent-breadcrumbs" class="breadcrumbs">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/x-template" title="movePageSearchPanel">
+    <div class="row information">
+        <div class="inner">
+            <div class="element">
+                Search for and select the new parent page for this page and its children.
+            </div>
+        </div>
+    </div>
+    <div id="move-page-search-container" class="row">
+        <div class="search-form">
+            <fieldset>
+                    
+
+    <legend class="assistive"><span>Search for a New Parent Page</span></legend>
+                    
+
+    <label  for="move-page-search-query" class="assistive">Search keywords</label>
+                <input class="search-query" id="move-page-search-query">
+                    
+
+    <label  for="move-page-search-space" class="assistive">Search in space</label>
+                                    <select id="move-page-search-space" class="search-space" disabled="disabled">
+                        <option value="design" selected="selected">Clojure Design</option>
+                    </select>
+                                <input type="button" value="Search">
+                                    <div class="description warning">You cannot move this page to another space because you do not have permission to remove it from this space.</div>
+                            </fieldset>
+        </div>
+        <div class="search-results">
+        </div>
+    </div>
+</script>
+<script type="text/x-template" title="searchResultsGrid">
+    <table>
+        <thead>
+            <tr class="header">
+                <th class="search-result-title">Page Title</th>
+                <th class="search-result-space">Space</th>
+                <th class="search-result-date">Updated</th>
+            </tr>
+        </thead>
+    </table>
+</script>
+<script type="text/x-template" title="searchResultsGridCount">
+    <p class="search-result-count">{0}</p>
+</script>
+<script type="text/x-template" title="searchResultsGridRow">
+    <tr class="search-result">
+        <th class="search-result-title"><a href="{1}" class="content-type-{2}"><span>{0}</span></a></th>
+        <td class="search-result-space"><a class="space" href="/display/{4}/" title="{3}">{3}</a></td>
+        <td class="search-result-date"><span class="date" title="{6}">{5}</span></td>
+    </tr>
+</script><!-- Start restrictions section -->
+<script type="text/x-template" title="page-permissions-div">
+<div id="page-permissions-div">
+    <div id="page-permissions-editor-form">
+
+                <div id="page-permissions-error-div" class="hidden">
+            <a href="#" id="permissions-error-div-close">Ok</a>
+            <div></div>
+        </div>
+
+                <div id="page-permissions-type-radios" class="page-permissions-label-rows">
+            <div>
+                <input id="restrictViewRadio" type="radio" checked="checked" name="pagePermissionTypeRadio" value="view"/>
+                <label for="restrictViewRadio">Restrict viewing of this page</label>
+                <input id="restrictEditRadio" type="radio" name="pagePermissionTypeRadio" value="edit"/>
+                <label for="restrictEditRadio">Restrict editing of this page</label>
+            </div>
+        </div>
+        <div id="page-permissions-input" class="page-permissions-label-rows">
+            <div class="page-permissions-label">To:</div>
+            <div id="page-permissions-chooser-box">
+                                <span id="page-permissions-choose-user" class="ajs-button">
+                    
+
+
+
+    
+
+
+
+<a href="#" id='userpicker-popup-link-image' onClick="var picker = window.open('/spaces/openuserpicker.action?key=design&amp;startIndex=0&amp;onPopupSubmit=AJS.PagePermissions.addUserPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=700,height=680,scrollbars=yes'); picker.focus(); return false;"><img src="/s/en_GB/3047/3/_/images/icons/user_16.gif" height=16 width=16 border=0 align="absmiddle"  title="Choose users" /></a>
+<a href="#" id='userpicker-popup-link-text' onClick="var picker = window.open('/spaces/openuserpicker.action?key=design&amp;startIndex=0&amp;onPopupSubmit=AJS.PagePermissions.addUserPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=700,height=680,scrollbars=yes'); picker.focus(); return false;">Person...</a>
+
+
+                </span>
+                <span id="page-permissions-choose-group" class="ajs-button">
+                    
+
+
+
+    
+
+ 
+
+<a href="#" id='grouppicker-popup-link-image' onClick="var picker = window.open('/spaces/opengrouppicker.action?key=design&amp;startIndex=0&amp;actionName=dosearchgroups.action&amp;onPopupSubmit=AJS.PagePermissions.addGroupPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=580,height=550,scrollbars=yes'); picker.focus(); return false;"><img src="/s/en_GB/3047/3/_/images/icons/group_16.gif" height=16 width=16 border=0 align="absmiddle"  title="Choose groups" /></a>
+<a href="#" id='grouppicker-popup-link-text' onClick="var picker = window.open('/spaces/opengrouppicker.action?key=design&amp;startIndex=0&amp;actionName=dosearchgroups.action&amp;onPopupSubmit=AJS.PagePermissions.addGroupPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=580,height=550,scrollbars=yes'); picker.focus(); return false;">Group...</a>
+
+
+                </span>
+            </div>
+            <div id="page-permissions-input-box">
+                <input type="text" id="page-permissions-names-input" name="permissionNames"
+                    placeholder="Enter user or group name" class="autocomplete-user"
+                    data-max="10" data-none-message="No matches"
+                    data-target="#page-permissions-names-hidden" data-template="{username}"
+                    data-dropdown-target="#page-perms-name-dropdown-wrapper" data-resize-to-input="true"
+                    size="30"/>
+                <input
+    type="hidden"
+                            id="page-permissions-names-hidden"           />                <img height="16px" width="1px" src="/s/en_GB/3047/3/_/images/border/spacer.gif"/>
+                <input type="button" id="add-typed-names" value="Restrict">
+                <div id="page-perms-name-dropdown-wrapper" class="aui-dd-parent autocomplete"></div>
+            </div>
+        </div>
+    </div>
+    <div id="page-permissions-tables">
+        <div id="page-permissions-table-div">
+                        <table id="page-permissions-table" class="page-permissions-table">
+                <tr id="page-permissions-no-views" class="marker-row">
+                    <td colspan="3" class="page-permissions-marker-cell"><span>No view restrictions are defined for this page</span></td>
+                </tr>
+                <tr id="page-permissions-no-edits" class="marker-row">
+                    <td colspan="3" class="page-permissions-marker-cell"><span>No edit restrictions are defined for this page</span></td>
+                </tr>
+            </table>
+        </div>
+        <div id="page-inherited-permissions-table-div" class="hidden">
+            <span id="page-inherited-permissions-table-desc">
+                <a class="icon twisty-closed">Show/Hide</a>
+                <a id="toggle-inherited-permissions" title="Click to see inherited restrictions">This page has restricted parent pages. It can only be seen by users who can see those parent pages.</a>
+            </span>
+            <div id="page-inherited-permissions-tables" class="hidden page-inheritance-togglable"></div>
+        </div>
+    </div>
+</div>
+</script>
+
+<!-- End restrictions section -->
+
+        
+    
+    
+        <fieldset class="hidden parameters">
+            <input type="hidden" title="parentPageId" value="2424919">
+        </fieldset>
+
+        
+                            
+    
+
+                    
+
+        
+        <a href="#page-metadata-end" class="assistive">Skip to end of metadata</a>
+<div id="page-metadata-start" class="assistive"></div>
+
+    <div class="page-metadata">
+        <ul>
+                            <li class="page-metadata-item noprint">
+    
+            
+    
+    <a  id="content-metadata-page-restrictions" href="#"  class="page-metadata-icon page-restrictions hidden"   title="Page restrictions apply. Click the lock icon to view or edit the restriction.">
+                   <span>Page restrictions apply</span></a>        </li>
+                        <li class="page-metadata-modification-info">
+                                    Added by <a href="../../login.action-os_destination=-display-~bendlas.html"
+                          class="url fn"
+                   >Herwig Hochleitner</a>, last edited by <a href="../../login.action-os_destination=-display-~bendlas.html"
+                          class="url fn"
+                   >Herwig Hochleitner</a> on May 31, 2013
+                                                                <span class="noprint">&nbsp;(<a id="view-change-link" href="https://dev.clojure.org/pages/diffpages.action?pageId=5767379&amp;originalId=8192149">view change</a>)</span>
+                                                </li>
+                    </ul>
+                </div>
+
+
+<a href="#page-metadata-start" class="assistive">Go to start of metadata</a>
+<div id="page-metadata-end" class="assistive"></div>
+        
+        <fieldset class="hidden parameters">
+                        <input type="hidden" title="browsePageTreeMode" value="view">
+        </fieldset>
+
+        <div class="wiki-content">
+                           <p> </p><p><strong>UPDATE 06052013 - Herwig</strong></p><p>Updated the page with input from David Nolen, the description of the prototype is left intact at the end of the page.</p><p>I concur with giving specify an extend-like interface, which can be passed functions.</p><p><strong>UPDATE 06052013-2 - Herwig</strong></p><p>I pushed a commit to github that makes most of clojurescript runnable again with the refactoring: <a href="https://github.com/bendlas/clojurescript/commit/5d827ee8f11b2a575dff2647f7321bc2c47db1de" class="external-link" rel="nofollow">https://github.com/bendlas/clojurescript/commit/5d827ee8f11b2a575dff2647f7321bc2c47db1de</a></p><p>There is still an issue with accessing locals from reify, when implementing IFn. Due to the call method hack.</p><p>Added replys to comments.</p><h1 id="specifyiereifyforinstances-Problemstatement">Problem statement</h1><p>Even with namespacing extend-type is a global modification of a Clojure program. While powerful, this feature comes at some cost to modularity. On dynamic hosts like JavaScript, Clojure can provide an efficient modification of individual instances so that they may participate in a protocol. Such a feature would have the additional benefit of actually being more general than extend-type - that is the global modification (via JavaScript prototypes in the case of ClojureScript) is a special case of instance modification.</p><h1 id="specifyiereifyforinstances-Proposal">Proposal</h1><p>Add two new macros: specify and specify!. Both have a syntax similar to clojure.core/extend, but take a target object in place of the type and are macros.</p><p>specify! will mutate the target object by assigning protocol methods as keys. This is mostly useful to create new prototypes, but can occasionally be useful for external objects from libraries or eval.</p><p>specify will clone the target object before specify! ing the clone.</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[(specify! x
+ IFoo 
+ {:-bar existing-fn
+  :-baz (fn ([x] ...) ([x y] ..)})]]></script>
+</div></div><p>The function implementing the method (existing-fn) will be called method-fn in this.</p><h2 id="specifyiereifyforinstances-Costs">Costs</h2><p>Giving specify an interface like extend has following difficulties</p><ol><li>Since there is one slot per method, you need to pass a multi-arity fn when implementing a multi-arity method.<br />In a naive implementation, that would cost another arity dispatch, which already has been done at the method call site.<br />This can be mitigated by having specify reuse the existing infrastructure for arity optimization: properties on the fn object called <span style="color: rgb(221,17,68);">.cljs$lang$arity$*</span><br />specify can peel off those properties and use them as methods, which leads to the next cost</li><li>A redundant fn object when implementing inline (the one that would do the arity dispatch otherwise)<br />this could be mitigated by having specify recognize fn forms and emitting the arity-methods directly </li><li>specify will have to dispatch on the type(s) of method-fn<br />the type being whether it has <span style="color: rgb(221,17,68);">.cljs$lang$arity$*<br /><span style="color: rgb(0,0,0);">see Issues &gt; Method arities </span></span></li></ol><h1 id="specifyiereifyforinstances-Issues">Issues</h1><h3 id="specifyiereifyforinstances-Methodarities">Method arities</h3><p>Since the arity dispatch is already done at the method call site, we want to directly call the appropriate arity of the method-fn. Since method-fns are lexically bound, we cannot statically know in all cases, how to get the target arity thunk from method-fn.</p><p>As the fallback, specify will have to look at the method-fn in every call (of specify!), but this could be mitigated, when the type of a method-fn is known from analysis.</p><h3 id="specifyiereifyforinstances-CompatibilitywithexternalobjectsNameclashes">Compatibility with external objects / Name clashes</h3><p>Since specify may come into contact with external data, there is a risk of name clashes, since under advanced compilation method names are shortened to few characters.</p><p>specify should check if a property exists on the target object before assigning and should throw if so. This will also guard against double specification with possibly different method-fns.</p><p>For external data, such conflicts can and should be resolved with externs files.</p><p><span style="color: rgb(153,51,0);">We need to think about this some more - we really don't want any checks for modifying prototypes. We need specify! to work elegantly for both scenarios - David</span></p><p><span style="color: rgb(0,0,0);">Ok, that's true. Maybe a warning would be more appropriate but the warning strings would already equal half a reflection layer. </span><span style="font-size: 10.0pt;line-height: 13.0pt;color: rgb(0,0,0);">In production, </span><span style="font-size: 10.0pt;line-height: 13.0pt;color: rgb(0,0,0);">people really shouldn't specify the same object more than once. For development and macros that will use specify on the prototype (extend-type), there could be another metadata flag ^:force-specify - Herwig</span></p><p><span style="font-size: 10.0pt;line-height: 13.0pt;color: rgb(153,51,0);">I'm inclined to say that specify! need not warn at all. If you're going to specify! foreign data you don't control that's a user error. For foreign data I think it's probably far wiser to use reify.</span></p><p><span style="font-size: 10.0pt;line-height: 13.0pt;color: rgb(0,0,0);">It's a user error, alright, but it's one that might manifest as a heisenbug from compilation to compilation, because the set of clobbered property names will change randomly. It won't show up under normal compilation and not even under advanced compilation with minification disabled (there is an option in gclosure for that, we should expose it). A truly horrifying perspective in my eyes. We should at least warn about it. - Herwig</span></p><p><span style="color: rgb(153,51,0);"><span>The docstring of specify! should make it clear that it's not intended for data objects outside the ClojureScript compilation process and suggest reify for those cases. - David</span></span></p><p>I'm not exactly happy with that, but I think its manageable, given that clojurescript has still some way to go towards 1.0 - Herwig</p><h3 id="specifyiereifyforinstances-ObjectmethodsandIFn">Object methods and IFn</h3><p>As per the refactoring from CLJS-414, generating (unmangled) Object methods is possible with (the private version of) specify.</p><p>When implementing IFn, extend-type generates a multi-arity fn and uses that as a call method. This hack was carried over into CLJS-414.</p><p>specify will generate arity methods, call and apply directly, when implementing IFn.</p><p>David, can you comment on how .apply vs .<span style="color: rgb(0,0,0);">cljs$lang$applyTo are used?</span></p><p><span style="color: rgb(153,51,0);">.apply is for regular JavaScript fns and simple ClojureScript fns, .cljs$lang$applyTo is for everything else, .cljs$lang$applyTo gets checked first - David</span></p><p>I will need to unify the code for emitting a function with the code for specifying IFn. <span style="font-size: 10.0pt;line-height: 13.0pt;">That move might even make fn* redundant in the analysis format, since it can then be implemented as (specify! (Function.) IFn ...) - Herwig</span></p><p><span style="color: rgb(153,51,0);">I don't see how since you still want the general version that dispatches via argument.length - David</span></p><p><span style="color: rgb(0,0,0);">Well, my example presupposed that specifying an Object as IFn would generate .call and .apply, as requested, which would supposedly need to dispatch on argument.lenght and do all the other things fn is doing, won't it? - Herwig</span></p><p><span style="color: rgb(153,51,0);">I don't see why you need to generate .apply instead of cljs$lang$applyTo. We do probably need to generate .call, this is mostly needed for compilation mode other than advanced - David</span></p><p><span style="color: rgb(0,0,0);">1. pass a function-like object into jquery 2. jquery calls .apply on it. ... We don't need to generate .apply for every specify IFn; a single .apply method that calls .call or .<span style="color: rgb(0,0,0);">cljs$lang$applyTo can be assigned to all implementors of IFn. Maybe just Function.prototype.apply - Herwig</span></span></p><p><span style="color: rgb(153,51,0);">It's an entirely unrealistic expection to think you can pass instances of IFn to external JavaScript library and think they will work. The point of adding a .call property is about a uniform ClojureScript calling convention. JS libs will not generally invoke functions via .call or .apply. Adding .apply serves no purpose for ClojureScript that clj$lang$applyTo doesn't solve. - David</span></p><p><span style="color: rgb(0,0,0);">Right, adding .call doesn't automatically make an object callable. Thanks for catching that! </span></p><p><span style="color: rgb(0,0,0);">But we do want cljs$core$IFn$_invoke$arity$variadic and cljs$lang$maxFixedArity, right? - Herwig</span></p><p><span style="color: rgb(0,0,0);">Update 290513: I've implemented generating .<span style="color: rgb(0,0,0);">cljs$core$IFn$_invoke$arity$ methods and .<span style="color: rgb(0,0,0);">cljs$lang$applyTo along with .-cljs$lang$maxFixedArity and a wrapper for .call. Surprisingly, this seems to slow down IFn invokations slightly, at least on my machine, despite the generated code looking pretty optimal: <a href="https://github.com/bendlas/clojurescript/blob/8a7b4d75708ed8c7ac35ccb1dbd5627b1fce97dc/src/clj/cljs/core.clj#L583" class="external-link" rel="nofollow">https://github.com/bendlas/clojurescript/blob/8a7b4d75708ed8c7ac35ccb1dbd5627b1fce97dc/src/clj/cljs/core.clj#L583</a> and <a href="https://gist.github.com/bendlas/5664542#file-specify-js-L77" class="external-link" rel="nofollow">https://gist.github.com/bendlas/5664542#file-specify-js-L77</a> - Herwig</span></span></span></p><p><span style="color: rgb(0,0,0);"><span style="color: rgb(0,0,0);"><span style="color: rgb(0,0,0);">The slowdown issue has been resolved by type hinting. An area I want to explore is the possibility of using a single .call method for all fns (containing a switch and pulling the arity off this). - Herwig</span></span></span></p><h3 id="specifyiereifyforinstances-Methodnames"><span style="color: rgb(0,0,0);">Method names</span></h3><p><span style="color: rgb(0,0,0);">Should the method names be written as symbols instead of keywords? extend has keywords, but it's a function. </span></p><p><span style="color: rgb(0,0,0);">specify might become a function on clojurescript if and when cljs gets reflection, which it probably won't.</span></p><p><span style="color: rgb(0,0,0);">Still, other dynamic hosts, that have reflection built in might profit, if we stick to keywords now.</span></p><p><span style="color: rgb(153,51,0);">there's also the added benefit of specifying maps of fns at the macro level and merging them there. This one is probably worth asking the community about once the proposal is more fully baked - David</span></p><h3 id="specifyiereifyforinstances-Protocolmethodcallingconvention"><span style="color: rgb(0,0,0);">Protocol method calling convention</span></h3><p><span style="color: rgb(0,0,0);">Right now there is a special case, where IFn$_invoke is called without the otherwise usual first this parameter. I will explore the possibility to remove the redundant first parameters from other protocol methods aswell. Specify will need to introduce the binding via this-as or a wrapper function in the case of external implementations. - Herwig</span></p><h1 id="specifyiereifyforinstances-Implementation"><span style="color: rgb(0,0,0);">Implementation</span></h1><h6 id="specifyiereifyforinstances-Herwig"><span style="color: rgb(0,0,0);">Herwig</span></h6><p><span style="color: rgb(0,0,0);">I'm willing to implement the optimization for cost 1: to pull arity methods from the method-fn, if available. That would leave the overhead of the type dispatch(es) when invoking specify + a couple of redundant fn objects per specify call site.</span></p><p><span style="color: rgb(153,51,0);">I don't see why we need type dispatches, redundant fns for inline specifications do not add any more cost than what we're currently paying - which is nonexistent as far as I can tell from benchmarking - David</span></p><p><span style="color: rgb(0,0,0);">By type dispatch I mean checking for arity-methods on method-fn / other type specific optimisations. Currently extend-type just generates the arity-methods. A full fn would also generate an arity dispatch and apply that will never be used by specify. - Herwig</span></p><p><span style="color: rgb(153,51,0);">Right we should probably avoid generating the full fn - David</span></p><p><span style="color: rgb(0,0,0);">My point is that we don't generate the full fn, the user does:</span></p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[(extend-type
+ IFoo
+ (-m1 ; this only generates IFoo$._m1$arity methods
+  ([o] :m1) 
+  ([o x] [:m1 x])))
+
+(specify (js-obj)
+  IFoo
+  {:-m1 (fn ; this generates an unused arity-dispatch, ... unless we do something about it 
+         ([o] :m1)
+         ([o x] [:m1 x]))})]]></script>
+</div></div><p><span style="color: rgb(0,0,0);">- Herwig</span></p><p><span style="color: rgb(153,51,0);">Yes, I think we should special case this since in this case that the fn arities map back to the protocol, there's no need for the wrapper. - David</span></p><p><span style="color: rgb(0,0,0);">==</span></p><p><span style="color: rgb(0,0,0);">Both could be thought of as confined costs, but I would like to make sure that they won't be show-stoppers, if nobody gets around to figure out how the specify macro could interact with the analyzer in such a way that they are removed. </span></p><p><span style="color: rgb(153,51,0);">analyzer/resolve-existing-var is all you need, this will contain all the known information about the fn, arities, max-arity, whether it's variadic etc - David</span></p><p><span style="color: rgb(0,0,0);">Does this also work for lexically bound names? What about expressions? Can I analyze them from a macro? - Herwig</span></p><p><span style="color: rgb(153,51,0);">It does work for lexically bound names though I'm not sure why you need that for specify. Expression themselves don't generally have any information. I don't see why you couldn't analyze from a macro, you're passed the environment so I think you should be able to call analyzer from the macro yes. - David</span></p><p> </p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[(specify x IFoo {:m1 existing-fn}) ; existing-fn is lexically bound and could be an arbitrary expression. Remember, I'm referring to existing-fn as method-fn - Herwig]]></script>
+</div></div><h6 id="specifyiereifyforinstances-UPDATE06052013-3-Herwig"><strong>UPDATE 06052013-3 - Herwig</strong></h6><p>Most major decisions seem to be ironed out. I'll start with the ground work for:</p><ol><li>Implementing protocol methods with the arity-methods of a regular fn</li><li>Emitting arity-dispatch for .call outside of cljs.compiler/emit for use in specify!</li></ol><p>There is still time to chime in on the design; it might take a week or two before I can allocate another time block like this to start pushing patches</p><h1 id="specifyiereifyforinstances-ProposalDescriptionofprototypeimplementationaspartofrefactoringCLJS-414"><s>Proposal</s> Description of prototype implementation as part of refactoring: <a href="http://dev.clojure.org/jira/browse/CLJS-414" class="external-link" rel="nofollow">CLJS-414</a></h1><p>The operation to extend an instance will be called specify in the next proposal and have an interface similar to deftype. See discussion at <a href="http://dev.clojure.org/jira/browse/CLJS-398" class="external-link" rel="nofollow">CLJS-398</a></p><p> </p><h6 id="specifyiereifyforinstances-UPDATE06052013"><strong>UPDATE 06052013</strong></h6><p>The refactoring done as part of this implementation will be rebased to current master with names specify and specify* set to private, until the design for specify is fully fleshed out.</p><h3 id="specifyiereifyforinstances-Outlineoftheimplementation">Outline of the implementation</h3><p>extend-type now expands to specify on the .prototype property.</p><p>specify expands to specify* of protocols and method-arity-maps with fn expressions.</p><p>Since the whole protocol/type stack in clojurescript is based on modifying the prototype anyway, the patches from CLJS-414 basically just pull out the redundancies and label them.</p><h3 id="specifyiereifyforinstances-Kerneloperationspecify">Kernel operation: specify*</h3><p>specify* is loosely based on clojure.core/extend, in that it takes maps of implementing closures.</p><h4 id="specifyiereifyforinstances-Justification">Justification</h4><p>specify* is needed, because currently CLJS doesn't lift lambdas, so new function objects are allocated every time specify is evaluated. This is fine for specifying prototypes or configuration-object-like protocol instances. It is not so fine for specifying 1000 objects to take part in IEquiv and IHash.</p><h4 id="specifyiereifyforinstances-Differencesfromextend">Differences from extend</h4><ul><li>It is a macro<ul><li>bootstrapping: takes a PersistentMap parameter</li><li>gclosure minification + no reflection layer: clojurescript doesn't know how to access name mangled protocol fields</li></ul></li><li>It takes method names as symbols<ul><li>by the time we have an optional reflection layer there might be a cljs.reflect/specify with same interface as extend</li></ul></li><li>Takes arities in addition to protocol and method name: (specify* o P {-m {1 m-impl-1, 3 m-impl-3}})<ul><li>OK for a low-level user visible operation??</li><li>we allow users to implement only parts of a protocol anyway</li><li>use single-arity fast path</li><li>no need to unpack single-arity impls from multi-arity fns, which breaks down if user passes javascript fn</li><li>abstracts protocol name mangling: essentially a setter generator</li></ul></li></ul><h3 id="specifyiereifyforinstances-extend-typerefactoredspecify">extend-type refactored: specify</h3><ul><li>Takes fn bodies like extend-type and instantiates them</li><li>extend-type now just expands to a specify on the .prototype property</li><li>'Object' pseudo protocol lives here</li></ul><h3 id="specifyiereifyforinstances-Example">Example</h3><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[(deftype A
+  ILookup
+  (-lookup ([o k] (aget s k))
+           ([o k nf] (if (.hasOwnProperty o k) (aget o k) nf))) 
+;; expands to
+
+(specify (.-prototype A)
+  ILookup
+  ...)
+
+;; expands to
+
+(specify* (.-prototype A)
+  ILookup {-lookup {2 (fn [o k] ..)
+                    3 (fn [o k nf] ..)}})
+
+;; and if we want to specify a whole batch
+;; we can have the same method instances attached to every object
+  
+(let [m2 (fn [o k] ..)
+      m3 (fn [o k nf] ..)] 
+  (defn specify-alookup! [o]
+    (specify* o
+      ILookup {-lookup {2 m2 3 m3}})))
+
+(defn jsonp-callback [json-list]
+  (process (map specify-alookup! json-list)))]]></script>
+</div></div><p> </p><h3 id="specifyiereifyforinstances-Issues">Issues</h3><ul><li><s>specify* can't-be used with IFn in the current patchset to <a href="http://dev.clojure.org/jira/browse/CLJS-414" class="external-link" rel="nofollow">CLJS-414</a> as of writing </s></li><li>specify expects to see each method only once, should error when user tries to do</li></ul><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[(extend-type T
+ P
+ (meth [a] &quot;one&quot;)
+ (meth [a b] &quot;two&quot;) )]]></script>
+</div></div><ul><li>Is specify* too low level?<ul><li>Are users that just want the methods reused better served by defspecifyer with deftype syntax?</li><li>Might just be a temporary solution until we get lambda lifting anyway</li><li>Are there other use cases?</li></ul></li></ul>
+    
+        </div>
+
+        <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="https://dev.clojure.org/display/design/specify+i.e.+reify+for+instances"
+    dc:identifier="https://dev.clojure.org/display/design/specify+i.e.+reify+for+instances"
+    dc:title="specify i.e. reify for instances"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/5767379"/>
+</rdf:RDF>
+-->
+
+        <script type="text/x-template" title="labels-dialog-div">
+
+    
+    <div id="labels-dialog">
+        <div class="labels-editor">
+            <span class="errorMessage error" id="errorSpan"></span>
+            <form method="GET" action="" id="add-labels-form">
+                <div id="labelOperationErrorContainer">
+                    <span class="error"><span class="errorMessage" id="labelOperationErrorMessage"></span></span>
+                </div>
+    
+                <div class="caption">Enter labels to add to this page:</div>
+                <div id="label-input-fields">
+                    <input autocomplete="off" id="labelsString" name="labelsString" value="">
+                    <input id="add-labels-editor-button" type="submit" class="add-labels" value="Add">
+                </div>
+                <div id="labelsAutocompleteList" class="aui-dd-parent resize-to-input" style="width: 417px"></div>
+                <div id="dialog-label-list">
+                    <span id="labels-section-title-none" class="no-labels-message" >
+None
+</span>
+<ul class="label-list">
+</ul>
+                </div>
+                <div id="waitImageAndStatus">
+                    <img class="waiting" alt="Please wait" src="/s/en_GB/3047/3/_/images/icons/wait.gif">&nbsp;
+                    <span id="labelOperationStatus" class="smalltext"></span>
+                </div>
+                <div class="labels-tip"></div>
+            </form>
+        </div>
+    </div>
+</script>
+            
+    
+
+
+<div id="labels-section" class="pageSection group">
+    <div class="labels-editor">
+        <span id="labels-section-title" class="label-title">Labels:</span>
+        <div id="labels-section-content" class="content-column">
+            <span id="labels-section-title-none" class="no-labels-message" >
+None
+</span>
+<ul class="label-list">
+</ul>
+
+                            <a id="labels-edit" href="#" class="show-labels-editor editor-icon" title="Edit Labels">
+                    <span class="icon icon-edit">Edit Labels</span>
+                </a>
+                    </div>
+    </div>
+</div>
+
+            
+            
+
+
+
+
+            
+    
+
+
+
+
+
+
+
+<div id="comments-section" class="pageSection group">
+    
+            <div class="section-header ">
+            <h2 id="comments-section-title" class="section-title">
+                <a href="#" class="comments-show-hide comments-showing" name="comments">
+                                            7 Comments
+                                    </a>
+            </h2>
+            <a title="Hide/Show Comments" href="#" 
+               class="comments-show-hide icon comments-showing icon-section-opened">
+                Hide/Show Comments
+            </a>
+        </div>
+    
+    
+                            <ol class="comment-threads top-level " id="page-comments">
+                        <li id="comment-thread-8192017" class="comment-thread">
+                                <div class="comment  " id="comment-8192017">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: dnolen" title="dnolen">                </p>
+                <p class="date" title="May 04, 2013 17:57">
+                    May 04, 2013
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~dnolen.html"
+                          class="url fn"
+                   >David Nolen</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>Why not `specify` and `specify!` one which clones its target and one which does not. `specify` does mean that we'll likely want a cloning protocol.</p><p>I see now why `specify*` takes the map form, since the user can provide an existing function. But I don't see why `specify*` needs the arity information. If it's a real fn form you can look at the arglist. If it's an existing ClojureScript fn you can use the analyzer to figure this out. If it's a JavaScript fn it's a cost you should be OK w/ paying.</p><p>As far as the justification, wanting specify to take previously defined fns, makes sense: performance numbers: <a href="http://jsperf.com/specify-costs" class="external-link" rel="nofollow">http://jsperf.com/specify-costs</a></p><p>However it might be worth putting a little more thought into how we could allow people to do specify implementations inline w/o taking or minimizing the performance hit. We can't use the same trick we do with `reify` and perhaps in the end anything we come up with may be too ugly, but probably worth outlining here that we at least considered it thoroughly.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="specify+i.e.+reify+for+instances-focusedCommentId=8192017.html#comment-8192017"
+                id="comment-permalink-8192017"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="specify+i.e.+reify+for+instances-focusedCommentId=8192017.html#comment-8192017"
+    dc:identifier="specify+i.e.+reify+for+instances-focusedCommentId=8192017.html#comment-8192017"
+    dc:title="specify i.e. reify for instances"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/8192017"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                        <li id="comment-thread-8192029" class="comment-thread">
+                                <div class="comment  " id="comment-8192029">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: dnolen" title="dnolen">                </p>
+                <p class="date" title="May 04, 2013 17:51">
+                    May 04, 2013
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~dnolen.html"
+                          class="url fn"
+                   >David Nolen</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>Here's benchmark illustrating an approach that caches the fns on the namespace and add locals as a property to avoid the issues around creating the closure around the implementations once: <a href="http://jsperf.com/specify-costs" class="external-link" rel="nofollow">http://jsperf.com/specify-costs</a></p><p>V8 fares well but not so for the other browsers.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="specify+i.e.+reify+for+instances-focusedCommentId=8192029.html#comment-8192029"
+                id="comment-permalink-8192029"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="specify+i.e.+reify+for+instances-focusedCommentId=8192029.html#comment-8192029"
+    dc:identifier="specify+i.e.+reify+for+instances-focusedCommentId=8192029.html#comment-8192029"
+    dc:title="specify i.e. reify for instances"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/8192029"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                        <li id="comment-thread-8192031" class="comment-thread">
+                                <div class="comment  " id="comment-8192031">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: bendlas" title="bendlas">                </p>
+                <p class="date" title="May 05, 2013 01:25">
+                    May 05, 2013
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~bendlas.html"
+                          class="url fn"
+                   >Herwig Hochleitner</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>My actual train of thought for the arities was:</p><ul style="list-style-type: square;"><li>One fn per arity is always generated by the compiler</li><li>protocol calls are already arity-dispatched, so we would want to call the generated thunks</li><li>at this point the full fn just acts as a container for its arity methods</li><li>we can save the allocation of this container by passing the arities directly</li></ul><p>I guess you could say, that saving the allocation of a single object is not worth dictating the design of even the lowest level public functionality. To which I would say: I don't know</p><p>A more practical issue is the added complexity of pulling the arities off an fn et.al.</p><p>Do you think it's worthwile to go forward with such a design?</p><p>Thanks for the benchmark!</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="specify+i.e.+reify+for+instances-focusedCommentId=8192031.html#comment-8192031"
+                id="comment-permalink-8192031"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="specify+i.e.+reify+for+instances-focusedCommentId=8192031.html#comment-8192031"
+    dc:identifier="specify+i.e.+reify+for+instances-focusedCommentId=8192031.html#comment-8192031"
+    dc:title="specify i.e. reify for instances"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/8192031"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-8192032" class="comment-thread">
+                                <div class="comment  " id="comment-8192032">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: dnolen" title="dnolen">                </p>
+                <p class="date" title="May 05, 2013 10:17">
+                    May 05, 2013
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~dnolen.html"
+                          class="url fn"
+                   >David Nolen</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>I see no good justification for explicit arities, it will be more work to implement yes. But specify! and specify are both something that people will want to use - we need to present a sensible interface.</p><p>Related, specify! and specify should both support Object methods and IFn. In the case of IFn - adding call and apply methods was always a bit of a hack. It would be better to add the specific cljs$core$IFn$_invoke$arity$N properties as well as clj$lang$applyTo. Doing this will make using collections as fns considerably more efficient which is an optimization I've been meaning to look into for some time.</p><p>I also think we should follow the extend syntax very closely.</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[(specify! x
+  IFoo 
+  {:-bar existing-fn
+   :-baz (fn ([x] ...) ([x y] ..)})]]></script>
+</div></div>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="specify+i.e.+reify+for+instances-focusedCommentId=8192032.html#comment-8192032"
+                id="comment-permalink-8192032"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="specify+i.e.+reify+for+instances-focusedCommentId=8192032.html#comment-8192032"
+    dc:identifier="specify+i.e.+reify+for+instances-focusedCommentId=8192032.html#comment-8192032"
+    dc:title="specify i.e. reify for instances"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/8192032"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                                </ol>
+                        </li>
+                        <li id="comment-thread-8192038" class="comment-thread">
+                                <div class="comment  " id="comment-8192038">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: dnolen" title="dnolen">                </p>
+                <p class="date" title="May 05, 2013 11:22">
+                    May 05, 2013
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~dnolen.html"
+                          class="url fn"
+                   >David Nolen</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>One thing that you haven't brought up is how this will interact with advanced compilation? Closure won't know anything about the objects coming via JSONP or whatever so likely hood of clobbering an existing property name isn't small.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="specify+i.e.+reify+for+instances-focusedCommentId=8192038.html#comment-8192038"
+                id="comment-permalink-8192038"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="specify+i.e.+reify+for+instances-focusedCommentId=8192038.html#comment-8192038"
+    dc:identifier="specify+i.e.+reify+for+instances-focusedCommentId=8192038.html#comment-8192038"
+    dc:title="specify i.e. reify for instances"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/8192038"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                        <li id="comment-thread-8192041" class="comment-thread">
+                                <div class="comment  " id="comment-8192041">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: bendlas" title="bendlas">                </p>
+                <p class="date" title="May 06, 2013 00:38">
+                    May 06, 2013
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~bendlas.html"
+                          class="url fn"
+                   >Herwig Hochleitner</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>Again, thanks for the input. I'd have completely missed the advanced compilation issue.</p><p>I've updated the page with issue descriptions and a new proposal.</p><p>I had noted the IFn hack, but didn't want to change anything while refactoring and before your input in case it was on purpose.</p><p>I had used symbols instead of keywords in the original proposal to signify that specify is a macro. Do you think it's still better to follow extend's syntax in that?</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="specify+i.e.+reify+for+instances-focusedCommentId=8192041.html#comment-8192041"
+                id="comment-permalink-8192041"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="specify+i.e.+reify+for+instances-focusedCommentId=8192041.html#comment-8192041"
+    dc:identifier="specify+i.e.+reify+for+instances-focusedCommentId=8192041.html#comment-8192041"
+    dc:title="specify i.e. reify for instances"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/8192041"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                        <li id="comment-thread-8192140" class="comment-thread">
+                                <div class="comment  " id="comment-8192140">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: bendlas" title="bendlas">                </p>
+                <p class="date" title="May 29, 2013 13:16">
+                    May 29, 2013
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~bendlas.html"
+                          class="url fn"
+                   >Herwig Hochleitner</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>I updated my specify branch: <a href="https://github.com/bendlas/clojurescript" class="external-link" rel="nofollow">https://github.com/bendlas/clojurescript</a></p><p>cljs$core$IFn$_invoke, cljs$lang$applyTo aswell as a .call wrapper are now generated directly, when specifying an IFn.</p><p>Even though the generated code is optimized pretty well by closure, a quick benchmark of using collections as functions shows a slight slowdown compared to current master.</p><p>I'm not sure why that happens; I've created a gist for review, with the generated advanced optimized code, pretty printed: <a href="https://gist.github.com/bendlas/5664542" class="external-link" rel="nofollow">https://gist.github.com/bendlas/5664542</a></p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="specify+i.e.+reify+for+instances-focusedCommentId=8192140.html#comment-8192140"
+                id="comment-permalink-8192140"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="specify+i.e.+reify+for+instances-focusedCommentId=8192140.html#comment-8192140"
+    dc:identifier="specify+i.e.+reify+for+instances-focusedCommentId=8192140.html#comment-8192140"
+    dc:title="specify i.e. reify for instances"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/8192140"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                </ol>
+    
+    </div>
+
+
+            
+</div>
+
+
+    
+
+
+
+    
+    
+
+    
+    
+    
+
+
+    
+
+
+
+    <br class="clear">
+</div>
+  
+    </div>
+</div>
+
+<div id="footer">
+                                                <p class="license license-opensource">
+                  Powered by a free <b>Atlassian Confluence Open Source Project License</b> granted to Clojure. <a href="http://www.atlassian.com/c/conf/11461">Evaluate Confluence today</a>.<br>
+                </p>
+                        
+    <ul id="poweredby">
+        <li class="noprint">Powered by <a href="http://www.atlassian.com/software/confluence" class="hover-footer-link">Atlassian Confluence</a> <span id='footer-build-information'>4.0</span>, the <a href="http://www.atlassian.com/software/confluence/tour/enterprise-wiki.jsp" class="hover-footer-link">Enterprise Wiki</a></li>
+        <li class="print-only">Printed by Atlassian Confluence 4.0, the Enterprise Wiki.</li>        
+        <li class="noprint"> &nbsp; |&nbsp; <a href="http://jira.atlassian.com/secure/BrowseProject.jspa?id=10470" class="hover-footer-link">Report a bug</a></li>
+        <li class="noprint"> &nbsp;|&nbsp; <a href="http://www.atlassian.com/about/connected.jsp?s_kwcid=Confluence-stayintouch" class="hover-footer-link">Atlassian News</a></li>
+    </ul>
+
+    
+
+            <div><span style="">Site support by</span><a href="http://contegix.com"> <img style="vertical-align:middle" src="../../download/attachments/459015/contegix.jpg.html"/></a></div>
+    </div></div>
+</body>
+</html>

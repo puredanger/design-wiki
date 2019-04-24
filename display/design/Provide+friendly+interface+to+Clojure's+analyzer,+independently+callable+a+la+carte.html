@@ -1,0 +1,2233 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Provide friendly interface to Clojure&#39;s analyzer, independently callable a la carte - Clojure Design - Clojure Development</title>
+
+        
+
+                        
+    
+
+            <meta http-equiv="X-UA-Compatible" content="IE=EDGE">
+<meta charset="UTF-8">
+<!-- Deprecated since 3.4. To be removed in a future version of Confluence; use AJS.Confluence.getContextPath() -->
+<meta id="confluence-context-path" name="confluence-context-path" content="">
+<meta id="confluence-base-url" name="confluence-base-url" content="https://dev.clojure.org">
+
+<meta id="atlassian-token" name="atlassian-token" content="30041c830a95ce9c95d0b58cb377def6b96aa6d2">
+
+<meta id="confluence-space-key" name="confluence-space-key" content="design">
+<script type="text/javascript">
+    // Deprecated global variables. To be removed in a future version of Confluence.
+    var contextPath = '';
+</script>
+
+    
+
+<!-- include system css resources -->
+
+
+    <link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/55/_/download/superbatch/css/batch.css" media="all">
+<!--[if lt IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/_/download/superbatch/css/batch.css?conditionalComment=lt+IE+9" media="all">
+<![endif]-->
+<!--[if IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/_/download/superbatch/css/batch.css?conditionalComment=IE+9" media="all">
+<![endif]-->
+<!--[if lte IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/_/download/superbatch/css/batch.css?conditionalComment=lte+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/55/_/download/superbatch/css/batch-media=print.css" media="print">
+<!--[if lt IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/_/download/contextbatch/css/page/batch.css?conditionalComment=lt+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/_/download/contextbatch/css/page/batch.css" media="all">
+<!--[if lt IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/_/download/contextbatch/css/viewcontent,main/batch.css?conditionalComment=lt+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/_/download/contextbatch/css/viewcontent,main/batch.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.6/_/download/batch/com.atlassian.confluence.ext.newcode-macro-plugin-syntaxhighlighter/com.atlassian.confluence.ext.newcode-macro-plugin-syntaxhighlighter.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.6/_/download/batch/com.atlassian.confluence.ext.newcode-macro-plugin-sh-theme-confluence/com.atlassian.confluence.ext.newcode-macro-plugin-sh-theme-confluence.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.1/_/download/batch/com.atlassian.confluence.plugins.pagetree-pagetree-resources/com.atlassian.confluence.plugins.pagetree-pagetree-resources.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/3/_/styles/colors-spaceKey=design.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.5/_/download/resources/com.atlassian.confluence.plugins.doctheme-documentation/default-theme.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.5/_/download/resources/com.atlassian.confluence.plugins.doctheme-documentation/splitter.css" media="all">
+
+<!-- end system css resources -->
+
+    <meta name="confluence-request-time" content="1556129196819">
+            <meta name="ajs-page-id" content="4063367">
+            <meta name="ajs-parent-page-id" content="950459">
+            <meta name="ajs-space-key" content="design">
+            <meta name="ajs-space-name" content="Clojure Design">
+            <meta name="ajs-page-title" content="Provide friendly interface to Clojure&#39;s analyzer, independently callable a la carte">
+            <meta name="ajs-parent-page-title" content="Core">
+            <meta name="ajs-from-page-title" content="">
+            <meta name="ajs-context-path" content="">
+            <meta name="ajs-version-number" content="4.0">
+            <meta name="ajs-build-number" content="3047">
+            <meta name="ajs-remote-user" content="">
+            <meta name="ajs-static-resource-url-prefix" content="/s/en_GB/3047/3/_">
+            <meta name="ajs-global-settings-attachment-max-size" content="10485760">
+            <meta name="ajs-user-locale" content="en_GB">
+            <meta name="ajs-enabled-dark-features" content="">
+            <meta name="ajs-atl-token" content="30041c830a95ce9c95d0b58cb377def6b96aa6d2">
+            
+            <meta name="ajs-keyboardshortcut-hash" content="7b95af54c6deada096af1f28fdd0f413">
+            <meta name="ajs-use-keyboard-shortcuts" content="true">
+    <!-- Deprecated since 3.4. To be removed in a future version of Confluence; use atl.header -->
+        
+            <script type="text/x-template" title="share-content-popup">
+    <form action="#" method="post" class="aui share-content-popup">
+        <fieldset>
+            <label for="users">User name or email</label>
+            <div class="autocomplete-user-target">
+                <input class="text autocomplete-sharepage" id="users" data-max="10" data-dropdown-target=".autocomplete-user-target" data-none-message="No matching user or email found"/>
+            </div>
+            <ol class="recipients">
+            </ol>
+            <div><label for="note">Note</label></div>
+            <textarea class="textarea" id="note" placeholder="Add an optional note"/>
+        </fieldset>
+        <div class="button-panel">
+            <div class="progress-messages-icon"></div>
+            <div class="progress-messages">
+            </div>
+            <input class="button submit" type="submit" value="Share" disabled/>
+            <a class="close-dialog" href="#">Cancel</a>
+        </div>
+    </form>
+</script>
+
+<script type="text/x-template" title="share-content-popup-recipient-username">
+    <li data-username="{username}" style="display: none">
+        <span>
+            <img src="{thumbnailLink.href}" title="{title}">
+            <span>{title}</span>
+            <span class="remove-recipient"/>
+        </span>
+    </li>
+</script>
+
+<script type="text/x-template" title="share-content-popup-recipient-email">
+    <li data-email="{email}" style="display: none">
+        <span>
+            <img src="{icon}" title="{email}">
+            <span>{email}</span>
+            <span class="remove-recipient"/>
+        </span>
+    </li>
+</script>
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="icon" type="image/png" href="../../s/en_GB/3047/3/_/images/logo/confluence_16.png">
+
+<link rel="search" type="application/opensearchdescription+xml" href="../../opensearch/osd.action.xml" title="Clojure Development"/>
+
+        <!-- include system javascript resources -->
+                        
+    
+    <script type="text/javascript" src="../../s/en_GB/3047/3/55/_/download/superbatch/js/batch.js" ></script>
+<!--[if lte IE 8]>
+<script type="text/javascript" src="/s/en_GB/3047/3/55/_/download/superbatch/js/batch.js?conditionalComment=lte+IE+8" ></script>
+<![endif]-->
+<script type="text/javascript" src="../../s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/_/download/contextbatch/js/page/batch.js" ></script>
+<script type="text/javascript" src="../../s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/_/download/contextbatch/js/viewcontent,main/batch.js" ></script>
+<script type="text/javascript" src="../../s/en_GB/3047/3/2.0.6/_/download/batch/com.atlassian.confluence.ext.newcode-macro-plugin-syntaxhighlighter/com.atlassian.confluence.ext.newcode-macro-plugin-syntaxhighlighter.js" ></script>
+<script type="text/javascript" src="../../s/en_GB/3047/3/2.0.6/_/download/batch/com.atlassian.confluence.ext.newcode-macro-plugin-syntaxhighlighter-brushes/com.atlassian.confluence.ext.newcode-macro-plugin-syntaxhighlighter-brushes.js" ></script>
+<script type="text/javascript" src="../../s/en_GB/3047/3/2.0.1/_/download/batch/com.atlassian.confluence.plugins.pagetree-pagetree-resources/com.atlassian.confluence.plugins.pagetree-pagetree-resources.js" ></script>
+
+    
+    <!-- end system javascript resources -->
+
+    
+
+    
+    <link rel="canonical" href="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte.html">
+    <link rel="shortlink" href="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte.html">
+    <meta name="wikilink" content="[design:Provide friendly interface to Clojure&#39;s analyzer, independently callable a la carte]">
+    <meta name="page-version" content="40">
+
+</head>
+
+<body             onload="placeFocus()"
+     id="com-atlassian-confluence" class="theme-documentation ">
+<div id="full-height-container">
+    <div id="header-precursor">
+        
+        
+                </div>
+
+<div id="header" class="sectionbottom ">
+        <form id="quick-search" class="quick-search" method="get" action="../../dosearchsite.action.html">
+                <fieldset>
+            <input type="hidden" name="spaceSearch" value="false"/>
+        </fieldset>
+        <fieldset>
+            <legend>Quick Search</legend>
+            <input class="quick-search-query" id="quick-search-query" type="text" accessKey="search-pages-action.accesskey" autocomplete="off" name="queryString" size="25"/>
+            <input class="quick-search-submit" id="quick-search-submit" type="submit"  value="Search Confluence" />
+            <div class="aui-dd-parent quick-nav-drop-down"><!-- Quick nav appears here --></div>
+        </fieldset>
+        <fieldset class="hidden parameters">
+            <input type="hidden" id="quickNavEnabled" value="true" />
+                    </fieldset>
+    </form>
+
+    <ul id="header-menu-bar" class="ajs-menu-bar">
+                    
+        
+            <li class="normal ajs-menu-item">
+        <a id="browse-menu-link" class="browse trigger ajs-menu-title" href="#"><span><span>Browse</span></span></a>         <div class="assistive ajs-drop-down">
+                        <ul  id="browse-menu-link-leading"                 class="section-leading first">
+                                        <li>
+    
+        
+    
+    <a  id="space-pages-link" href="../../pages/recentlyupdated.action-key=design.html"  class=""   title="Browse pages in the Clojure Design space">
+                   <span>Pages</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-blogposts-link" href="../../pages/viewrecentblogposts.action-key=design.html"  class=""   title="Browse blogs in the Clojure Design space">
+                   <span>Blog</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-labels-link" href="../../labels/listlabels-heatmap.action-key=design.html"  class=""   title="Browse labels in the Clojure Design space">
+                   <span>Labels</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-attachments-link" href="../../spaces/listattachmentsforspace.action-key=design.html"  class=""   title="Browse attachments in the Clojure Design space">
+                   <span>Attachments</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-mail-link" href="../../spaces/viewmailarchive.action-key=design.html"  class=""   title="Browse mail in the Clojure Design space">
+                   <span>Mail</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-advanced-link" href="../../spaces/viewspacesummary.action-key=design.html"  class=""   title="Browse additional space functions in the Clojure Design space">
+                   <span>Advanced</span></a>        </li>
+                            </ul>
+                        <ul  id="browse-menu-link-global"                 class="section-global">
+                                        <li>
+    
+        
+    
+    <a  id="whats-new-menu-link" href="http://docs.atlassian.com/confluence/docs-40/whatsnew/iframe"  class=""   title="">
+                   <span>What’s New</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-directory-link" href="../../spacedirectory/view.action.html"  class=""   title="Browse the Confluence space directory">
+                   <span>Space Directory</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="feed-builder-link" href="../../dashboard/configurerssfeed.action.html"  class=""   title="Create your custom RSS feed.">
+                   <span>Feed Builder</span></a>        </li>
+                                        <li>
+    
+            
+    
+    <a  id="keyboard-shortcuts-link" href="#"  class=""   title="View available keyboard shortcuts">
+                   <span>Keyboard Shortcuts</span></a>        </li>
+                                        <li>
+    
+            
+    
+    <a  id="gadget-directory-link" href="#"  class="user-item administration-link"   title="Browse gadgets provided by Confluence">
+                   <span>Confluence Gadgets</span></a>        </li>
+                            </ul>
+                    </div>
+    </li>
+        
+                                                         <li class="ajs-menu-item normal">
+        
+        
+    
+    <a  id="login-link" href="https://dev.clojure.org/login.action?os_destination=%2Fdisplay%2Fdesign%2FProvide%2Bfriendly%2Binterface%2Bto%2BClojure%27s%2Banalyzer%2C%2Bindependently%2Bcallable%2Ba%2Bla%2Bcarte"  class="user-item login-link"   title="">
+                   <span>Log In</span></a>        </li>
+                            <li class="ajs-menu-item normal">
+    
+        
+    
+    <a  id="signup-link" href="../../signup.action.html"  class="user-item signup-link"   title="">
+                   <span>Sign Up</span></a>        </li>
+                                <li class="normal ajs-menu-item">
+            <div id="splitter-button" class="hidden" title="Show or hide sidebar"></div>
+        </li>
+
+    </ul>
+    
+    
+    <ol id="breadcrumbs">
+                    
+                        
+        <li class="first" >
+                                    <span><a href="../../dashboard.action.html" title="Go to Dashboard">Dashboard</a></span>
+                </li>
+                    
+                
+        <li>
+                                    <span><a href="Home-jsessionid=3A56E29DA520B75101350BA4484B9990.html">Clojure Design</a></span>
+                </li>
+                                        <li id="ellipsis" title="Show all breadcrumbs"><span><strong>&#8230;</strong></span></li>
+                                    
+                
+        <li class="hidden-crumb" >
+                                    <span><a href="Home.html">Home</a></span>
+                </li>
+                                
+                
+        <li class="hidden-crumb" >
+                                    <span><a href="Idea+Hammock.html">Idea Hammock</a></span>
+                </li>
+                                
+                
+        <li class="hidden-crumb" >
+                                    <span><a href="Core.html">Core</a></span>
+                </li>
+                    
+                
+        <li>
+                                    <span><a href="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte.html">Provide friendly interface to Clojure&#39;s analyzer, independently callable a la carte</a></span>
+                </li>
+        </ol>
+
+</div>
+
+    <div id="splitter">
+    <div id="splitter-sidebar" >
+        
+
+                    
+        
+    
+
+<div class="plugin_pagetree">
+
+                <div id="pagetreesearch">
+            <form method="POST" action="../../dosearchsite.action-searchQuery.queryString=&amp;searchQuery.spaceKey=conf_all.html" name="pagetreesearchform">
+                                    <input type="hidden" name="ancestorId" value="458775">
+                                <input type="hidden" name="spaceKey" value="design">
+                <input type="text"  size="20" name="queryString">
+                <input type="submit" value="Search">
+            </form>
+        </div>
+    
+        
+    <ul class="plugin_pagetree_children_list plugin_pagetree_children_list_noleftspace">
+        <div class="plugin_pagetree_children">
+        </div>
+    </ul>
+
+    <fieldset class="hidden">
+        <input type="hidden" name="treeId" value="">
+        <input type="hidden" name="treeRequestId" value="/plugins/pagetree/naturalchildren.action?decorator=none&amp;excerpt=false&amp;sort=position&amp;reverse=false&amp;disableLinks=false">
+        <input type="hidden" name="treePageId" value="4063367">
+
+        <input type="hidden" name="noRoot" value="false">
+        <input type="hidden" name="rootPageId" value="458775">
+
+        <input type="hidden" name="rootPage" value="">
+        <input type="hidden" name="startDepth" value="0">
+        <input type="hidden" name="spaceKey" value="design" >
+
+        <input type="hidden" name="i18n-pagetree.loading" value="Loading...">
+        <input type="hidden" name="i18n-pagetree.error.permission" value="Unable to load page tree. It seems that you do not have permission to view the root page.">
+        <input type="hidden" name="i18n-pagetree.eeror.general" value="There was a problem retrieving the page tree. Please check the server log file for more information.">
+        <input type="hidden" name="loginUrl" value="/login.action?os_destination=%2Fdisplay%2Fdesign%2FProvide%2Bfriendly%2Binterface%2Bto%2BClojure%27s%2Banalyzer%2C%2Bindependently%2Bcallable%2Ba%2Bla%2Bcarte">
+
+                <fieldset class="hidden">
+                                                <input type="hidden" name="ancestorId" value="950459">
+                                    <input type="hidden" name="ancestorId" value="8192213">
+                                    <input type="hidden" name="ancestorId" value="458775">
+                                    </fieldset>
+    </fieldset>
+</div>
+
+
+
+            </div>
+    <div id="splitter-content">
+
+                    <script type="text/javascript" src="../../s/en_GB/3047/3/2.0.5/_/download/resources/com.atlassian.confluence.plugins.doctheme-resources/doc-theme.js"></script>
+    
+            
+    
+<div id="main" >
+    <div id="main-header">
+	    
+	    
+    <div id="navigation" class="content-navigation view">
+                    <ul class="ajs-menu-bar">
+                                
+                        
+            <li class="normal ajs-menu-item">
+        <a id="action-menu-link" class="action trigger ajs-menu-title" href="#"><span><span>Tools</span></span></a>         <div class="assistive ajs-drop-down">
+                        <ul  id="action-menu-link-primary"                 class="section-primary first">
+                                        <li>
+    
+        
+    
+    <a  id="view-attachments-link" href="../../pages/viewpageattachments.action-pageId=4063367.html"  class="action-view-attachments"  accessKey="a"  title="View Attachments">
+                   <span><u>A</u>ttachments (0)</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="action-view-history-link" href="../../pages/viewpreviousversions.action-pageId=4063367.html"  class="action-view-history"   title="">
+                   <span>Page History</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="action-page-permissions-link" href="../../pages/viewinfo.action-pageId=4063367.html"  class="action-page-permissions"   title="Edit restrictions">
+                   <span>Restrictions</span></a>        </li>
+                            </ul>
+                        <ul  id="action-menu-link-secondary"                 class="section-secondary">
+                                        <li>
+    
+        
+    
+    <a  id="view-page-info-link" href="../../pages/viewinfo.action-pageId=4063367.html"  class="action-view-info"   title="">
+                   <span>Info</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="link-to-page-link" href="../../pages/viewinfo.action-pageId=4063367.html"  class=""   title="Link to this Page">
+                   <span>Link to this Page&hellip;</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="view-in-hierarchy-link" href="../../pages/listpages-dirview.action-key=design&amp;openId=4063367.html#selectedPageInHierarchy"  class=""   title="">
+                   <span>View in Hierarchy</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="action-view-source-link" href="../../plugins/viewsource/viewpagesrc.action-pageId=4063367.html"  class="action-view-source popup-link"   title="">
+                   <span>View Source</span></a>        </li>
+                            </ul>
+                    </div>
+    </li>
+            </ul>
+    </div>
+
+	    
+	    <h1 id="title-heading" class="pagetitle">
+	        	            <a href="Home-jsessionid=3A56E29DA520B75101350BA4484B9990.html"><img class="logo global custom" src="../../download/attachments/131074/global.logo.png" alt=""></a>	        	
+			<span id="title-text">
+							            <a href="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte.html">Provide friendly interface to Clojure&#39;s analyzer, independently callable a la carte</a>
+    						</span>
+	    </h1>
+	</div>
+
+    
+
+    
+    
+    
+    
+    
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+        
+    
+    
+                    
+    
+
+    
+
+
+<div id="content" class="page view">
+    
+
+
+
+                
+<script type="text/x-template" title="movePageDialog">
+    <div class="row information">
+        <div class="inner">
+            <div class="element">
+                Specify the new parent page for this page and its children by space and title.
+            </div>
+        </div>
+    </div>
+    <div class="form">
+        <fieldset>
+                
+
+    <legend class="assistive"><span>Change the Parent Page to a Known Page</span></legend>
+            <div class="row">
+                <label for="new-space">New space:</label>
+                <div class="value new-space-value">
+                    <input id="new-space-key" name="new-space-key" type="hidden" value="design">
+                                            <span class="space-input">
+                            <input id="new-space" name="new-space" value="Clojure Design" disabled="disabled">
+                        </span>
+                        <span class="description warning">You cannot move this page to another space because you do not have permission to remove it from this space.</span>
+                                        <div class="new-space-dropdown aui-dd-parent autocomplete"></div>
+                </div>
+            </div>
+            <div class="row">
+                <label for="new-parent-page">New parent page:</label>
+                <div class="value new-parent-page-value">
+                    <span class="page-input">
+                        <input id="new-parent-page" name="new-parent-page" value="Core">
+                    </span>
+                    <span class="description">Start typing a page title to see a list of suggestions.</span>
+                    <div class="new-parent-page-dropdown aui-dd-parent autocomplete"></div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <div class="location-info">
+        <div class="row">
+            <label>Current location:</label>
+            <div class="value breadcrumbs-container">
+                <div class="breadcrumbs-line">
+                    <ul id="current-parent-breadcrumbs" class="breadcrumbs">
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <label>New location:</label>
+            <div class="value breadcrumbs-container">
+                <div class="breadcrumbs-line">
+                    <ul id="new-parent-breadcrumbs" class="breadcrumbs">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/x-template" title="movePageSearchPanel">
+    <div class="row information">
+        <div class="inner">
+            <div class="element">
+                Search for and select the new parent page for this page and its children.
+            </div>
+        </div>
+    </div>
+    <div id="move-page-search-container" class="row">
+        <div class="search-form">
+            <fieldset>
+                    
+
+    <legend class="assistive"><span>Search for a New Parent Page</span></legend>
+                    
+
+    <label  for="move-page-search-query" class="assistive">Search keywords</label>
+                <input class="search-query" id="move-page-search-query">
+                    
+
+    <label  for="move-page-search-space" class="assistive">Search in space</label>
+                                    <select id="move-page-search-space" class="search-space" disabled="disabled">
+                        <option value="design" selected="selected">Clojure Design</option>
+                    </select>
+                                <input type="button" value="Search">
+                                    <div class="description warning">You cannot move this page to another space because you do not have permission to remove it from this space.</div>
+                            </fieldset>
+        </div>
+        <div class="search-results">
+        </div>
+    </div>
+</script>
+<script type="text/x-template" title="searchResultsGrid">
+    <table>
+        <thead>
+            <tr class="header">
+                <th class="search-result-title">Page Title</th>
+                <th class="search-result-space">Space</th>
+                <th class="search-result-date">Updated</th>
+            </tr>
+        </thead>
+    </table>
+</script>
+<script type="text/x-template" title="searchResultsGridCount">
+    <p class="search-result-count">{0}</p>
+</script>
+<script type="text/x-template" title="searchResultsGridRow">
+    <tr class="search-result">
+        <th class="search-result-title"><a href="{1}" class="content-type-{2}"><span>{0}</span></a></th>
+        <td class="search-result-space"><a class="space" href="/display/{4}/" title="{3}">{3}</a></td>
+        <td class="search-result-date"><span class="date" title="{6}">{5}</span></td>
+    </tr>
+</script><!-- Start restrictions section -->
+<script type="text/x-template" title="page-permissions-div">
+<div id="page-permissions-div">
+    <div id="page-permissions-editor-form">
+
+                <div id="page-permissions-error-div" class="hidden">
+            <a href="#" id="permissions-error-div-close">Ok</a>
+            <div></div>
+        </div>
+
+                <div id="page-permissions-type-radios" class="page-permissions-label-rows">
+            <div>
+                <input id="restrictViewRadio" type="radio" checked="checked" name="pagePermissionTypeRadio" value="view"/>
+                <label for="restrictViewRadio">Restrict viewing of this page</label>
+                <input id="restrictEditRadio" type="radio" name="pagePermissionTypeRadio" value="edit"/>
+                <label for="restrictEditRadio">Restrict editing of this page</label>
+            </div>
+        </div>
+        <div id="page-permissions-input" class="page-permissions-label-rows">
+            <div class="page-permissions-label">To:</div>
+            <div id="page-permissions-chooser-box">
+                                <span id="page-permissions-choose-user" class="ajs-button">
+                    
+
+
+
+    
+
+
+
+<a href="#" id='userpicker-popup-link-image' onClick="var picker = window.open('/spaces/openuserpicker.action?key=design&amp;startIndex=0&amp;onPopupSubmit=AJS.PagePermissions.addUserPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=700,height=680,scrollbars=yes'); picker.focus(); return false;"><img src="/s/en_GB/3047/3/_/images/icons/user_16.gif" height=16 width=16 border=0 align="absmiddle"  title="Choose users" /></a>
+<a href="#" id='userpicker-popup-link-text' onClick="var picker = window.open('/spaces/openuserpicker.action?key=design&amp;startIndex=0&amp;onPopupSubmit=AJS.PagePermissions.addUserPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=700,height=680,scrollbars=yes'); picker.focus(); return false;">Person...</a>
+
+
+                </span>
+                <span id="page-permissions-choose-group" class="ajs-button">
+                    
+
+
+
+    
+
+ 
+
+<a href="#" id='grouppicker-popup-link-image' onClick="var picker = window.open('/spaces/opengrouppicker.action?key=design&amp;startIndex=0&amp;actionName=dosearchgroups.action&amp;onPopupSubmit=AJS.PagePermissions.addGroupPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=580,height=550,scrollbars=yes'); picker.focus(); return false;"><img src="/s/en_GB/3047/3/_/images/icons/group_16.gif" height=16 width=16 border=0 align="absmiddle"  title="Choose groups" /></a>
+<a href="#" id='grouppicker-popup-link-text' onClick="var picker = window.open('/spaces/opengrouppicker.action?key=design&amp;startIndex=0&amp;actionName=dosearchgroups.action&amp;onPopupSubmit=AJS.PagePermissions.addGroupPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=580,height=550,scrollbars=yes'); picker.focus(); return false;">Group...</a>
+
+
+                </span>
+            </div>
+            <div id="page-permissions-input-box">
+                <input type="text" id="page-permissions-names-input" name="permissionNames"
+                    placeholder="Enter user or group name" class="autocomplete-user"
+                    data-max="10" data-none-message="No matches"
+                    data-target="#page-permissions-names-hidden" data-template="{username}"
+                    data-dropdown-target="#page-perms-name-dropdown-wrapper" data-resize-to-input="true"
+                    size="30"/>
+                <input
+    type="hidden"
+                            id="page-permissions-names-hidden"           />                <img height="16px" width="1px" src="/s/en_GB/3047/3/_/images/border/spacer.gif"/>
+                <input type="button" id="add-typed-names" value="Restrict">
+                <div id="page-perms-name-dropdown-wrapper" class="aui-dd-parent autocomplete"></div>
+            </div>
+        </div>
+    </div>
+    <div id="page-permissions-tables">
+        <div id="page-permissions-table-div">
+                        <table id="page-permissions-table" class="page-permissions-table">
+                <tr id="page-permissions-no-views" class="marker-row">
+                    <td colspan="3" class="page-permissions-marker-cell"><span>No view restrictions are defined for this page</span></td>
+                </tr>
+                <tr id="page-permissions-no-edits" class="marker-row">
+                    <td colspan="3" class="page-permissions-marker-cell"><span>No edit restrictions are defined for this page</span></td>
+                </tr>
+            </table>
+        </div>
+        <div id="page-inherited-permissions-table-div" class="hidden">
+            <span id="page-inherited-permissions-table-desc">
+                <a class="icon twisty-closed">Show/Hide</a>
+                <a id="toggle-inherited-permissions" title="Click to see inherited restrictions">This page has restricted parent pages. It can only be seen by users who can see those parent pages.</a>
+            </span>
+            <div id="page-inherited-permissions-tables" class="hidden page-inheritance-togglable"></div>
+        </div>
+    </div>
+</div>
+</script>
+
+<!-- End restrictions section -->
+
+        
+    
+    
+        <fieldset class="hidden parameters">
+            <input type="hidden" title="parentPageId" value="950459">
+        </fieldset>
+
+        
+                            
+    
+
+                    
+
+        
+        <a href="#page-metadata-end" class="assistive">Skip to end of metadata</a>
+<div id="page-metadata-start" class="assistive"></div>
+
+    <div class="page-metadata">
+        <ul>
+                            <li class="page-metadata-item noprint">
+    
+            
+    
+    <a  id="content-metadata-page-restrictions" href="#"  class="page-metadata-icon page-restrictions hidden"   title="Page restrictions apply. Click the lock icon to view or edit the restriction.">
+                   <span>Page restrictions apply</span></a>        </li>
+                        <li class="page-metadata-modification-info">
+                                    Added by <a href="../../login.action-os_destination=-display-~ambrosebs.html"
+                          class="url fn"
+                   >Ambrose Bonnaire-Sergeant</a>, last edited by <a href="../../login.action-os_destination=-display-~ambrosebs.html"
+                          class="url fn"
+                   >Ambrose Bonnaire-Sergeant</a> on Jan 03, 2012
+                                                                <span class="noprint">&nbsp;(<a id="view-change-link" href="../../pages/diffpages.action-pageId=4063367&amp;originalId=4063591.html">view change</a>)</span>
+                                                </li>
+                            <li class="show-hide-comment-link">
+                    <a id="show-version-comment" class="inline-control-link" href="#">show comment</a>
+                    <a id="hide-version-comment" class="inline-control-link" style="display:none;" href="#">hide comment</a>
+                </li>
+                    </ul>
+                <div id="version-comment" class="noteMacro">
+        <strong>Comment:</strong>
+        Issue with class redefinition<br />
+    </div>
+        </div>
+
+
+<a href="#page-metadata-start" class="assistive">Go to start of metadata</a>
+<div id="page-metadata-end" class="assistive"></div>
+        
+        <fieldset class="hidden parameters">
+                        <input type="hidden" title="browsePageTreeMode" value="view">
+        </fieldset>
+
+        <div class="wiki-content">
+                           <h1 id="ProvidefriendlyinterfacetoClojuresanalyzerindependentlycallablealacarte-Rationale">Rationale</h1><p>Much useful information is contained in Clojure's analysis compilation phase. There should be an interface to collect this information a la carte, in a nice form (ie. a map).</p><h1 id="ProvidefriendlyinterfacetoClojuresanalyzerindependentlycallablealacarte-Steps">Steps</h1><ul style="list-style-type: square;"><li>build an interface to the current Compiler<ul style="list-style-type: square;"><li>takes Form, results in Map</li></ul></li><li>test the things we can do with this information, is it useful?</li><li>request to add some information to the compiler to provide missing information</li><li>iterate until useful</li></ul><h1 id="ProvidefriendlyinterfacetoClojuresanalyzerindependentlycallablealacarte-Progress">Progress</h1><p>Building interface: <a href="https://github.com/frenchy64/analyze/blob/master/src/analyze/core.clj" class="external-link" rel="nofollow">https://github.com/frenchy64/analyze/blob/master/src/analyze/core.clj</a></p><h1 id="ProvidefriendlyinterfacetoClojuresanalyzerindependentlycallablealacarte-Issues">Issues</h1><h2 id="ProvidefriendlyinterfacetoClojuresanalyzerindependentlycallablealacarte-RedefinitionofClassesatCompiletime">Redefinition of Classes at Compile time</h2><p>Running `clojure.core` through the analyzer attempts to redefine functions at (what seems to be) macroexpand time.</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[CompilerException java.lang.LinkageError: loader (instance of clojure/lang/DynamicClassLoader): attempted duplicate class definition for name: &quot;clojure/core$booleans&quot;, compiling:(REPL:4)
+ clojure.lang.Compiler.analyzeSeq (Compiler.java:6416)
+ clojure.lang.Compiler.analyze (Compiler.java:6216)
+ clojure.lang.Compiler.analyzeSeq (Compiler.java:6397)
+ clojure.lang.Compiler.analyze (Compiler.java:6216)
+ clojure.lang.Compiler.analyze (Compiler.java:6177)
+ clojure.lang.Compiler$InvokeExpr.parse (Compiler.java:3503)
+ clojure.lang.Compiler.analyzeSeq (Compiler.java:6411)
+ clojure.lang.Compiler.analyze (Compiler.java:6216)
+ clojure.lang.Compiler.analyze (Compiler.java:6177)
+ clojure.lang.Compiler$BodyExpr$Parser.parse (Compiler.java:5572)
+ clojure.lang.Compiler.analyzeSeq (Compiler.java:6409)
+ clojure.lang.Compiler.analyze (Compiler.java:6216)
+Caused by:
+LinkageError loader (instance of clojure/lang/DynamicClassLoader): attempted duplicate class definition for name: &quot;clojure/core$booleans&quot;
+ java.lang.ClassLoader.defineClass1 (ClassLoader.java:-2)
+ java.lang.ClassLoader.defineClassCond (ClassLoader.java:631)
+ java.lang.ClassLoader.defineClass (ClassLoader.java:615)
+ java.lang.ClassLoader.defineClass (ClassLoader.java:465)
+ clojure.lang.DynamicClassLoader.defineClass (DynamicClassLoader.java:46)
+ clojure.lang.Compiler$ObjExpr.getCompiledClass (Compiler.java:4533)
+ clojure.lang.Compiler$FnExpr.parse (Compiler.java:3697)
+ clojure.lang.Compiler.analyzeSeq (Compiler.java:6407)
+ clojure.lang.Compiler.analyze (Compiler.java:6216)]]></script>
+</div></div><p>Offending line in `clojure.core`:</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[(definline booleans
+  &quot;Casts to boolean[]&quot;
+  {:added &quot;1.1&quot;}
+  [xs] `(. clojure.lang.Numbers booleans ~xs))]]></script>
+</div></div><p>I don't have a good idea how to fix this. Maybe a flag that indicates to catch a redefinition error, and then lookup the class in the cache?</p>
+    
+        </div>
+
+        <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="https://dev.clojure.org/display/design/Provide+friendly+interface+to+Clojure%27s+analyzer%2C+independently+callable+a+la+carte"
+    dc:identifier="https://dev.clojure.org/display/design/Provide+friendly+interface+to+Clojure%27s+analyzer%2C+independently+callable+a+la+carte"
+    dc:title="Provide friendly interface to Clojure&#39;s analyzer, independently callable a la carte"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/4063367"/>
+</rdf:RDF>
+-->
+
+        <script type="text/x-template" title="labels-dialog-div">
+
+    
+    <div id="labels-dialog">
+        <div class="labels-editor">
+            <span class="errorMessage error" id="errorSpan"></span>
+            <form method="GET" action="" id="add-labels-form">
+                <div id="labelOperationErrorContainer">
+                    <span class="error"><span class="errorMessage" id="labelOperationErrorMessage"></span></span>
+                </div>
+    
+                <div class="caption">Enter labels to add to this page:</div>
+                <div id="label-input-fields">
+                    <input autocomplete="off" id="labelsString" name="labelsString" value="">
+                    <input id="add-labels-editor-button" type="submit" class="add-labels" value="Add">
+                </div>
+                <div id="labelsAutocompleteList" class="aui-dd-parent resize-to-input" style="width: 417px"></div>
+                <div id="dialog-label-list">
+                    <span id="labels-section-title-none" class="no-labels-message" >
+None
+</span>
+<ul class="label-list">
+</ul>
+                </div>
+                <div id="waitImageAndStatus">
+                    <img class="waiting" alt="Please wait" src="/s/en_GB/3047/3/_/images/icons/wait.gif">&nbsp;
+                    <span id="labelOperationStatus" class="smalltext"></span>
+                </div>
+                <div class="labels-tip"></div>
+            </form>
+        </div>
+    </div>
+</script>
+            
+    
+
+
+<div id="labels-section" class="pageSection group">
+    <div class="labels-editor">
+        <span id="labels-section-title" class="label-title">Labels:</span>
+        <div id="labels-section-content" class="content-column">
+            <span id="labels-section-title-none" class="no-labels-message" >
+None
+</span>
+<ul class="label-list">
+</ul>
+
+                            <a id="labels-edit" href="#" class="show-labels-editor editor-icon" title="Edit Labels">
+                    <span class="icon icon-edit">Edit Labels</span>
+                </a>
+                    </div>
+    </div>
+</div>
+
+            
+            
+
+
+
+
+            
+    
+
+
+
+
+
+
+
+<div id="comments-section" class="pageSection group">
+    
+            <div class="section-header ">
+            <h2 id="comments-section-title" class="section-title">
+                <a href="#" class="comments-show-hide comments-showing" name="comments">
+                                            29 Comments
+                                    </a>
+            </h2>
+            <a title="Hide/Show Comments" href="#" 
+               class="comments-show-hide icon comments-showing icon-section-opened">
+                Hide/Show Comments
+            </a>
+        </div>
+    
+    
+                            <ol class="comment-threads top-level " id="page-comments">
+                        <li id="comment-thread-4063377" class="comment-thread">
+                                <div class="comment  " id="comment-4063377">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: cgrand" title="cgrand">                </p>
+                <p class="date" title="Nov 28, 2011 02:06">
+                    Nov 28, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="https://dev.clojure.org/display/~cgrand"
+                          class="url fn"
+                   >Christophe Grand</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>(Take everything with a pinch of salt: half baked ideas below.)</p><p>I'm unsure that substituting analyze with your own is desirable. Obviously you can do everything this way but the drawback is that you are on your own.</p><p>For analysis purposes it often seems easier to work from a fully expanded tree (what the AST provides) – driving macroexpansion yourself seems brittle. In my opinion, if you need to record extra information, the analyzer should call your code and not the other way round.</p><p>On the syntax front, metadata could be the answer: either on the ns or on individual forms (forms can be grouped with 'do).</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063377.html#comment-4063377"
+                id="comment-permalink-4063377"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063377.html#comment-4063377"
+    dc:identifier="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063377.html#comment-4063377"
+    dc:title="Provide friendly interface to Clojure&#39;s analyzer, independently callable a la carte"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/4063377"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-4063378" class="comment-thread">
+                                <div class="comment  " id="comment-4063378">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: ambrosebs" title="ambrosebs">                </p>
+                <p class="date" title="Nov 28, 2011 02:59">
+                    Nov 28, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~ambrosebs.html"
+                          class="url fn"
+                   >Ambrose Bonnaire-Sergeant</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>Agreed, my approach seems brittle.</p><p>I'm trying to connect the dots with the metadata idea. So when the analyzer comes across a particular metadata entry, it would call a function you produce? That sounds very nice.</p><p>Here's a vague interpretation of that idea as a sketch.</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[(ns my-typed
+  (:use [typed-clojure :only [type-check-form defn-typed]])) 
+
+;; If a form has [:type-check true] metadata, pass the analyze'd AST to type-check-form
+(add-metadata-hook! [:type-check true] type-check-form)
+
+(with-meta
+ (do 
+  (defn-typed add [(a : Number) (b : Number)] : Number
+    (+ a b)
+ )
+ 
+ {:type-check true}
+)]]></script>
+</div></div><p>One thing I don't understand is how to keep these compiler hooks namespaced. I guess I haven't delved into that subject before.</p><p>Is this close to what you were saying <a class="confluence-userlink" data-username="cgrand" href="https://dev.clojure.org/display/~cgrand" data-linked-resource-id="950320" data-linked-resource-type="userinfo" data-base-url="https://dev.clojure.org">Christophe Grand</a>?</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063378.html#comment-4063378"
+                id="comment-permalink-4063378"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063378.html#comment-4063378"
+    dc:identifier="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063378.html#comment-4063378"
+    dc:title="Provide friendly interface to Clojure&#39;s analyzer, independently callable a la carte"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/4063378"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-4063379" class="comment-thread">
+                                <div class="comment  " id="comment-4063379">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: cgrand" title="cgrand">                </p>
+                <p class="date" title="Nov 28, 2011 03:29">
+                    Nov 28, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="https://dev.clojure.org/display/~cgrand"
+                          class="url fn"
+                   >Christophe Grand</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>Sort of. On metadata, I was thinking of using ^ and not with-meta so that metadata would be available on the form straight from the reader.</p><pre>^::tc/type-check<br />(defn-t<code class="java plain">yped add [(a : Number) (b : Number)] : Number</code><code class="java spaces"><br /></code><code class="java plain"> (+ a b))</code></pre><p>I don't understand your question  about keeping the compiler hooks namespaced: are you refrering to several hooks compteing for the same keyword or something else?</p><p>The important part is that to me a hook should provide functions to be called by the analyzer but the analyzer should stay in control – to avoid duplicating the analyzer behavior in hooks.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063379.html#comment-4063379"
+                id="comment-permalink-4063379"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063379.html#comment-4063379"
+    dc:identifier="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063379.html#comment-4063379"
+    dc:title="Provide friendly interface to Clojure&#39;s analyzer, independently callable a la carte"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/4063379"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-4063380" class="comment-thread">
+                                <div class="comment  " id="comment-4063380">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: ambrosebs" title="ambrosebs">                </p>
+                <p class="date" title="Nov 28, 2011 09:05">
+                    Nov 28, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~ambrosebs.html"
+                          class="url fn"
+                   >Ambrose Bonnaire-Sergeant</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>Right, I was thinking something along those lines (competing hooks). I'm not sure if it's a problem, I was just putting it out there.</p><p>How could we provide the actual functions? Via metadata again?</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063380.html#comment-4063380"
+                id="comment-permalink-4063380"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063380.html#comment-4063380"
+    dc:identifier="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063380.html#comment-4063380"
+    dc:title="Provide friendly interface to Clojure&#39;s analyzer, independently callable a la carte"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/4063380"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-4063384" class="comment-thread">
+                                <div class="comment  " id="comment-4063384">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: cgrand" title="cgrand">                </p>
+                <p class="date" title="Nov 28, 2011 10:14">
+                    Nov 28, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="https://dev.clojure.org/display/~cgrand"
+                          class="url fn"
+                   >Christophe Grand</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>Before asking how at the syntax level, it could be good to sketch out what is our goal. There are three things I'd like to hook into the analyzer to do:</p><ul><li>whole AST transform</li><li>defining new special forms</li><li>macroexpansion control (to enrich the AST with information that may be lost otherwise or to add sugar like the interop sugar)</li></ul><p>Plus I'd like to be able to feed the AST back into the analyzer but that's out of scope and just an AST -&gt; sexpr converter away.</p><p>Yours?</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063384.html#comment-4063384"
+                id="comment-permalink-4063384"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063384.html#comment-4063384"
+    dc:identifier="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063384.html#comment-4063384"
+    dc:title="Provide friendly interface to Clojure&#39;s analyzer, independently callable a la carte"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/4063384"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-4063387" class="comment-thread">
+                                <div class="comment  " id="comment-4063387">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: ambrosebs" title="ambrosebs">                </p>
+                <p class="date" title="Nov 28, 2011 10:24">
+                    Nov 28, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~ambrosebs.html"
+                          class="url fn"
+                   >Ambrose Bonnaire-Sergeant</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>Wrt Typed Clojure, I want to:</p><ul style="list-style-type: square;"><li>add metadata to forms during compilation (such as preconditions)</li><li>add type information to a database during compilation, sourced from existing metadata</li></ul>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063387.html#comment-4063387"
+                id="comment-permalink-4063387"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063387.html#comment-4063387"
+    dc:identifier="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063387.html#comment-4063387"
+    dc:title="Provide friendly interface to Clojure&#39;s analyzer, independently callable a la carte"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/4063387"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-4063390" class="comment-thread">
+                                <div class="comment  " id="comment-4063390">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: cgrand" title="cgrand">                </p>
+                <p class="date" title="Nov 28, 2011 10:47">
+                    Nov 28, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="https://dev.clojure.org/display/~cgrand"
+                          class="url fn"
+                   >Christophe Grand</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>Are you only interested in top-level forms? (I don't think so)</p><p>So basically you want to inser a function which sees every form and that may tweak them. You are not interested in the AST itself. Do you?</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063390.html#comment-4063390"
+                id="comment-permalink-4063390"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063390.html#comment-4063390"
+    dc:identifier="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063390.html#comment-4063390"
+    dc:title="Provide friendly interface to Clojure&#39;s analyzer, independently callable a la carte"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/4063390"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-4063393" class="comment-thread">
+                                <div class="comment  " id="comment-4063393">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: ambrosebs" title="ambrosebs">                </p>
+                <p class="date" title="Nov 29, 2011 10:35">
+                    Nov 29, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~ambrosebs.html"
+                          class="url fn"
+                   >Ambrose Bonnaire-Sergeant</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <h1 id="ProvidefriendlyinterfacetoClojuresanalyzerindependentlycallablealacarte-Toplevelforms">Top level forms?</h1><p>Not just top-level forms, no. The reason I brought it up was to mirror Racket's behavior with the #%top-interaction macro. But the metadata based approach is nicer and more general.</p><h1 id="ProvidefriendlyinterfacetoClojuresanalyzerindependentlycallablealacarte-TypedClojure">Typed Clojure</h1><p>I'll flesh out some ideas.</p><h2 id="ProvidefriendlyinterfacetoClojuresanalyzerindependentlycallablealacarte-Macroexpansion">Macroexpansion</h2><p>I want to fully macroexpand forms to perform some basic type inference at compile time.</p><p>The idea is that we tell the type system how to reason about the special forms, then we reduce all code to those special forms, and perform the reasoning.</p><p><s>I am interested in the macroexpanded AST (if I understand you correctly).</s></p><p><s><strong>EDIT</strong>: I misunderstood what the AST was referring to. No, I don't need to access the AST, just the Clojure form.</s></p><p><strong>EDIT2</strong>: This should be a hook that gets passed the AST</p><h2 id="ProvidefriendlyinterfacetoClojuresanalyzerindependentlycallablealacarte-Tweakingexistingcode">Tweaking existing code</h2><p>When importing functions from the untyped world, we want to add runtime pre/postconditions on the arguments at compile time.</p><p>Say I want the + function from the untyped world.</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[;; Import '+' with type declaration
+(require-untyped clojure.core/+ [Number -&gt; Number -&gt; Number])]]></script>
+</div></div><p>I want to (somehow) add run-time pre/postconditions on the argument types.</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[(defn + [a b]
+  {:pre [(number? a) (number? b)]
+   :post [#(number? %)]}
+  (.internalPlus... a b))]]></script>
+</div></div>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063393.html#comment-4063393"
+                id="comment-permalink-4063393"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063393.html#comment-4063393"
+    dc:identifier="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063393.html#comment-4063393"
+    dc:title="Provide friendly interface to Clojure&#39;s analyzer, independently callable a la carte"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/4063393"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-4063398" class="comment-thread">
+                                <div class="comment  " id="comment-4063398">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: cgrand" title="cgrand">                </p>
+                <p class="date" title="Nov 29, 2011 02:19">
+                    Nov 29, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="https://dev.clojure.org/display/~cgrand"
+                          class="url fn"
+                   >Christophe Grand</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>As far as I understand, require-untyped, reminds me of Fogus' Trammel (additionally you may add the sig to your types database). I don't see why you need compiler hooks for require-untyped.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063398.html#comment-4063398"
+                id="comment-permalink-4063398"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063398.html#comment-4063398"
+    dc:identifier="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063398.html#comment-4063398"
+    dc:title="Provide friendly interface to Clojure&#39;s analyzer, independently callable a la carte"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/4063398"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-4063401" class="comment-thread">
+                                <div class="comment  " id="comment-4063401">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: ambrosebs" title="ambrosebs">                </p>
+                <p class="date" title="Nov 29, 2011 02:46">
+                    Nov 29, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~ambrosebs.html"
+                          class="url fn"
+                   >Ambrose Bonnaire-Sergeant</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>You're right, I've got it backwards.</p><p>If you use a typed function from the untyped world, contracts must be added to protect the invariants defined by the type checker.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063401.html#comment-4063401"
+                id="comment-permalink-4063401"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063401.html#comment-4063401"
+    dc:identifier="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063401.html#comment-4063401"
+    dc:title="Provide friendly interface to Clojure&#39;s analyzer, independently callable a la carte"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/4063401"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                                </ol>
+                        </li>
+                                        <li id="comment-thread-4063402" class="comment-thread">
+                                <div class="comment  " id="comment-4063402">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: cgrand" title="cgrand">                </p>
+                <p class="date" title="Nov 29, 2011 02:55">
+                    Nov 29, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="https://dev.clojure.org/display/~cgrand"
+                          class="url fn"
+                   >Christophe Grand</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>There's no such thing as a fully macroexpanded form (but you can build it from the AST) in CLJ or CLJS compiler</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063402.html#comment-4063402"
+                id="comment-permalink-4063402"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063402.html#comment-4063402"
+    dc:identifier="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063402.html#comment-4063402"
+    dc:title="Provide friendly interface to Clojure&#39;s analyzer, independently callable a la carte"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/4063402"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                                        <li id="comment-thread-4063416" class="comment-thread">
+                                <div class="comment  " id="comment-4063416">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: dnolen" title="dnolen">                </p>
+                <p class="date" title="Nov 29, 2011 10:19">
+                    Nov 29, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~dnolen.html"
+                          class="url fn"
+                   >David Nolen</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>Why do you want the form and not the AST? If you don't have the AST you'll have to construct it yourself right?</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063416.html#comment-4063416"
+                id="comment-permalink-4063416"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063416.html#comment-4063416"
+    dc:identifier="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063416.html#comment-4063416"
+    dc:title="Provide friendly interface to Clojure&#39;s analyzer, independently callable a la carte"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/4063416"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-4063417" class="comment-thread">
+                                <div class="comment  " id="comment-4063417">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: ambrosebs" title="ambrosebs">                </p>
+                <p class="date" title="Nov 29, 2011 10:34">
+                    Nov 29, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~ambrosebs.html"
+                          class="url fn"
+                   >Ambrose Bonnaire-Sergeant</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>Heh, I've spent today understanding what the AST gives you, you're correct of course. It's pretty awesome!</p><p>So I'd want a &quot;post-analysis phase&quot; hook that gets passed the resulting AST.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063417.html#comment-4063417"
+                id="comment-permalink-4063417"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063417.html#comment-4063417"
+    dc:identifier="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063417.html#comment-4063417"
+    dc:title="Provide friendly interface to Clojure&#39;s analyzer, independently callable a la carte"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/4063417"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                                </ol>
+                        </li>
+                                </ol>
+                        </li>
+                                </ol>
+                        </li>
+                                </ol>
+                        </li>
+                                </ol>
+                        </li>
+                                </ol>
+                        </li>
+                                </ol>
+                        </li>
+                                </ol>
+                        </li>
+                                </ol>
+                        </li>
+                        <li id="comment-thread-4063389" class="comment-thread">
+                                <div class="comment  " id="comment-4063389">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: cgrand" title="cgrand">                </p>
+                <p class="date" title="Nov 28, 2011 10:44">
+                    Nov 28, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="https://dev.clojure.org/display/~cgrand"
+                          class="url fn"
+                   >Christophe Grand</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>What does :compiler-hooks do that a require wouldn't?</p><p>In what I envision a namespace register (through a aptly named register-compiler-hook function) a compielr extension associated with a keyword and then any ns which requires this ns can use this extension simply by adding metadata on form or by adding metadata at the ns-form level (won't work as is). However it's just the surface.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063389.html#comment-4063389"
+                id="comment-permalink-4063389"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063389.html#comment-4063389"
+    dc:identifier="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063389.html#comment-4063389"
+    dc:title="Provide friendly interface to Clojure&#39;s analyzer, independently callable a la carte"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/4063389"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-4063395" class="comment-thread">
+                                <div class="comment  " id="comment-4063395">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: ambrosebs" title="ambrosebs">                </p>
+                <p class="date" title="Nov 28, 2011 23:05">
+                    Nov 28, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~ambrosebs.html"
+                          class="url fn"
+                   >Ambrose Bonnaire-Sergeant</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>Yes, you're right. Your idea well and truly puts the &quot;namespacing&quot; issue I had previously to rest. I've updated the wiki.</p><p>I'd imagine metadata at the ns-form level would mean wrapping the body of a file in an extra form? This behavior is more useful to me than adding metadata to individual forms. </p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063395.html#comment-4063395"
+                id="comment-permalink-4063395"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063395.html#comment-4063395"
+    dc:identifier="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063395.html#comment-4063395"
+    dc:title="Provide friendly interface to Clojure&#39;s analyzer, independently callable a la carte"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/4063395"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-4063399" class="comment-thread">
+                                <div class="comment  " id="comment-4063399">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: cgrand" title="cgrand">                </p>
+                <p class="date" title="Nov 29, 2011 02:26">
+                    Nov 29, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="https://dev.clojure.org/display/~cgrand"
+                          class="url fn"
+                   >Christophe Grand</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>No whole-file wrapping because it goes against Clojure compilation model (one form at a time, the ns is not a file or a compilation unit). So it means additional compiler state.</p><p>(Btw don't take my ideas or opinions as definite: I'm exploring this design too and can rapidly change my mind in face of compelling arguments.)</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063399.html#comment-4063399"
+                id="comment-permalink-4063399"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063399.html#comment-4063399"
+    dc:identifier="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063399.html#comment-4063399"
+    dc:title="Provide friendly interface to Clojure&#39;s analyzer, independently callable a la carte"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/4063399"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-4063420" class="comment-thread">
+                                <div class="comment  " id="comment-4063420">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: dnolen" title="dnolen">                </p>
+                <p class="date" title="Nov 29, 2011 19:20">
+                    Nov 29, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~dnolen.html"
+                          class="url fn"
+                   >David Nolen</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>Also whole-file wrapping is just less necessary in Clojure. Definitions must appear in the proper order.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063420.html#comment-4063420"
+                id="comment-permalink-4063420"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063420.html#comment-4063420"
+    dc:identifier="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063420.html#comment-4063420"
+    dc:title="Provide friendly interface to Clojure&#39;s analyzer, independently callable a la carte"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/4063420"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                                </ol>
+                        </li>
+                                </ol>
+                        </li>
+                                </ol>
+                        </li>
+                        <li id="comment-thread-4063403" class="comment-thread">
+                                <div class="comment  " id="comment-4063403">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: hiredman" title="hiredman">                </p>
+                <p class="date" title="Nov 29, 2011 03:16">
+                    Nov 29, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~hiredman.html"
+                          class="url fn"
+                   >Kevin Downey</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>I still like</p><pre>(ns foo.bar<br />  (:analyzer clojure.typed/analyzer))</pre><p> </p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063403.html#comment-4063403"
+                id="comment-permalink-4063403"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063403.html#comment-4063403"
+    dc:identifier="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063403.html#comment-4063403"
+    dc:title="Provide friendly interface to Clojure&#39;s analyzer, independently callable a la carte"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/4063403"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-4063404" class="comment-thread">
+                                <div class="comment  " id="comment-4063404">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: cgrand" title="cgrand">                </p>
+                <p class="date" title="Nov 29, 2011 03:28">
+                    Nov 29, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="https://dev.clojure.org/display/~cgrand"
+                          class="url fn"
+                   >Christophe Grand</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>What would be the semantics?</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063404.html#comment-4063404"
+                id="comment-permalink-4063404"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063404.html#comment-4063404"
+    dc:identifier="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063404.html#comment-4063404"
+    dc:title="Provide friendly interface to Clojure&#39;s analyzer, independently callable a la carte"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/4063404"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-4063406" class="comment-thread">
+                                <div class="comment  " id="comment-4063406">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: hiredman" title="hiredman">                </p>
+                <p class="date" title="Nov 29, 2011 03:35">
+                    Nov 29, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~hiredman.html"
+                          class="url fn"
+                   >Kevin Downey</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>the named analyzer (possibly analyzer post processor?) would be used for the given namespace</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063406.html#comment-4063406"
+                id="comment-permalink-4063406"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063406.html#comment-4063406"
+    dc:identifier="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063406.html#comment-4063406"
+    dc:title="Provide friendly interface to Clojure&#39;s analyzer, independently callable a la carte"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/4063406"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-4063409" class="comment-thread">
+                                <div class="comment  " id="comment-4063409">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: cgrand" title="cgrand">                </p>
+                <p class="date" title="Nov 29, 2011 06:44">
+                    Nov 29, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="https://dev.clojure.org/display/~cgrand"
+                          class="url fn"
+                   >Christophe Grand</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>What if I don't want to use the analyzer (eg aggressivelly-deforesting-analyzer) for the whole namespace but only for a handful of defs? What if I want to use several analyzer?</p><p>If it's about being obvious from the namespace that you are using a custom analyzer, wouldn't</p><div class="line number1 index0 alt2"><code class="java plain">(ns my-user-ns<br />  {::tc/type-checked true}<br /></code></div><div class="line number2 index1 alt1"><code class="java plain">  (:require [typed-clojure.core :as tc]))</code></div><div class="line number2 index1 alt1"> </div><div class="line number2 index1 alt1">be enough to content you?</div><div class="line number2 index1 alt1">If not, please explain what's lacking.</div>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063409.html#comment-4063409"
+                id="comment-permalink-4063409"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063409.html#comment-4063409"
+    dc:identifier="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063409.html#comment-4063409"
+    dc:title="Provide friendly interface to Clojure&#39;s analyzer, independently callable a la carte"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/4063409"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-4063422" class="comment-thread">
+                                <div class="comment  " id="comment-4063422">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: hiredman" title="hiredman">                </p>
+                <p class="date" title="Nov 29, 2011 19:22">
+                    Nov 29, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~hiredman.html"
+                          class="url fn"
+                   >Kevin Downey</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>sure, a per form analyzer is strictly more powerful, but do you really want to allow mixing and matching of analyzers inside a form? inside a function? where does it end?</p><p>namespaces seem like a nice granularity for declaring these options.</p><p>this extension would allow you do to very interesting and cool things, but it would complicate the model of the clojure language.</p><p>so how can we limit the scope of the complications while still enabling the power you get from being able to reach into the guts and make it do what you want.</p><p>again scoping analyzers to a namespace seems like a good fit.</p><p> </p><p>EDIT:</p><p>and the simplicity of the model (reading/macroexpansion/compilation/running) is a real strength of clojure.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063422.html#comment-4063422"
+                id="comment-permalink-4063422"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063422.html#comment-4063422"
+    dc:identifier="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063422.html#comment-4063422"
+    dc:title="Provide friendly interface to Clojure&#39;s analyzer, independently callable a la carte"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/4063422"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-4063430" class="comment-thread">
+                                <div class="comment  " id="comment-4063430">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: ambrosebs" title="ambrosebs">                </p>
+                <p class="date" title="Nov 29, 2011 21:53">
+                    Nov 29, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~ambrosebs.html"
+                          class="url fn"
+                   >Ambrose Bonnaire-Sergeant</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>If we eventually have multiple compiler extension points, we could take inspiration from Racket's #lang form to group extensions as a separate &quot;language&quot;.</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[(ns my-ns
+  (:lang clojure.typed/lang))]]></script>
+</div></div>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063430.html#comment-4063430"
+                id="comment-permalink-4063430"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063430.html#comment-4063430"
+    dc:identifier="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063430.html#comment-4063430"
+    dc:title="Provide friendly interface to Clojure&#39;s analyzer, independently callable a la carte"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/4063430"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                                        <li id="comment-thread-4063431" class="comment-thread">
+                                <div class="comment  " id="comment-4063431">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: cgrand" title="cgrand">                </p>
+                <p class="date" title="Nov 30, 2011 02:15">
+                    Nov 30, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="https://dev.clojure.org/display/~cgrand"
+                          class="url fn"
+                   >Christophe Grand</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>The reading/macroexpansion/compilation/running model is slightly a lie in Clojure: macroexpansion and compilation are intertwined, at no time you get a fully macro-expanded form that gets passed to the compiler (I'd like that but that's not the CLJ or CLJS compiler design).</p><p>The true model is reading/analyze/compilation/running and macroexpansion is part of analyze.</p><p>Strictlty speaking post-analyze hooks/AST transformers are as powerful as macros (you could do the same thing with macros but it would more brittle: you have to replicate all the macroexpansion/code-walking of the compiler) – it's just a saner way to implement such macros.</p><p>If we have an analyze function and a reform function (which outputs forms from an AST) then</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[(defmacro typed [expr]
+  (-&gt;&gt; expr (analyze &amp;env) transform reform))]]></script>
+</div></div><p>would be functionally equivalent to a post-analyzer hook.</p><p>Metadata tricks or ns declarations are just sugar on top of this functionality. This functionality being in the same class as macros there is no reason not to offer them at the form level. </p><p>For example I envision post-analyzers to be used to perform specific aggressive optimizations and I definitely don't want to apply them on a whole namespace or to reorganize all my namespaces to isolate the functions to optimize.</p><p>To me the ns-level is too coarse but I'm more than willing to make sure the resulting model is understandable and its behavior well scoped.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063431.html#comment-4063431"
+                id="comment-permalink-4063431"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063431.html#comment-4063431"
+    dc:identifier="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063431.html#comment-4063431"
+    dc:title="Provide friendly interface to Clojure&#39;s analyzer, independently callable a la carte"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/4063431"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-4063432" class="comment-thread">
+                                <div class="comment  " id="comment-4063432">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: hiredman" title="hiredman">                </p>
+                <p class="date" title="Nov 30, 2011 05:32">
+                    Nov 30, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~hiredman.html"
+                          class="url fn"
+                   >Kevin Downey</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>what is your use case that makes ns-level post analyzers too coarse?</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063432.html#comment-4063432"
+                id="comment-permalink-4063432"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063432.html#comment-4063432"
+    dc:identifier="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063432.html#comment-4063432"
+    dc:title="Provide friendly interface to Clojure&#39;s analyzer, independently callable a la carte"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/4063432"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-4063437" class="comment-thread">
+                                <div class="comment  " id="comment-4063437">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: cgrand" title="cgrand">                </p>
+                <p class="date" title="Nov 30, 2011 11:37">
+                    Nov 30, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="https://dev.clojure.org/display/~cgrand"
+                          class="url fn"
+                   >Christophe Grand</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>For example to  &quot;transientize&quot; an expression: most expressions can't be converted and, really, it's not the kind of optimization I want to unleash on a whole ns. (Transients are going to be phased out but a t least transientization is an actual aggressive (possibly breaking) optimization.)</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063437.html#comment-4063437"
+                id="comment-permalink-4063437"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063437.html#comment-4063437"
+    dc:identifier="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063437.html#comment-4063437"
+    dc:title="Provide friendly interface to Clojure&#39;s analyzer, independently callable a la carte"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/4063437"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                                </ol>
+                        </li>
+                                </ol>
+                        </li>
+                                </ol>
+                        </li>
+                                </ol>
+                        </li>
+                                </ol>
+                        </li>
+                                </ol>
+                        </li>
+                                </ol>
+                        </li>
+                        <li id="comment-thread-4063405" class="comment-thread">
+                                <div class="comment  " id="comment-4063405">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: hiredman" title="hiredman">                </p>
+                <p class="date" title="Nov 29, 2011 03:36">
+                    Nov 29, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~hiredman.html"
+                          class="url fn"
+                   >Kevin Downey</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>&lt;&lt;redacted&gt;&gt;</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063405.html#comment-4063405"
+                id="comment-permalink-4063405"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063405.html#comment-4063405"
+    dc:identifier="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063405.html#comment-4063405"
+    dc:title="Provide friendly interface to Clojure&#39;s analyzer, independently callable a la carte"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/4063405"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                        <li id="comment-thread-4063461" class="comment-thread">
+                                <div class="comment  " id="comment-4063461">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: richhickey" title="richhickey">                </p>
+                <p class="date" title="Dec 04, 2011 09:29">
+                    Dec 04, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~richhickey.html"
+                          class="url fn"
+                   >Rich Hickey</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>So, this seems to me to be immediately combining things. Should we not first:</p><ul><li>make analyze independently callable a la carte<ul><li>ensure it provides sufficient interesting information, in a useful form</li></ul></li><li>experiment with things we can do with it<ul><li>you can do type checking independent of compilation, there's not much reason to do it as you go, and doing so will only invite the problems of mandatory typing</li></ul></li><li>then, and only then, consider extending the compilation process to interact with such things</li></ul><p>That is, the rationale is broken. What are the problems you are trying to solve?</p><p>The first problems might be like this:</p><ul><li>I want to write a type checker, IDE etc and need access to the knowledge of the compiler analysis phase, but can't get at it. Access to the analyzer helps solve this.</li></ul><p>Later, the problem might be:</p><ul><li>I've written a type checker and I'd like to run it during compilation because (some good reason here).</li></ul><p>Making it pluggable because we can isn't going to yield good results.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063461.html#comment-4063461"
+                id="comment-permalink-4063461"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063461.html#comment-4063461"
+    dc:identifier="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063461.html#comment-4063461"
+    dc:title="Provide friendly interface to Clojure&#39;s analyzer, independently callable a la carte"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/4063461"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-4063462" class="comment-thread">
+                                <div class="comment  " id="comment-4063462">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: ambrosebs" title="ambrosebs">                </p>
+                <p class="date" title="Dec 04, 2011 10:30">
+                    Dec 04, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~ambrosebs.html"
+                          class="url fn"
+                   >Ambrose Bonnaire-Sergeant</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>Thanks for the feedback Rich.</p><p>I'm taking a step back and exploring your first two points.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063462.html#comment-4063462"
+                id="comment-permalink-4063462"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063462.html#comment-4063462"
+    dc:identifier="Provide+friendly+interface+to+Clojure&apos;s+analyzer,+independently+callable+a+la+carte-focusedCommentId=4063462.html#comment-4063462"
+    dc:title="Provide friendly interface to Clojure&#39;s analyzer, independently callable a la carte"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/4063462"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                                </ol>
+                        </li>
+                </ol>
+    
+    </div>
+
+
+            
+</div>
+
+
+    
+
+
+
+    
+    
+
+    
+    
+    
+
+
+    
+
+
+
+    <br class="clear">
+</div>
+  
+    </div>
+</div>
+
+<div id="footer">
+                                                <p class="license license-opensource">
+                  Powered by a free <b>Atlassian Confluence Open Source Project License</b> granted to Clojure. <a href="http://www.atlassian.com/c/conf/11461">Evaluate Confluence today</a>.<br>
+                </p>
+                        
+    <ul id="poweredby">
+        <li class="noprint">Powered by <a href="http://www.atlassian.com/software/confluence" class="hover-footer-link">Atlassian Confluence</a> <span id='footer-build-information'>4.0</span>, the <a href="http://www.atlassian.com/software/confluence/tour/enterprise-wiki.jsp" class="hover-footer-link">Enterprise Wiki</a></li>
+        <li class="print-only">Printed by Atlassian Confluence 4.0, the Enterprise Wiki.</li>        
+        <li class="noprint"> &nbsp; |&nbsp; <a href="http://jira.atlassian.com/secure/BrowseProject.jspa?id=10470" class="hover-footer-link">Report a bug</a></li>
+        <li class="noprint"> &nbsp;|&nbsp; <a href="http://www.atlassian.com/about/connected.jsp?s_kwcid=Confluence-stayintouch" class="hover-footer-link">Atlassian News</a></li>
+    </ul>
+
+    
+
+            <div><span style="">Site support by</span><a href="http://contegix.com"> <img style="vertical-align:middle" src="../../download/attachments/459015/contegix.jpg.html"/></a></div>
+    </div></div>
+</body>
+</html>

@@ -1,0 +1,894 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Socket Server REPL - Clojure Design - Clojure Development</title>
+
+        
+
+                        
+    
+
+            <meta http-equiv="X-UA-Compatible" content="IE=EDGE">
+<meta charset="UTF-8">
+<!-- Deprecated since 3.4. To be removed in a future version of Confluence; use AJS.Confluence.getContextPath() -->
+<meta id="confluence-context-path" name="confluence-context-path" content="">
+<meta id="confluence-base-url" name="confluence-base-url" content="https://dev.clojure.org">
+
+<meta id="atlassian-token" name="atlassian-token" content="30041c830a95ce9c95d0b58cb377def6b96aa6d2">
+
+<meta id="confluence-space-key" name="confluence-space-key" content="design">
+<script type="text/javascript">
+    // Deprecated global variables. To be removed in a future version of Confluence.
+    var contextPath = '';
+</script>
+
+    
+
+<!-- include system css resources -->
+
+
+    <link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/55/_/download/superbatch/css/batch.css" media="all">
+<!--[if lt IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/_/download/superbatch/css/batch.css?conditionalComment=lt+IE+9" media="all">
+<![endif]-->
+<!--[if IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/_/download/superbatch/css/batch.css?conditionalComment=IE+9" media="all">
+<![endif]-->
+<!--[if lte IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/_/download/superbatch/css/batch.css?conditionalComment=lte+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/55/_/download/superbatch/css/batch-media=print.css" media="print">
+<!--[if lt IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/_/download/contextbatch/css/page/batch.css?conditionalComment=lt+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/_/download/contextbatch/css/page/batch.css" media="all">
+<!--[if lt IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/_/download/contextbatch/css/viewcontent,main/batch.css?conditionalComment=lt+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/_/download/contextbatch/css/viewcontent,main/batch.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.6/_/download/batch/com.atlassian.confluence.ext.newcode-macro-plugin-syntaxhighlighter/com.atlassian.confluence.ext.newcode-macro-plugin-syntaxhighlighter.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.6/_/download/batch/com.atlassian.confluence.ext.newcode-macro-plugin-sh-theme-confluence/com.atlassian.confluence.ext.newcode-macro-plugin-sh-theme-confluence.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.1/_/download/batch/com.atlassian.confluence.plugins.pagetree-pagetree-resources/com.atlassian.confluence.plugins.pagetree-pagetree-resources.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/3/_/styles/colors-spaceKey=design.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.5/_/download/resources/com.atlassian.confluence.plugins.doctheme-documentation/default-theme.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.5/_/download/resources/com.atlassian.confluence.plugins.doctheme-documentation/splitter.css" media="all">
+
+<!-- end system css resources -->
+
+    <meta name="confluence-request-time" content="1556129076241">
+            <meta name="ajs-page-id" content="11305253">
+            <meta name="ajs-parent-page-id" content="12845093">
+            <meta name="ajs-space-key" content="design">
+            <meta name="ajs-space-name" content="Clojure Design">
+            <meta name="ajs-page-title" content="Socket Server REPL">
+            <meta name="ajs-parent-page-title" content="Release 1.8">
+            <meta name="ajs-from-page-title" content="">
+            <meta name="ajs-context-path" content="">
+            <meta name="ajs-version-number" content="4.0">
+            <meta name="ajs-build-number" content="3047">
+            <meta name="ajs-remote-user" content="">
+            <meta name="ajs-static-resource-url-prefix" content="/s/en_GB/3047/3/_">
+            <meta name="ajs-global-settings-attachment-max-size" content="10485760">
+            <meta name="ajs-user-locale" content="en_GB">
+            <meta name="ajs-enabled-dark-features" content="">
+            <meta name="ajs-atl-token" content="30041c830a95ce9c95d0b58cb377def6b96aa6d2">
+            
+            <meta name="ajs-keyboardshortcut-hash" content="7b95af54c6deada096af1f28fdd0f413">
+            <meta name="ajs-use-keyboard-shortcuts" content="true">
+    <!-- Deprecated since 3.4. To be removed in a future version of Confluence; use atl.header -->
+        
+            <script type="text/x-template" title="share-content-popup">
+    <form action="#" method="post" class="aui share-content-popup">
+        <fieldset>
+            <label for="users">User name or email</label>
+            <div class="autocomplete-user-target">
+                <input class="text autocomplete-sharepage" id="users" data-max="10" data-dropdown-target=".autocomplete-user-target" data-none-message="No matching user or email found"/>
+            </div>
+            <ol class="recipients">
+            </ol>
+            <div><label for="note">Note</label></div>
+            <textarea class="textarea" id="note" placeholder="Add an optional note"/>
+        </fieldset>
+        <div class="button-panel">
+            <div class="progress-messages-icon"></div>
+            <div class="progress-messages">
+            </div>
+            <input class="button submit" type="submit" value="Share" disabled/>
+            <a class="close-dialog" href="#">Cancel</a>
+        </div>
+    </form>
+</script>
+
+<script type="text/x-template" title="share-content-popup-recipient-username">
+    <li data-username="{username}" style="display: none">
+        <span>
+            <img src="{thumbnailLink.href}" title="{title}">
+            <span>{title}</span>
+            <span class="remove-recipient"/>
+        </span>
+    </li>
+</script>
+
+<script type="text/x-template" title="share-content-popup-recipient-email">
+    <li data-email="{email}" style="display: none">
+        <span>
+            <img src="{icon}" title="{email}">
+            <span>{email}</span>
+            <span class="remove-recipient"/>
+        </span>
+    </li>
+</script>
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="icon" type="image/png" href="../../s/en_GB/3047/3/_/images/logo/confluence_16.png">
+
+<link rel="search" type="application/opensearchdescription+xml" href="../../opensearch/osd.action.xml" title="Clojure Development"/>
+
+        <!-- include system javascript resources -->
+                        
+    
+    <script type="text/javascript" src="../../s/en_GB/3047/3/55/_/download/superbatch/js/batch.js" ></script>
+<!--[if lte IE 8]>
+<script type="text/javascript" src="/s/en_GB/3047/3/55/_/download/superbatch/js/batch.js?conditionalComment=lte+IE+8" ></script>
+<![endif]-->
+<script type="text/javascript" src="../../s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/_/download/contextbatch/js/page/batch.js" ></script>
+<script type="text/javascript" src="../../s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/_/download/contextbatch/js/viewcontent,main/batch.js" ></script>
+<script type="text/javascript" src="../../s/en_GB/3047/3/2.0.6/_/download/batch/com.atlassian.confluence.ext.newcode-macro-plugin-syntaxhighlighter/com.atlassian.confluence.ext.newcode-macro-plugin-syntaxhighlighter.js" ></script>
+<script type="text/javascript" src="../../s/en_GB/3047/3/2.0.6/_/download/batch/com.atlassian.confluence.ext.newcode-macro-plugin-syntaxhighlighter-brushes/com.atlassian.confluence.ext.newcode-macro-plugin-syntaxhighlighter-brushes.js" ></script>
+<script type="text/javascript" src="../../s/en_GB/3047/3/2.0.1/_/download/batch/com.atlassian.confluence.plugins.pagetree-pagetree-resources/com.atlassian.confluence.plugins.pagetree-pagetree-resources.js" ></script>
+
+    
+    <!-- end system javascript resources -->
+
+    
+
+    
+    <link rel="canonical" href="Socket+Server+REPL.html">
+    <link rel="shortlink" href="Socket+Server+REPL.html">
+    <meta name="wikilink" content="[design:Socket Server REPL]">
+    <meta name="page-version" content="24">
+
+</head>
+
+<body             onload="placeFocus()"
+     id="com-atlassian-confluence" class="theme-documentation ">
+<div id="full-height-container">
+    <div id="header-precursor">
+        
+        
+                </div>
+
+<div id="header" class="sectionbottom ">
+        <form id="quick-search" class="quick-search" method="get" action="../../dosearchsite.action.html">
+                <fieldset>
+            <input type="hidden" name="spaceSearch" value="false"/>
+        </fieldset>
+        <fieldset>
+            <legend>Quick Search</legend>
+            <input class="quick-search-query" id="quick-search-query" type="text" accessKey="search-pages-action.accesskey" autocomplete="off" name="queryString" size="25"/>
+            <input class="quick-search-submit" id="quick-search-submit" type="submit"  value="Search Confluence" />
+            <div class="aui-dd-parent quick-nav-drop-down"><!-- Quick nav appears here --></div>
+        </fieldset>
+        <fieldset class="hidden parameters">
+            <input type="hidden" id="quickNavEnabled" value="true" />
+                    </fieldset>
+    </form>
+
+    <ul id="header-menu-bar" class="ajs-menu-bar">
+                    
+        
+            <li class="normal ajs-menu-item">
+        <a id="browse-menu-link" class="browse trigger ajs-menu-title" href="#"><span><span>Browse</span></span></a>         <div class="assistive ajs-drop-down">
+                        <ul  id="browse-menu-link-leading"                 class="section-leading first">
+                                        <li>
+    
+        
+    
+    <a  id="space-pages-link" href="../../pages/recentlyupdated.action-key=design.html"  class=""   title="Browse pages in the Clojure Design space">
+                   <span>Pages</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-blogposts-link" href="../../pages/viewrecentblogposts.action-key=design.html"  class=""   title="Browse blogs in the Clojure Design space">
+                   <span>Blog</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-labels-link" href="../../labels/listlabels-heatmap.action-key=design.html"  class=""   title="Browse labels in the Clojure Design space">
+                   <span>Labels</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-attachments-link" href="../../spaces/listattachmentsforspace.action-key=design.html"  class=""   title="Browse attachments in the Clojure Design space">
+                   <span>Attachments</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-mail-link" href="../../spaces/viewmailarchive.action-key=design.html"  class=""   title="Browse mail in the Clojure Design space">
+                   <span>Mail</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-advanced-link" href="../../spaces/viewspacesummary.action-key=design.html"  class=""   title="Browse additional space functions in the Clojure Design space">
+                   <span>Advanced</span></a>        </li>
+                            </ul>
+                        <ul  id="browse-menu-link-global"                 class="section-global">
+                                        <li>
+    
+        
+    
+    <a  id="whats-new-menu-link" href="http://docs.atlassian.com/confluence/docs-40/whatsnew/iframe"  class=""   title="">
+                   <span>What’s New</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-directory-link" href="../../spacedirectory/view.action.html"  class=""   title="Browse the Confluence space directory">
+                   <span>Space Directory</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="feed-builder-link" href="../../dashboard/configurerssfeed.action.html"  class=""   title="Create your custom RSS feed.">
+                   <span>Feed Builder</span></a>        </li>
+                                        <li>
+    
+            
+    
+    <a  id="keyboard-shortcuts-link" href="#"  class=""   title="View available keyboard shortcuts">
+                   <span>Keyboard Shortcuts</span></a>        </li>
+                                        <li>
+    
+            
+    
+    <a  id="gadget-directory-link" href="#"  class="user-item administration-link"   title="Browse gadgets provided by Confluence">
+                   <span>Confluence Gadgets</span></a>        </li>
+                            </ul>
+                    </div>
+    </li>
+        
+                                                         <li class="ajs-menu-item normal">
+        
+        
+    
+    <a  id="login-link" href="../../login.action-os_destination=-display-design-Socket+Server+REPL.html"  class="user-item login-link"   title="">
+                   <span>Log In</span></a>        </li>
+                            <li class="ajs-menu-item normal">
+    
+        
+    
+    <a  id="signup-link" href="../../signup.action.html"  class="user-item signup-link"   title="">
+                   <span>Sign Up</span></a>        </li>
+                                <li class="normal ajs-menu-item">
+            <div id="splitter-button" class="hidden" title="Show or hide sidebar"></div>
+        </li>
+
+    </ul>
+    
+    
+    <ol id="breadcrumbs">
+                    
+                        
+        <li class="first" >
+                                    <span><a href="../../dashboard.action.html" title="Go to Dashboard">Dashboard</a></span>
+                </li>
+                    
+                
+        <li>
+                                    <span><a href="Home-jsessionid=3A56E29DA520B75101350BA4484B9990.html">Clojure Design</a></span>
+                </li>
+                                        <li id="ellipsis" title="Show all breadcrumbs"><span><strong>&#8230;</strong></span></li>
+                                    
+                
+        <li class="hidden-crumb" >
+                                    <span><a href="Home.html">Home</a></span>
+                </li>
+                                
+                
+        <li class="hidden-crumb" >
+                                    <span><a href="Release+Planning.html">Release Planning</a></span>
+                </li>
+                                
+                
+        <li class="hidden-crumb" >
+                                    <span><a href="Release+1.8.html">Release 1.8</a></span>
+                </li>
+                    
+                
+        <li>
+                                    <span><a href="Socket+Server+REPL.html">Socket Server REPL</a></span>
+                </li>
+        </ol>
+
+</div>
+
+    <div id="splitter">
+    <div id="splitter-sidebar" >
+        
+
+                    
+        
+    
+
+<div class="plugin_pagetree">
+
+                <div id="pagetreesearch">
+            <form method="POST" action="../../dosearchsite.action-searchQuery.queryString=&amp;searchQuery.spaceKey=conf_all.html" name="pagetreesearchform">
+                                    <input type="hidden" name="ancestorId" value="458775">
+                                <input type="hidden" name="spaceKey" value="design">
+                <input type="text"  size="20" name="queryString">
+                <input type="submit" value="Search">
+            </form>
+        </div>
+    
+        
+    <ul class="plugin_pagetree_children_list plugin_pagetree_children_list_noleftspace">
+        <div class="plugin_pagetree_children">
+        </div>
+    </ul>
+
+    <fieldset class="hidden">
+        <input type="hidden" name="treeId" value="">
+        <input type="hidden" name="treeRequestId" value="/plugins/pagetree/naturalchildren.action?decorator=none&amp;excerpt=false&amp;sort=position&amp;reverse=false&amp;disableLinks=false">
+        <input type="hidden" name="treePageId" value="11305253">
+
+        <input type="hidden" name="noRoot" value="false">
+        <input type="hidden" name="rootPageId" value="458775">
+
+        <input type="hidden" name="rootPage" value="">
+        <input type="hidden" name="startDepth" value="0">
+        <input type="hidden" name="spaceKey" value="design" >
+
+        <input type="hidden" name="i18n-pagetree.loading" value="Loading...">
+        <input type="hidden" name="i18n-pagetree.error.permission" value="Unable to load page tree. It seems that you do not have permission to view the root page.">
+        <input type="hidden" name="i18n-pagetree.eeror.general" value="There was a problem retrieving the page tree. Please check the server log file for more information.">
+        <input type="hidden" name="loginUrl" value="/login.action?os_destination=%2Fdisplay%2Fdesign%2FSocket%2BServer%2BREPL">
+
+                <fieldset class="hidden">
+                                                <input type="hidden" name="ancestorId" value="12845093">
+                                    <input type="hidden" name="ancestorId" value="5767475">
+                                    <input type="hidden" name="ancestorId" value="458775">
+                                    </fieldset>
+    </fieldset>
+</div>
+
+
+
+            </div>
+    <div id="splitter-content">
+
+                    <script type="text/javascript" src="../../s/en_GB/3047/3/2.0.5/_/download/resources/com.atlassian.confluence.plugins.doctheme-resources/doc-theme.js"></script>
+    
+            
+    
+<div id="main" >
+    <div id="main-header">
+	    
+	    
+    <div id="navigation" class="content-navigation view">
+                    <ul class="ajs-menu-bar">
+                                
+                        
+            <li class="normal ajs-menu-item">
+        <a id="action-menu-link" class="action trigger ajs-menu-title" href="#"><span><span>Tools</span></span></a>         <div class="assistive ajs-drop-down">
+                        <ul  id="action-menu-link-primary"                 class="section-primary first">
+                                        <li>
+    
+        
+    
+    <a  id="view-attachments-link" href="../../pages/viewpageattachments.action-pageId=11305253.html"  class="action-view-attachments"  accessKey="a"  title="View Attachments">
+                   <span><u>A</u>ttachments (0)</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="action-view-history-link" href="../../pages/viewpreviousversions.action-pageId=11305253.html"  class="action-view-history"   title="">
+                   <span>Page History</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="action-page-permissions-link" href="../../pages/viewinfo.action-pageId=11305253.html"  class="action-page-permissions"   title="Edit restrictions">
+                   <span>Restrictions</span></a>        </li>
+                            </ul>
+                        <ul  id="action-menu-link-secondary"                 class="section-secondary">
+                                        <li>
+    
+        
+    
+    <a  id="view-page-info-link" href="../../pages/viewinfo.action-pageId=11305253.html"  class="action-view-info"   title="">
+                   <span>Info</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="link-to-page-link" href="../../pages/viewinfo.action-pageId=11305253.html"  class=""   title="Link to this Page">
+                   <span>Link to this Page&hellip;</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="view-in-hierarchy-link" href="../../pages/listpages-dirview.action-key=design&amp;openId=11305253.html#selectedPageInHierarchy"  class=""   title="">
+                   <span>View in Hierarchy</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="action-view-source-link" href="../../plugins/viewsource/viewpagesrc.action-pageId=11305253.html"  class="action-view-source popup-link"   title="">
+                   <span>View Source</span></a>        </li>
+                            </ul>
+                    </div>
+    </li>
+            </ul>
+    </div>
+
+	    
+	    <h1 id="title-heading" class="pagetitle">
+	        	            <a href="Home-jsessionid=3A56E29DA520B75101350BA4484B9990.html"><img class="logo global custom" src="../../download/attachments/131074/global.logo.png" alt=""></a>	        	
+			<span id="title-text">
+							            <a href="Socket+Server+REPL.html">Socket Server REPL</a>
+    						</span>
+	    </h1>
+	</div>
+
+    
+
+    
+    
+    
+    
+    
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+        
+    
+    
+                    
+    
+
+    
+
+
+<div id="content" class="page view">
+    
+
+
+
+                
+<script type="text/x-template" title="movePageDialog">
+    <div class="row information">
+        <div class="inner">
+            <div class="element">
+                Specify the new parent page for this page and its children by space and title.
+            </div>
+        </div>
+    </div>
+    <div class="form">
+        <fieldset>
+                
+
+    <legend class="assistive"><span>Change the Parent Page to a Known Page</span></legend>
+            <div class="row">
+                <label for="new-space">New space:</label>
+                <div class="value new-space-value">
+                    <input id="new-space-key" name="new-space-key" type="hidden" value="design">
+                                            <span class="space-input">
+                            <input id="new-space" name="new-space" value="Clojure Design" disabled="disabled">
+                        </span>
+                        <span class="description warning">You cannot move this page to another space because you do not have permission to remove it from this space.</span>
+                                        <div class="new-space-dropdown aui-dd-parent autocomplete"></div>
+                </div>
+            </div>
+            <div class="row">
+                <label for="new-parent-page">New parent page:</label>
+                <div class="value new-parent-page-value">
+                    <span class="page-input">
+                        <input id="new-parent-page" name="new-parent-page" value="Release 1.8">
+                    </span>
+                    <span class="description">Start typing a page title to see a list of suggestions.</span>
+                    <div class="new-parent-page-dropdown aui-dd-parent autocomplete"></div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <div class="location-info">
+        <div class="row">
+            <label>Current location:</label>
+            <div class="value breadcrumbs-container">
+                <div class="breadcrumbs-line">
+                    <ul id="current-parent-breadcrumbs" class="breadcrumbs">
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <label>New location:</label>
+            <div class="value breadcrumbs-container">
+                <div class="breadcrumbs-line">
+                    <ul id="new-parent-breadcrumbs" class="breadcrumbs">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/x-template" title="movePageSearchPanel">
+    <div class="row information">
+        <div class="inner">
+            <div class="element">
+                Search for and select the new parent page for this page and its children.
+            </div>
+        </div>
+    </div>
+    <div id="move-page-search-container" class="row">
+        <div class="search-form">
+            <fieldset>
+                    
+
+    <legend class="assistive"><span>Search for a New Parent Page</span></legend>
+                    
+
+    <label  for="move-page-search-query" class="assistive">Search keywords</label>
+                <input class="search-query" id="move-page-search-query">
+                    
+
+    <label  for="move-page-search-space" class="assistive">Search in space</label>
+                                    <select id="move-page-search-space" class="search-space" disabled="disabled">
+                        <option value="design" selected="selected">Clojure Design</option>
+                    </select>
+                                <input type="button" value="Search">
+                                    <div class="description warning">You cannot move this page to another space because you do not have permission to remove it from this space.</div>
+                            </fieldset>
+        </div>
+        <div class="search-results">
+        </div>
+    </div>
+</script>
+<script type="text/x-template" title="searchResultsGrid">
+    <table>
+        <thead>
+            <tr class="header">
+                <th class="search-result-title">Page Title</th>
+                <th class="search-result-space">Space</th>
+                <th class="search-result-date">Updated</th>
+            </tr>
+        </thead>
+    </table>
+</script>
+<script type="text/x-template" title="searchResultsGridCount">
+    <p class="search-result-count">{0}</p>
+</script>
+<script type="text/x-template" title="searchResultsGridRow">
+    <tr class="search-result">
+        <th class="search-result-title"><a href="{1}" class="content-type-{2}"><span>{0}</span></a></th>
+        <td class="search-result-space"><a class="space" href="/display/{4}/" title="{3}">{3}</a></td>
+        <td class="search-result-date"><span class="date" title="{6}">{5}</span></td>
+    </tr>
+</script><!-- Start restrictions section -->
+<script type="text/x-template" title="page-permissions-div">
+<div id="page-permissions-div">
+    <div id="page-permissions-editor-form">
+
+                <div id="page-permissions-error-div" class="hidden">
+            <a href="#" id="permissions-error-div-close">Ok</a>
+            <div></div>
+        </div>
+
+                <div id="page-permissions-type-radios" class="page-permissions-label-rows">
+            <div>
+                <input id="restrictViewRadio" type="radio" checked="checked" name="pagePermissionTypeRadio" value="view"/>
+                <label for="restrictViewRadio">Restrict viewing of this page</label>
+                <input id="restrictEditRadio" type="radio" name="pagePermissionTypeRadio" value="edit"/>
+                <label for="restrictEditRadio">Restrict editing of this page</label>
+            </div>
+        </div>
+        <div id="page-permissions-input" class="page-permissions-label-rows">
+            <div class="page-permissions-label">To:</div>
+            <div id="page-permissions-chooser-box">
+                                <span id="page-permissions-choose-user" class="ajs-button">
+                    
+
+
+
+    
+
+
+
+<a href="#" id='userpicker-popup-link-image' onClick="var picker = window.open('/spaces/openuserpicker.action?key=design&amp;startIndex=0&amp;onPopupSubmit=AJS.PagePermissions.addUserPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=700,height=680,scrollbars=yes'); picker.focus(); return false;"><img src="/s/en_GB/3047/3/_/images/icons/user_16.gif" height=16 width=16 border=0 align="absmiddle"  title="Choose users" /></a>
+<a href="#" id='userpicker-popup-link-text' onClick="var picker = window.open('/spaces/openuserpicker.action?key=design&amp;startIndex=0&amp;onPopupSubmit=AJS.PagePermissions.addUserPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=700,height=680,scrollbars=yes'); picker.focus(); return false;">Person...</a>
+
+
+                </span>
+                <span id="page-permissions-choose-group" class="ajs-button">
+                    
+
+
+
+    
+
+ 
+
+<a href="#" id='grouppicker-popup-link-image' onClick="var picker = window.open('/spaces/opengrouppicker.action?key=design&amp;startIndex=0&amp;actionName=dosearchgroups.action&amp;onPopupSubmit=AJS.PagePermissions.addGroupPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=580,height=550,scrollbars=yes'); picker.focus(); return false;"><img src="/s/en_GB/3047/3/_/images/icons/group_16.gif" height=16 width=16 border=0 align="absmiddle"  title="Choose groups" /></a>
+<a href="#" id='grouppicker-popup-link-text' onClick="var picker = window.open('/spaces/opengrouppicker.action?key=design&amp;startIndex=0&amp;actionName=dosearchgroups.action&amp;onPopupSubmit=AJS.PagePermissions.addGroupPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=580,height=550,scrollbars=yes'); picker.focus(); return false;">Group...</a>
+
+
+                </span>
+            </div>
+            <div id="page-permissions-input-box">
+                <input type="text" id="page-permissions-names-input" name="permissionNames"
+                    placeholder="Enter user or group name" class="autocomplete-user"
+                    data-max="10" data-none-message="No matches"
+                    data-target="#page-permissions-names-hidden" data-template="{username}"
+                    data-dropdown-target="#page-perms-name-dropdown-wrapper" data-resize-to-input="true"
+                    size="30"/>
+                <input
+    type="hidden"
+                            id="page-permissions-names-hidden"           />                <img height="16px" width="1px" src="/s/en_GB/3047/3/_/images/border/spacer.gif"/>
+                <input type="button" id="add-typed-names" value="Restrict">
+                <div id="page-perms-name-dropdown-wrapper" class="aui-dd-parent autocomplete"></div>
+            </div>
+        </div>
+    </div>
+    <div id="page-permissions-tables">
+        <div id="page-permissions-table-div">
+                        <table id="page-permissions-table" class="page-permissions-table">
+                <tr id="page-permissions-no-views" class="marker-row">
+                    <td colspan="3" class="page-permissions-marker-cell"><span>No view restrictions are defined for this page</span></td>
+                </tr>
+                <tr id="page-permissions-no-edits" class="marker-row">
+                    <td colspan="3" class="page-permissions-marker-cell"><span>No edit restrictions are defined for this page</span></td>
+                </tr>
+            </table>
+        </div>
+        <div id="page-inherited-permissions-table-div" class="hidden">
+            <span id="page-inherited-permissions-table-desc">
+                <a class="icon twisty-closed">Show/Hide</a>
+                <a id="toggle-inherited-permissions" title="Click to see inherited restrictions">This page has restricted parent pages. It can only be seen by users who can see those parent pages.</a>
+            </span>
+            <div id="page-inherited-permissions-tables" class="hidden page-inheritance-togglable"></div>
+        </div>
+    </div>
+</div>
+</script>
+
+<!-- End restrictions section -->
+
+        
+    
+    
+        <fieldset class="hidden parameters">
+            <input type="hidden" title="parentPageId" value="12845093">
+        </fieldset>
+
+        
+                            
+    
+
+                    
+
+        
+        <a href="#page-metadata-end" class="assistive">Skip to end of metadata</a>
+<div id="page-metadata-start" class="assistive"></div>
+
+    <div class="page-metadata">
+        <ul>
+                            <li class="page-metadata-item noprint">
+    
+            
+    
+    <a  id="content-metadata-page-restrictions" href="#"  class="page-metadata-icon page-restrictions hidden"   title="Page restrictions apply. Click the lock icon to view or edit the restriction.">
+                   <span>Page restrictions apply</span></a>        </li>
+                        <li class="page-metadata-modification-info">
+                                    Added by <a href="../../login.action-os_destination=-display-~alexmiller.html"
+                          class="url fn"
+                   >Alex Miller</a>, last edited by <a href="../../login.action-os_destination=-display-~alexmiller.html"
+                          class="url fn"
+                   >Alex Miller</a> on Aug 24, 2015
+                                                                <span class="noprint">&nbsp;(<a id="view-change-link" href="../../pages/diffpages.action-pageId=11305253&amp;originalId=11862267.html">view change</a>)</span>
+                                                </li>
+                    </ul>
+                </div>
+
+
+<a href="#page-metadata-start" class="assistive">Go to start of metadata</a>
+<div id="page-metadata-end" class="assistive"></div>
+        
+        <fieldset class="hidden parameters">
+                        <input type="hidden" title="browsePageTreeMode" value="view">
+        </fieldset>
+
+        <div class="wiki-content">
+                           <p><span style="color: rgb(0,0,0);font-size: 1.6em;font-weight: bold;line-height: normal;">Problems</span></p><p>Programs often want to provide REPLs to users in contexts when a) network communication is desired, b) capturing stdio is difficult, or c) when more than one REPL session is desired. In addition, tools that want to support REPLs and simultaneous conversations with the host are difficult with a single stdio REPL as currently provided by Clojure.</p><p>Tooling and users often need to enable a REPL on a program without changing the program, e.g. without asking author or program to include code to start a REPL host of some sort. Thus a solution must be externally and declaratively configured.</p><h2 id="SocketServerREPL-Proposal">Proposal</h2><p>A REPL is just a special case of a socket service. Rather than provide a socket server REPL, provide a built-in socket server that composes with the existing repl function.</p><p>Encapsulate configuration mechanism from invoked service function.</p><ol><li>Socket server to accept connections on address and port, then invoke an accept function.<ol><li><span>Runtime configuration via data.</span></li><li><span>Existing applications can start a socket server without changing their code.</span></li><li><span>The Clojure runtime should support configuration and running of multiple servers.</span></li></ol></li><li>Extend existing REPL (<a href="http://clojure.main/repl" class="external-link" rel="nofollow">clojure.main/repl</a>) capabilities:</li><ol><li>Currently configuration expects function, but can't pass function via data configuration.</li><li>Need means of control via REPL keyword commands</li><li>Ability to communicate only with data (changes made in 1.7 for this - exceptions, etc as data)</li></ol><li>Shared socket repl &quot;sessions&quot;<ol><li>Socket repl exists in a &quot;session&quot;</li><li>Tool connection on a socket repl can &quot;attach&quot; to an existing (user) session, allowing access to the session's repl environment (dynamic vars, etc)</li></ol></li></ol><h2 id="SocketServerREPL-Summary">Summary</h2><div> </div><div>Summary of the proposed changes:</div><div> </div><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh">Facet</th><th class="confluenceTh">Description</th><th class="confluenceTh">Open issues</th></tr><tr><td class="confluenceTd">Server config</td><td class="confluenceTd"><p>Specify each server config via system property that is EDN string containing a map.<br />-Dclojure.server.NAME=&quot;{:address \&quot;127.0.0.1\&quot;  :\port 5555 :accept clojure.repl/repl}&quot;</p><p>For each server, properties are:</p><ul style="list-style-type: square;"><li>address - host or address, default to loopback</li><li>port - port, required</li><li>accept - namespaced symbol of function to invoke on socket accept, required</li><li>args - optional sequential args to apply to accept fn</li><li>bind-err - whether to bind *err* in socket, default true</li><li>server-daemon - whether socket server thread should be a daemon, default true</li><li>client-daemon - whether socket client thread should be a daemon, default true</li></ul></td><td class="confluenceTd"> </td></tr><tr><td colspan="1" class="confluenceTd"><em>Server config, </em><br /><em>external file </em></td><td colspan="1" class="confluenceTd"><p><em>Alternately to embedding the EDN map in a property, could also load from external file:<br /><span style="font-size: 10.0pt;line-height: 13.0pt;">-Dclojure.server.NAME=foo.edn</span></em></p></td><td colspan="1" class="confluenceTd"><em>Not currently included</em></td></tr><tr><td colspan="1" class="confluenceTd"><em>Server config,</em><br /><em>REPL shortcut</em></td><td colspan="1" class="confluenceTd"><em>For the special (and presumably common case) of running only a REPL with defaults on a socket server:</em><br /><em>-Dclojure.repl=127.0.0.1:5555 </em></td><td colspan="1" class="confluenceTd"><em>Not currently included</em></td></tr><tr><td class="confluenceTd">Runtime startup</td><td class="confluenceTd">At Clojure runtime startup, parse the system properties and start each configured server.</td><td class="confluenceTd"> </td></tr><tr><td class="confluenceTd">Server state</td><td class="confluenceTd">Var containing map of server and session state, used to control the servers and share session state across sessions.</td><td class="confluenceTd"> </td></tr><tr><td colspan="1" class="confluenceTd">Session identifier</td><td colspan="1" class="confluenceTd">Dynamic var *session* bound to {:server server-name :client client-id} in each socket client connection.</td><td colspan="1" class="confluenceTd"> </td></tr><tr><td colspan="1" class="confluenceTd">REPL commands</td><td colspan="1" class="confluenceTd"><p>At socket repl, keywords in &quot;repl&quot; namespace are caught and handled specially by the repl.</p><p>:repl/quit - acts like ^D to &quot;quit&quot; the repl, allowing nested repl control <br />:repl/sessions - returns vector of session ids for this server<br />:repl/attach &lt;session&gt; - attach to existing repl session, interpret \*ns* etc in attached session context<br />:repl/detach - detach from attached session</p></td><td colspan="1" class="confluenceTd"> </td></tr></tbody></table></div><p> </p><h2 id="SocketServerREPL-SocketServer">Socket Server</h2><p>The Socket Server will be a general facility available as part of the Clojure runtime, initiated one or more times based on configuration.</p><h3 id="SocketServerREPL-Configuration">Configuration</h3><ul><li>Multiple socket servers</li><li>Config per socket server</li><ul><li><span style="font-size: 10.0pt;line-height: 13.0pt;">Socket server properties</span><ul><li>Address (default = loopback) as host or address (IPv4 or IPv6)</li><li>Port (required)</li><li>Name (required, defines server context)</li><li>Server thread config - daemon (default = true)</li><li><em>Server socket config - timeout, etc (omit these for now)</em></li></ul></li><li>Client connection properties<ul><li>Client thread config - daemon (default = true)</li><li>Bind err - whether to bind \*err* to socket output stream (default = true)</li><li>Namespaced symbol identifying a socket accept function to invoke -<span style="font-size: 10.0pt;line-height: 13.0pt;"> implies loading the ns containing the function early in runtime </span></li><li>Arguments to that function - EDNable strings</li></ul></li></ul></ul><p>Code example:</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[{:address &quot;localhost&quot; ;; host or dotted name, ipv4 or ipv6
+ :port 5555
+ :name &quot;repl&quot;
+ :accept clojure.main/repl
+ :args []
+ :bind-err true
+ :server-daemon true
+ :client-daemon true}]]></script>
+</div></div><p><span style="color: rgb(0,0,0);font-size: 1.4em;font-weight: bold;line-height: normal;"><br /></span></p><p><span style="color: rgb(0,0,0);font-size: 1.4em;font-weight: bold;line-height: normal;">Configuration Source</span></p><p>Clojure should support the configuration of one or more socket servers in any Clojure runtime based on runtime configuration (no code changes in the app required).</p><p><span>The primary means of specifying configuration will be a system property that is a map literal edn string:</span></p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[-Dclojure.server.myrepl=&quot;{:port 5555 :accept clojure.main/repl :args [\&quot;somearg1\&quot;]}\&quot;]]></script>
+</div></div><p><span style="font-size: 10.0pt;line-height: 13.0pt;">Or load the configuration from an external edn file:</span></p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[-Dclojure.server.myrepl=repl.edn]]></script>
+</div></div><p><span style="color: rgb(0,0,0);">Or for the expected common case of the repl, a shortcut that takes the host and port and takes care of the name and accept function for you:</span></p><p> </p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[-Dclojure.repl=127.0.0.1:5555]]></script>
+</div></div><p> </p><p><u><strong>Configuration alternatives (background, not currently used)</strong></u></p><p>Other alternatives for runtime configuration without changing existing application code:</p><ul><li>System properties</li><li>File at known path location</li><li>Resource at known classpath location<ul><li>problematic for things like uberjar deployment</li></ul></li><li>JDK <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ServiceLoader.html" class="external-link" rel="nofollow">ServiceLoader</a> - allows discovery of all service implementers on the classpath<ul><li>kind of a pain to create a jar with proper manifest to wire this up</li><li>problematic for things like uberjar deployment</li></ul></li><li>Java agent<ul><li>Requires packaging in separate jar file</li><li>Modify JVM startup properties to point to jar file</li><li>Agent is started prior to main(), which probably isn't very useful for us as the clojure runtime is not yet available - would need to have some way to have it wait for runtime initiation</li><li>Agent can also be injected and started later but this is an involved process</li><li>Can deploy same agent multiple times, so could have multiple server instances </li></ul></li><li>JMX <ul><li>not very useful for startup, but could be potentially interesting for providing a JMX service to start a server later</li><li>you could use something like JConsole to connect and launch a socket repl in a running process, or by <span>connecting to the </span><a href="http://docs.oracle.com/javase/8/docs/jdk/api/attach/spec/index.html" class="external-link" rel="nofollow">Attach API</a><span> (</span><span>requires having tools.jar on your classpath)</span></li></ul></li></ul><p><u>System Property alternatives</u></p><p>Could pack arguments into a single string with positional args:</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[clojure.server.myrepl=&quot;127.0.0.1 5555 clojure.main/repl somearg1&quot;]]></script>
+</div></div><p>where the values are: [address port accept-fn &amp; fn-args] and &quot;myrepl&quot; is the &quot;name&quot; of the server (would get into thread names and maybe available in a bound var or something). <span style="font-size: 10.0pt;line-height: 13.0pt;">That is not valid edn so we'd need to just split on spaces. The positional args don't leave a lot of room for variability or expansion</span></p><p>Or if we did commas, no quotes needed at all:</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[clojure.server.myrepl=127.0.0.1,5555,clojure.main/repl,somearg1]]></script>
+</div></div><p>edn form would require quotes:</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[clojure.server.myrepl=&quot;[\&quot;127.0.0.1\&quot; 5555 clojure.main/repl \&quot;somearg1\&quot;]&quot;]]></script>
+</div></div><p><span style="font-size: 10.0pt;line-height: 13.0pt;">Or break args apart:</span></p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: plain; gutter: false"><![CDATA[clojure.server.myrepl.address=127.0.0.1
+clojure.server.myrepl.port=5555
+clojure.server.myrepl.accept=clojure.main/repl
+clojure.server.myrepl.args=[somearg1]]]></script>
+</div></div><p><span style="color: rgb(0,0,0);font-size: 1.4em;font-weight: bold;line-height: normal;">Server State</span></p><p>To support server control and the ability to attach to remote sessions, create a map of socket server/session data stored in a var with the following structure:</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[{&quot;server name&quot; {:name &quot;server name&quot;
+                :socket &lt;server-socket&gt;
+                :session {1 {:ns &lt;namespace foo&gt;}}}}]]></script>
+</div></div><p>Session state then has well known &quot;session identifier&quot; for stashing and retrieving session-specific state: {:server server-name :session session-id}.</p><h3 id="SocketServerREPL-Behavior">Behavior</h3><p>On startup, Clojure runtime will:</p><ul><li>Read configuration (see above) for set of socket servers and their configuration</li><li>For each socket server:</li><ul><li>Read socket server configuration and apply defaults</li><li><span>Start socket server with address, port, name</span></li><li>Update server state</li><li>Load the namespace of the accept function</li><li>Start socket server thread</li><li>Start loop in server thread that:<ul><li>Accepts on server socket</li><li>Starts client thread (could also reuse from pool)</li><li>Binds<ul><li>*in* = LineNumberingPushbackReader of InputStreamReader of client socket InputStream</li><li>*out* = BufferedWriter of OutputStreamWriter of client socket OutputStream</li><li>*err* = same as *out* (if bind-err is true)</li><li>clojure.core.server/*session* = {:server server-name :session session-id}</li></ul></li><li>Invokes accept-fn with args</li></ul></li></ul></ul><h3 id="SocketServerREPL-Control">Control</h3><ul><li>Server socket can be stopped by retrieving the socket from the server state map and closing it</li><li>Server loop will stop automatically when the socket is closed</li><li>Client socket is closed if any exception occurs in the accept function or function completes</li><li>Client thread ends when client socket is closed</li><li>All servers can be stopped via clojure.core.server/stop-servers.</li></ul><h3 id="SocketServerREPL-ErrorHandling">Error Handling</h3><p>Error situations and how they are handled:</p><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh">Thread</th><th class="confluenceTh">Scenario</th><th class="confluenceTh">Result</th></tr><tr><td class="confluenceTd">Main startup thread</td><td class="confluenceTd">Server configuration is invalid or incomplete</td><td class="confluenceTd">Throws exception, Clojure runtime will not start</td></tr><tr><td class="confluenceTd">Server thread</td><td class="confluenceTd">Server socket fails to bind (ex: port already in use)</td><td class="confluenceTd">Throws exception, Clojure runtime will not start</td></tr><tr><td class="confluenceTd">Server thread</td><td class="confluenceTd">Server socket dies (ex: network error)</td><td class="confluenceTd">Server thread dies, server state cleaned up<br /><strong>TBD: who and how to notify in this case?</strong> </td></tr><tr><td class="confluenceTd">Client thread</td><td class="confluenceTd">Accept function throws error</td><td class="confluenceTd">Client thread dies, client state cleaned up<br /><strong>TBD: who and how to notify in this case?</strong> </td></tr><tr><td class="confluenceTd">Client thread</td><td class="confluenceTd">REPL expression throws exception</td><td class="confluenceTd">Print exception to error stream</td></tr><tr><td colspan="1" class="confluenceTd">Client thread</td><td colspan="1" class="confluenceTd">REPL command throws exception</td><td colspan="1" class="confluenceTd">Print exception to error stream</td></tr><tr><td colspan="1" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"> </td></tr></tbody></table></div><p>In the two cases marked above, the threads will properly clean up sockets and server info state and the exception will propagate out the top of the server and client threads. Since no exception handler is installed, the default uncaught exception handler can be installed to catch these if desired in the current patch. Alternately, we could provide a more explicit hook and/or store the exception in a var for retrieval. <span style="font-size: 10.0pt;line-height: 13.0pt;">In the server case, the server socket could be restarted, however this could lead to killing a server by putting it in a retry loop if (for example) it became detached from the network.</span></p><h2 id="SocketServerREPL-Sessions">Sessions</h2><p>To allow a tool to share repl context with a user's repl, we want to have two repl client connections that share a &quot;session&quot;, essentially the dynamic context in which they evaluate things. This allows an internal tool repl to get access to dynamic variables like \*ns* or potentially any other dynamic variable binding state. </p><p>To record binding state:</p><ul><li>After every eval in the socket repl, get and store the current bindings in the server map</li></ul><p>To use binding state:</p><ul><li>Allow a socket client repl to <em>attach </em>to a different session - this is done by recording the attached session id in this session's state </li><li>Before every eval, if client is attached<ul><li>Get attached session's bindings</li><li>Replace the stream bindings (in/out/err) with the client repl's bindings (don't want to hijack those)</li><li>Push the attached session's bindings</li></ul></li><li>After every eval, if client is attached<ul><li>Pop the bindings</li></ul></li></ul><p><span style="color: rgb(0,0,0);font-size: 1.6em;font-weight: bold;line-height: normal;">REPL Extensions</span></p><h3 id="SocketServerREPL-REPLConfiguration">REPL Configuration</h3><p>Currently the clojure.main/repl function takes optional kwargs to specify the properties of the repl in the form of functions. The properties loaded by the socket server will likely be read from strings, not be actual functions. Need to extend the function to resolve symbols to the referred function.</p><h3 id="SocketServerREPL-REPLControl">REPL Control</h3><p>REPL should have a means of control that is distinguishable from normal REPL input. For now, we are presuming these will be keywords with the &quot;repl&quot; namespace:</p><ul><li>:repl/quit - exits the current repl function, similar to Ctrl-D in some REPL environments. This can be used to exit a nested REPL without killing an entire connection.</li><li>:repl/sessions - return vector of running session ids</li><li><span style="font-size: 10.0pt;line-height: 13.0pt;">:repl/attach </span><span style="font-size: 10.0pt;line-height: 13.0pt;">{:server server-name :client session-id}</span><span style="font-size: 10.0pt;line-height: 13.0pt;"> - attach to existing session and interpret vars in terms of that session</span></li><li><span style="font-size: 10.0pt;line-height: 13.0pt;">:repl/detach - revert to last session or if top-level session, no change</span></li></ul><h3 id="SocketServerREPL-REPLDataCommunication">REPL Data Communication</h3><p>Two known areas where a REPL communicated information in a human-oriented form rather than a data form were:</p><ul><li>Print of an object without a print-method  (function, namespace, future, etc)</li><li>Print of a stack trace encountered during eval</li></ul><p>These two cases have been addressed with new data forms in recent <a href="https://github.com/clojure/clojure/commit/692645c73c86d12c93a97c858dc6e8b0f4280a0b" class="external-link" rel="nofollow">commits</a>.</p>
+    
+        </div>
+
+        <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="https://dev.clojure.org/display/design/Socket+Server+REPL"
+    dc:identifier="https://dev.clojure.org/display/design/Socket+Server+REPL"
+    dc:title="Socket Server REPL"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/11305253"/>
+</rdf:RDF>
+-->
+
+        <script type="text/x-template" title="labels-dialog-div">
+
+    
+    <div id="labels-dialog">
+        <div class="labels-editor">
+            <span class="errorMessage error" id="errorSpan"></span>
+            <form method="GET" action="" id="add-labels-form">
+                <div id="labelOperationErrorContainer">
+                    <span class="error"><span class="errorMessage" id="labelOperationErrorMessage"></span></span>
+                </div>
+    
+                <div class="caption">Enter labels to add to this page:</div>
+                <div id="label-input-fields">
+                    <input autocomplete="off" id="labelsString" name="labelsString" value="">
+                    <input id="add-labels-editor-button" type="submit" class="add-labels" value="Add">
+                </div>
+                <div id="labelsAutocompleteList" class="aui-dd-parent resize-to-input" style="width: 417px"></div>
+                <div id="dialog-label-list">
+                    <span id="labels-section-title-none" class="no-labels-message" >
+None
+</span>
+<ul class="label-list">
+</ul>
+                </div>
+                <div id="waitImageAndStatus">
+                    <img class="waiting" alt="Please wait" src="/s/en_GB/3047/3/_/images/icons/wait.gif">&nbsp;
+                    <span id="labelOperationStatus" class="smalltext"></span>
+                </div>
+                <div class="labels-tip"></div>
+            </form>
+        </div>
+    </div>
+</script>
+            
+    
+
+
+<div id="labels-section" class="pageSection group">
+    <div class="labels-editor">
+        <span id="labels-section-title" class="label-title">Labels:</span>
+        <div id="labels-section-content" class="content-column">
+            <span id="labels-section-title-none" class="no-labels-message" >
+None
+</span>
+<ul class="label-list">
+</ul>
+
+                            <a id="labels-edit" href="#" class="show-labels-editor editor-icon" title="Edit Labels">
+                    <span class="icon icon-edit">Edit Labels</span>
+                </a>
+                    </div>
+    </div>
+</div>
+
+            
+            
+
+
+
+
+            
+    
+
+
+
+
+
+
+
+<div id="comments-section" class="pageSection group">
+    
+    
+    
+    
+    </div>
+
+
+            
+</div>
+
+
+    
+
+
+
+    
+    
+
+    
+    
+    
+
+
+    
+
+
+
+    <br class="clear">
+</div>
+  
+    </div>
+</div>
+
+<div id="footer">
+                                                <p class="license license-opensource">
+                  Powered by a free <b>Atlassian Confluence Open Source Project License</b> granted to Clojure. <a href="http://www.atlassian.com/c/conf/11461">Evaluate Confluence today</a>.<br>
+                </p>
+                        
+    <ul id="poweredby">
+        <li class="noprint">Powered by <a href="http://www.atlassian.com/software/confluence" class="hover-footer-link">Atlassian Confluence</a> <span id='footer-build-information'>4.0</span>, the <a href="http://www.atlassian.com/software/confluence/tour/enterprise-wiki.jsp" class="hover-footer-link">Enterprise Wiki</a></li>
+        <li class="print-only">Printed by Atlassian Confluence 4.0, the Enterprise Wiki.</li>        
+        <li class="noprint"> &nbsp; |&nbsp; <a href="http://jira.atlassian.com/secure/BrowseProject.jspa?id=10470" class="hover-footer-link">Report a bug</a></li>
+        <li class="noprint"> &nbsp;|&nbsp; <a href="http://www.atlassian.com/about/connected.jsp?s_kwcid=Confluence-stayintouch" class="hover-footer-link">Atlassian News</a></li>
+    </ul>
+
+    
+
+            <div><span style="">Site support by</span><a href="http://contegix.com"> <img style="vertical-align:middle" src="../../download/attachments/459015/contegix.jpg.html"/></a></div>
+    </div></div>
+</body>
+</html>

@@ -1,0 +1,2329 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Feature Expressions - Clojure Design - Clojure Development</title>
+
+        
+
+                        
+    
+
+            <meta http-equiv="X-UA-Compatible" content="IE=EDGE">
+<meta charset="UTF-8">
+<!-- Deprecated since 3.4. To be removed in a future version of Confluence; use AJS.Confluence.getContextPath() -->
+<meta id="confluence-context-path" name="confluence-context-path" content="">
+<meta id="confluence-base-url" name="confluence-base-url" content="https://dev.clojure.org">
+
+<meta id="atlassian-token" name="atlassian-token" content="30041c830a95ce9c95d0b58cb377def6b96aa6d2">
+
+<meta id="confluence-space-key" name="confluence-space-key" content="design">
+<script type="text/javascript">
+    // Deprecated global variables. To be removed in a future version of Confluence.
+    var contextPath = '';
+</script>
+
+    
+
+<!-- include system css resources -->
+
+
+    <link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/55/_/download/superbatch/css/batch.css" media="all">
+<!--[if lt IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/_/download/superbatch/css/batch.css?conditionalComment=lt+IE+9" media="all">
+<![endif]-->
+<!--[if IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/_/download/superbatch/css/batch.css?conditionalComment=IE+9" media="all">
+<![endif]-->
+<!--[if lte IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/_/download/superbatch/css/batch.css?conditionalComment=lte+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/55/_/download/superbatch/css/batch-media=print.css" media="print">
+<!--[if lt IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/_/download/contextbatch/css/page/batch.css?conditionalComment=lt+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/_/download/contextbatch/css/page/batch.css" media="all">
+<!--[if lt IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/_/download/contextbatch/css/viewcontent,main/batch.css?conditionalComment=lt+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/_/download/contextbatch/css/viewcontent,main/batch.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.6/_/download/batch/com.atlassian.confluence.ext.newcode-macro-plugin-syntaxhighlighter/com.atlassian.confluence.ext.newcode-macro-plugin-syntaxhighlighter.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.6/_/download/batch/com.atlassian.confluence.ext.newcode-macro-plugin-sh-theme-confluence/com.atlassian.confluence.ext.newcode-macro-plugin-sh-theme-confluence.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.1/_/download/batch/com.atlassian.confluence.plugins.pagetree-pagetree-resources/com.atlassian.confluence.plugins.pagetree-pagetree-resources.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/3/_/styles/colors-spaceKey=design.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.5/_/download/resources/com.atlassian.confluence.plugins.doctheme-documentation/default-theme.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.5/_/download/resources/com.atlassian.confluence.plugins.doctheme-documentation/splitter.css" media="all">
+
+<!-- end system css resources -->
+
+    <meta name="confluence-request-time" content="1556128997821">
+            <meta name="ajs-page-id" content="5243060">
+            <meta name="ajs-parent-page-id" content="11305072">
+            <meta name="ajs-space-key" content="design">
+            <meta name="ajs-space-name" content="Clojure Design">
+            <meta name="ajs-page-title" content="Feature Expressions">
+            <meta name="ajs-parent-page-title" content="Reader Conditionals">
+            <meta name="ajs-from-page-title" content="">
+            <meta name="ajs-context-path" content="">
+            <meta name="ajs-version-number" content="4.0">
+            <meta name="ajs-build-number" content="3047">
+            <meta name="ajs-remote-user" content="">
+            <meta name="ajs-static-resource-url-prefix" content="/s/en_GB/3047/3/_">
+            <meta name="ajs-global-settings-attachment-max-size" content="10485760">
+            <meta name="ajs-user-locale" content="en_GB">
+            <meta name="ajs-enabled-dark-features" content="">
+            <meta name="ajs-atl-token" content="30041c830a95ce9c95d0b58cb377def6b96aa6d2">
+            
+            <meta name="ajs-keyboardshortcut-hash" content="7b95af54c6deada096af1f28fdd0f413">
+            <meta name="ajs-use-keyboard-shortcuts" content="true">
+    <!-- Deprecated since 3.4. To be removed in a future version of Confluence; use atl.header -->
+        
+            <script type="text/x-template" title="share-content-popup">
+    <form action="#" method="post" class="aui share-content-popup">
+        <fieldset>
+            <label for="users">User name or email</label>
+            <div class="autocomplete-user-target">
+                <input class="text autocomplete-sharepage" id="users" data-max="10" data-dropdown-target=".autocomplete-user-target" data-none-message="No matching user or email found"/>
+            </div>
+            <ol class="recipients">
+            </ol>
+            <div><label for="note">Note</label></div>
+            <textarea class="textarea" id="note" placeholder="Add an optional note"/>
+        </fieldset>
+        <div class="button-panel">
+            <div class="progress-messages-icon"></div>
+            <div class="progress-messages">
+            </div>
+            <input class="button submit" type="submit" value="Share" disabled/>
+            <a class="close-dialog" href="#">Cancel</a>
+        </div>
+    </form>
+</script>
+
+<script type="text/x-template" title="share-content-popup-recipient-username">
+    <li data-username="{username}" style="display: none">
+        <span>
+            <img src="{thumbnailLink.href}" title="{title}">
+            <span>{title}</span>
+            <span class="remove-recipient"/>
+        </span>
+    </li>
+</script>
+
+<script type="text/x-template" title="share-content-popup-recipient-email">
+    <li data-email="{email}" style="display: none">
+        <span>
+            <img src="{icon}" title="{email}">
+            <span>{email}</span>
+            <span class="remove-recipient"/>
+        </span>
+    </li>
+</script>
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="icon" type="image/png" href="../../s/en_GB/3047/3/_/images/logo/confluence_16.png">
+
+<link rel="search" type="application/opensearchdescription+xml" href="../../opensearch/osd.action.xml" title="Clojure Development"/>
+
+        <!-- include system javascript resources -->
+                        
+    
+    <script type="text/javascript" src="../../s/en_GB/3047/3/55/_/download/superbatch/js/batch.js" ></script>
+<!--[if lte IE 8]>
+<script type="text/javascript" src="/s/en_GB/3047/3/55/_/download/superbatch/js/batch.js?conditionalComment=lte+IE+8" ></script>
+<![endif]-->
+<script type="text/javascript" src="../../s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/_/download/contextbatch/js/page/batch.js" ></script>
+<script type="text/javascript" src="../../s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/_/download/contextbatch/js/viewcontent,main/batch.js" ></script>
+<script type="text/javascript" src="../../s/en_GB/3047/3/2.0.6/_/download/batch/com.atlassian.confluence.ext.newcode-macro-plugin-syntaxhighlighter/com.atlassian.confluence.ext.newcode-macro-plugin-syntaxhighlighter.js" ></script>
+<script type="text/javascript" src="../../s/en_GB/3047/3/2.0.6/_/download/batch/com.atlassian.confluence.ext.newcode-macro-plugin-syntaxhighlighter-brushes/com.atlassian.confluence.ext.newcode-macro-plugin-syntaxhighlighter-brushes.js" ></script>
+<script type="text/javascript" src="../../s/en_GB/3047/3/2.0.1/_/download/batch/com.atlassian.confluence.plugins.pagetree-pagetree-resources/com.atlassian.confluence.plugins.pagetree-pagetree-resources.js" ></script>
+
+    
+    <!-- end system javascript resources -->
+
+    
+
+    
+    <link rel="canonical" href="Feature+Expressions.html">
+    <link rel="shortlink" href="Feature+Expressions.html">
+    <meta name="wikilink" content="[design:Feature Expressions]">
+    <meta name="page-version" content="59">
+
+</head>
+
+<body             onload="placeFocus()"
+     id="com-atlassian-confluence" class="theme-documentation ">
+<div id="full-height-container">
+    <div id="header-precursor">
+        
+        
+                </div>
+
+<div id="header" class="sectionbottom ">
+        <form id="quick-search" class="quick-search" method="get" action="../../dosearchsite.action.html">
+                <fieldset>
+            <input type="hidden" name="spaceSearch" value="false"/>
+        </fieldset>
+        <fieldset>
+            <legend>Quick Search</legend>
+            <input class="quick-search-query" id="quick-search-query" type="text" accessKey="search-pages-action.accesskey" autocomplete="off" name="queryString" size="25"/>
+            <input class="quick-search-submit" id="quick-search-submit" type="submit"  value="Search Confluence" />
+            <div class="aui-dd-parent quick-nav-drop-down"><!-- Quick nav appears here --></div>
+        </fieldset>
+        <fieldset class="hidden parameters">
+            <input type="hidden" id="quickNavEnabled" value="true" />
+                    </fieldset>
+    </form>
+
+    <ul id="header-menu-bar" class="ajs-menu-bar">
+                    
+        
+            <li class="normal ajs-menu-item">
+        <a id="browse-menu-link" class="browse trigger ajs-menu-title" href="#"><span><span>Browse</span></span></a>         <div class="assistive ajs-drop-down">
+                        <ul  id="browse-menu-link-leading"                 class="section-leading first">
+                                        <li>
+    
+        
+    
+    <a  id="space-pages-link" href="../../pages/recentlyupdated.action-key=design.html"  class=""   title="Browse pages in the Clojure Design space">
+                   <span>Pages</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-blogposts-link" href="../../pages/viewrecentblogposts.action-key=design.html"  class=""   title="Browse blogs in the Clojure Design space">
+                   <span>Blog</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-labels-link" href="../../labels/listlabels-heatmap.action-key=design.html"  class=""   title="Browse labels in the Clojure Design space">
+                   <span>Labels</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-attachments-link" href="../../spaces/listattachmentsforspace.action-key=design.html"  class=""   title="Browse attachments in the Clojure Design space">
+                   <span>Attachments</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-mail-link" href="../../spaces/viewmailarchive.action-key=design.html"  class=""   title="Browse mail in the Clojure Design space">
+                   <span>Mail</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-advanced-link" href="../../spaces/viewspacesummary.action-key=design.html"  class=""   title="Browse additional space functions in the Clojure Design space">
+                   <span>Advanced</span></a>        </li>
+                            </ul>
+                        <ul  id="browse-menu-link-global"                 class="section-global">
+                                        <li>
+    
+        
+    
+    <a  id="whats-new-menu-link" href="http://docs.atlassian.com/confluence/docs-40/whatsnew/iframe"  class=""   title="">
+                   <span>What’s New</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-directory-link" href="../../spacedirectory/view.action.html"  class=""   title="Browse the Confluence space directory">
+                   <span>Space Directory</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="feed-builder-link" href="../../dashboard/configurerssfeed.action.html"  class=""   title="Create your custom RSS feed.">
+                   <span>Feed Builder</span></a>        </li>
+                                        <li>
+    
+            
+    
+    <a  id="keyboard-shortcuts-link" href="#"  class=""   title="View available keyboard shortcuts">
+                   <span>Keyboard Shortcuts</span></a>        </li>
+                                        <li>
+    
+            
+    
+    <a  id="gadget-directory-link" href="#"  class="user-item administration-link"   title="Browse gadgets provided by Confluence">
+                   <span>Confluence Gadgets</span></a>        </li>
+                            </ul>
+                    </div>
+    </li>
+        
+                                                         <li class="ajs-menu-item normal">
+        
+        
+    
+    <a  id="login-link" href="../../login.action-os_destination=-display-design-Feature+Expressions.html"  class="user-item login-link"   title="">
+                   <span>Log In</span></a>        </li>
+                            <li class="ajs-menu-item normal">
+    
+        
+    
+    <a  id="signup-link" href="../../signup.action.html"  class="user-item signup-link"   title="">
+                   <span>Sign Up</span></a>        </li>
+                                <li class="normal ajs-menu-item">
+            <div id="splitter-button" class="hidden" title="Show or hide sidebar"></div>
+        </li>
+
+    </ul>
+    
+    
+    <ol id="breadcrumbs">
+                    
+                        
+        <li class="first" >
+                                    <span><a href="../../dashboard.action.html" title="Go to Dashboard">Dashboard</a></span>
+                </li>
+                    
+                
+        <li>
+                                    <span><a href="Home-jsessionid=3A56E29DA520B75101350BA4484B9990.html">Clojure Design</a></span>
+                </li>
+                                        <li id="ellipsis" title="Show all breadcrumbs"><span><strong>&#8230;</strong></span></li>
+                                    
+                
+        <li class="hidden-crumb" >
+                                    <span><a href="Home.html">Home</a></span>
+                </li>
+                                
+                
+        <li class="hidden-crumb" >
+                                    <span><a href="Release+Planning.html">Release Planning</a></span>
+                </li>
+                                
+                
+        <li class="hidden-crumb" >
+                                    <span><a href="Release+1.7.html">Release 1.7</a></span>
+                </li>
+                                
+                
+        <li class="hidden-crumb" >
+                                    <span><a href="Reader+Conditionals.html">Reader Conditionals</a></span>
+                </li>
+                    
+                
+        <li>
+                                    <span><a href="Feature+Expressions.html">Feature Expressions</a></span>
+                </li>
+        </ol>
+
+</div>
+
+    <div id="splitter">
+    <div id="splitter-sidebar" >
+        
+
+                    
+        
+    
+
+<div class="plugin_pagetree">
+
+                <div id="pagetreesearch">
+            <form method="POST" action="../../dosearchsite.action-searchQuery.queryString=&amp;searchQuery.spaceKey=conf_all.html" name="pagetreesearchform">
+                                    <input type="hidden" name="ancestorId" value="458775">
+                                <input type="hidden" name="spaceKey" value="design">
+                <input type="text"  size="20" name="queryString">
+                <input type="submit" value="Search">
+            </form>
+        </div>
+    
+        
+    <ul class="plugin_pagetree_children_list plugin_pagetree_children_list_noleftspace">
+        <div class="plugin_pagetree_children">
+        </div>
+    </ul>
+
+    <fieldset class="hidden">
+        <input type="hidden" name="treeId" value="">
+        <input type="hidden" name="treeRequestId" value="/plugins/pagetree/naturalchildren.action?decorator=none&amp;excerpt=false&amp;sort=position&amp;reverse=false&amp;disableLinks=false">
+        <input type="hidden" name="treePageId" value="5243060">
+
+        <input type="hidden" name="noRoot" value="false">
+        <input type="hidden" name="rootPageId" value="458775">
+
+        <input type="hidden" name="rootPage" value="">
+        <input type="hidden" name="startDepth" value="0">
+        <input type="hidden" name="spaceKey" value="design" >
+
+        <input type="hidden" name="i18n-pagetree.loading" value="Loading...">
+        <input type="hidden" name="i18n-pagetree.error.permission" value="Unable to load page tree. It seems that you do not have permission to view the root page.">
+        <input type="hidden" name="i18n-pagetree.eeror.general" value="There was a problem retrieving the page tree. Please check the server log file for more information.">
+        <input type="hidden" name="loginUrl" value="/login.action?os_destination=%2Fdisplay%2Fdesign%2FFeature%2BExpressions">
+
+                <fieldset class="hidden">
+                                                <input type="hidden" name="ancestorId" value="11305072">
+                                    <input type="hidden" name="ancestorId" value="11305137">
+                                    <input type="hidden" name="ancestorId" value="5767475">
+                                    <input type="hidden" name="ancestorId" value="458775">
+                                    </fieldset>
+    </fieldset>
+</div>
+
+
+
+            </div>
+    <div id="splitter-content">
+
+                    <script type="text/javascript" src="../../s/en_GB/3047/3/2.0.5/_/download/resources/com.atlassian.confluence.plugins.doctheme-resources/doc-theme.js"></script>
+    
+            
+    
+<div id="main" >
+    <div id="main-header">
+	    
+	    
+    <div id="navigation" class="content-navigation view">
+                    <ul class="ajs-menu-bar">
+                                
+                        
+            <li class="normal ajs-menu-item">
+        <a id="action-menu-link" class="action trigger ajs-menu-title" href="#"><span><span>Tools</span></span></a>         <div class="assistive ajs-drop-down">
+                        <ul  id="action-menu-link-primary"                 class="section-primary first">
+                                        <li>
+    
+        
+    
+    <a  id="view-attachments-link" href="../../pages/viewpageattachments.action-pageId=5243060.html"  class="action-view-attachments"  accessKey="a"  title="View Attachments">
+                   <span><u>A</u>ttachments (0)</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="action-view-history-link" href="../../pages/viewpreviousversions.action-pageId=5243060.html"  class="action-view-history"   title="">
+                   <span>Page History</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="action-page-permissions-link" href="../../pages/viewinfo.action-pageId=5243060.html"  class="action-page-permissions"   title="Edit restrictions">
+                   <span>Restrictions</span></a>        </li>
+                            </ul>
+                        <ul  id="action-menu-link-secondary"                 class="section-secondary">
+                                        <li>
+    
+        
+    
+    <a  id="view-page-info-link" href="../../pages/viewinfo.action-pageId=5243060.html"  class="action-view-info"   title="">
+                   <span>Info</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="link-to-page-link" href="../../pages/viewinfo.action-pageId=5243060.html"  class=""   title="Link to this Page">
+                   <span>Link to this Page&hellip;</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="view-in-hierarchy-link" href="../../pages/listpages-dirview.action-key=design&amp;openId=5243060.html#selectedPageInHierarchy"  class=""   title="">
+                   <span>View in Hierarchy</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="action-view-source-link" href="../../plugins/viewsource/viewpagesrc.action-pageId=5243060.html"  class="action-view-source popup-link"   title="">
+                   <span>View Source</span></a>        </li>
+                            </ul>
+                    </div>
+    </li>
+            </ul>
+    </div>
+
+	    
+	    <h1 id="title-heading" class="pagetitle">
+	        	            <a href="Home-jsessionid=3A56E29DA520B75101350BA4484B9990.html"><img class="logo global custom" src="../../download/attachments/131074/global.logo.png" alt=""></a>	        	
+			<span id="title-text">
+							            <a href="Feature+Expressions.html">Feature Expressions</a>
+    						</span>
+	    </h1>
+	</div>
+
+    
+
+    
+    
+    
+    
+    
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+        
+    
+    
+                    
+    
+
+    
+
+
+<div id="content" class="page view">
+    
+
+
+
+                
+<script type="text/x-template" title="movePageDialog">
+    <div class="row information">
+        <div class="inner">
+            <div class="element">
+                Specify the new parent page for this page and its children by space and title.
+            </div>
+        </div>
+    </div>
+    <div class="form">
+        <fieldset>
+                
+
+    <legend class="assistive"><span>Change the Parent Page to a Known Page</span></legend>
+            <div class="row">
+                <label for="new-space">New space:</label>
+                <div class="value new-space-value">
+                    <input id="new-space-key" name="new-space-key" type="hidden" value="design">
+                                            <span class="space-input">
+                            <input id="new-space" name="new-space" value="Clojure Design" disabled="disabled">
+                        </span>
+                        <span class="description warning">You cannot move this page to another space because you do not have permission to remove it from this space.</span>
+                                        <div class="new-space-dropdown aui-dd-parent autocomplete"></div>
+                </div>
+            </div>
+            <div class="row">
+                <label for="new-parent-page">New parent page:</label>
+                <div class="value new-parent-page-value">
+                    <span class="page-input">
+                        <input id="new-parent-page" name="new-parent-page" value="Reader Conditionals">
+                    </span>
+                    <span class="description">Start typing a page title to see a list of suggestions.</span>
+                    <div class="new-parent-page-dropdown aui-dd-parent autocomplete"></div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <div class="location-info">
+        <div class="row">
+            <label>Current location:</label>
+            <div class="value breadcrumbs-container">
+                <div class="breadcrumbs-line">
+                    <ul id="current-parent-breadcrumbs" class="breadcrumbs">
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <label>New location:</label>
+            <div class="value breadcrumbs-container">
+                <div class="breadcrumbs-line">
+                    <ul id="new-parent-breadcrumbs" class="breadcrumbs">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/x-template" title="movePageSearchPanel">
+    <div class="row information">
+        <div class="inner">
+            <div class="element">
+                Search for and select the new parent page for this page and its children.
+            </div>
+        </div>
+    </div>
+    <div id="move-page-search-container" class="row">
+        <div class="search-form">
+            <fieldset>
+                    
+
+    <legend class="assistive"><span>Search for a New Parent Page</span></legend>
+                    
+
+    <label  for="move-page-search-query" class="assistive">Search keywords</label>
+                <input class="search-query" id="move-page-search-query">
+                    
+
+    <label  for="move-page-search-space" class="assistive">Search in space</label>
+                                    <select id="move-page-search-space" class="search-space" disabled="disabled">
+                        <option value="design" selected="selected">Clojure Design</option>
+                    </select>
+                                <input type="button" value="Search">
+                                    <div class="description warning">You cannot move this page to another space because you do not have permission to remove it from this space.</div>
+                            </fieldset>
+        </div>
+        <div class="search-results">
+        </div>
+    </div>
+</script>
+<script type="text/x-template" title="searchResultsGrid">
+    <table>
+        <thead>
+            <tr class="header">
+                <th class="search-result-title">Page Title</th>
+                <th class="search-result-space">Space</th>
+                <th class="search-result-date">Updated</th>
+            </tr>
+        </thead>
+    </table>
+</script>
+<script type="text/x-template" title="searchResultsGridCount">
+    <p class="search-result-count">{0}</p>
+</script>
+<script type="text/x-template" title="searchResultsGridRow">
+    <tr class="search-result">
+        <th class="search-result-title"><a href="{1}" class="content-type-{2}"><span>{0}</span></a></th>
+        <td class="search-result-space"><a class="space" href="/display/{4}/" title="{3}">{3}</a></td>
+        <td class="search-result-date"><span class="date" title="{6}">{5}</span></td>
+    </tr>
+</script><!-- Start restrictions section -->
+<script type="text/x-template" title="page-permissions-div">
+<div id="page-permissions-div">
+    <div id="page-permissions-editor-form">
+
+                <div id="page-permissions-error-div" class="hidden">
+            <a href="#" id="permissions-error-div-close">Ok</a>
+            <div></div>
+        </div>
+
+                <div id="page-permissions-type-radios" class="page-permissions-label-rows">
+            <div>
+                <input id="restrictViewRadio" type="radio" checked="checked" name="pagePermissionTypeRadio" value="view"/>
+                <label for="restrictViewRadio">Restrict viewing of this page</label>
+                <input id="restrictEditRadio" type="radio" name="pagePermissionTypeRadio" value="edit"/>
+                <label for="restrictEditRadio">Restrict editing of this page</label>
+            </div>
+        </div>
+        <div id="page-permissions-input" class="page-permissions-label-rows">
+            <div class="page-permissions-label">To:</div>
+            <div id="page-permissions-chooser-box">
+                                <span id="page-permissions-choose-user" class="ajs-button">
+                    
+
+
+
+    
+
+
+
+<a href="#" id='userpicker-popup-link-image' onClick="var picker = window.open('/spaces/openuserpicker.action?key=design&amp;startIndex=0&amp;onPopupSubmit=AJS.PagePermissions.addUserPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=700,height=680,scrollbars=yes'); picker.focus(); return false;"><img src="/s/en_GB/3047/3/_/images/icons/user_16.gif" height=16 width=16 border=0 align="absmiddle"  title="Choose users" /></a>
+<a href="#" id='userpicker-popup-link-text' onClick="var picker = window.open('/spaces/openuserpicker.action?key=design&amp;startIndex=0&amp;onPopupSubmit=AJS.PagePermissions.addUserPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=700,height=680,scrollbars=yes'); picker.focus(); return false;">Person...</a>
+
+
+                </span>
+                <span id="page-permissions-choose-group" class="ajs-button">
+                    
+
+
+
+    
+
+ 
+
+<a href="#" id='grouppicker-popup-link-image' onClick="var picker = window.open('/spaces/opengrouppicker.action?key=design&amp;startIndex=0&amp;actionName=dosearchgroups.action&amp;onPopupSubmit=AJS.PagePermissions.addGroupPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=580,height=550,scrollbars=yes'); picker.focus(); return false;"><img src="/s/en_GB/3047/3/_/images/icons/group_16.gif" height=16 width=16 border=0 align="absmiddle"  title="Choose groups" /></a>
+<a href="#" id='grouppicker-popup-link-text' onClick="var picker = window.open('/spaces/opengrouppicker.action?key=design&amp;startIndex=0&amp;actionName=dosearchgroups.action&amp;onPopupSubmit=AJS.PagePermissions.addGroupPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=580,height=550,scrollbars=yes'); picker.focus(); return false;">Group...</a>
+
+
+                </span>
+            </div>
+            <div id="page-permissions-input-box">
+                <input type="text" id="page-permissions-names-input" name="permissionNames"
+                    placeholder="Enter user or group name" class="autocomplete-user"
+                    data-max="10" data-none-message="No matches"
+                    data-target="#page-permissions-names-hidden" data-template="{username}"
+                    data-dropdown-target="#page-perms-name-dropdown-wrapper" data-resize-to-input="true"
+                    size="30"/>
+                <input
+    type="hidden"
+                            id="page-permissions-names-hidden"           />                <img height="16px" width="1px" src="/s/en_GB/3047/3/_/images/border/spacer.gif"/>
+                <input type="button" id="add-typed-names" value="Restrict">
+                <div id="page-perms-name-dropdown-wrapper" class="aui-dd-parent autocomplete"></div>
+            </div>
+        </div>
+    </div>
+    <div id="page-permissions-tables">
+        <div id="page-permissions-table-div">
+                        <table id="page-permissions-table" class="page-permissions-table">
+                <tr id="page-permissions-no-views" class="marker-row">
+                    <td colspan="3" class="page-permissions-marker-cell"><span>No view restrictions are defined for this page</span></td>
+                </tr>
+                <tr id="page-permissions-no-edits" class="marker-row">
+                    <td colspan="3" class="page-permissions-marker-cell"><span>No edit restrictions are defined for this page</span></td>
+                </tr>
+            </table>
+        </div>
+        <div id="page-inherited-permissions-table-div" class="hidden">
+            <span id="page-inherited-permissions-table-desc">
+                <a class="icon twisty-closed">Show/Hide</a>
+                <a id="toggle-inherited-permissions" title="Click to see inherited restrictions">This page has restricted parent pages. It can only be seen by users who can see those parent pages.</a>
+            </span>
+            <div id="page-inherited-permissions-tables" class="hidden page-inheritance-togglable"></div>
+        </div>
+    </div>
+</div>
+</script>
+
+<!-- End restrictions section -->
+
+        
+    
+    
+        <fieldset class="hidden parameters">
+            <input type="hidden" title="parentPageId" value="11305072">
+        </fieldset>
+
+        
+                            
+    
+
+                    
+
+        
+        <a href="#page-metadata-end" class="assistive">Skip to end of metadata</a>
+<div id="page-metadata-start" class="assistive"></div>
+
+    <div class="page-metadata">
+        <ul>
+                            <li class="page-metadata-item noprint">
+    
+            
+    
+    <a  id="content-metadata-page-restrictions" href="#"  class="page-metadata-icon page-restrictions hidden"   title="Page restrictions apply. Click the lock icon to view or edit the restriction.">
+                   <span>Page restrictions apply</span></a>        </li>
+                        <li class="page-metadata-modification-info">
+                                    Added by <a href="../../login.action-os_destination=-display-~r0man.html"
+                          class="url fn"
+                   >Roman Scherer</a>, last edited by <a href="../../login.action-os_destination=-display-~alexmiller.html"
+                          class="url fn"
+                   >Alex Miller</a> on May 04, 2015
+                                                                <span class="noprint">&nbsp;(<a id="view-change-link" href="../../pages/diffpages.action-pageId=5243060&amp;originalId=11305360.html">view change</a>)</span>
+                                                </li>
+                    </ul>
+                </div>
+
+
+<a href="#page-metadata-start" class="assistive">Go to start of metadata</a>
+<div id="page-metadata-end" class="assistive"></div>
+        
+        <fieldset class="hidden parameters">
+                        <input type="hidden" title="browsePageTreeMode" value="view">
+        </fieldset>
+
+        <div class="wiki-content">
+                           <p><span style="color: rgb(255,0,0);"><strong>NOTE: This page is no longer active. It was superseded by <a href="Reader+Conditionals.html"><span style="color: rgb(255,0,0);">Reader Conditionals</span></a> and included in Clojure 1.7 and ClojureScript.</strong></span></p><h2 id="FeatureExpressions-Problem">Problem</h2><p>There are Clojure dialects (Clojure, ClojureScript, ClojureCLR) hosted on several different platforms. We wish to write libraries that can share as much portable code as possible while leaving flexibility to provide platform-specific bits as needed, then have this code run on all of them.</p><p>Use cases for platform-specific functionality currently handled by cljx:</p><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh">Use case</th><th class="confluenceTh">Example (cljx)</th><th class="confluenceTh">Example (feature expr)</th></tr><tr><td class="confluenceTd">Platform-specific require/import</td><td class="confluenceTd"><p><span>In .cljx file which is preprocessed into .clj and .cljs files:</span></p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[(ns cemerick.pprng
+ #+cljs (:require math.seedrandom
+ [cljs.core :as lang])
+ #+clj (:require [clojure.core :as lang])
+ #+clj (:import java.util.Random)
+ (:refer-clojure :exclude (double float int long boolean)))]]></script>
+</div></div></td><td class="confluenceTd"><p>In .clj file <span>loadable in both Clojure and ClojureScript</span>:</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[(ns cemerick.pprng
+ #+cljs (:require math.seedrandom
+ [cljs.core :as lang])
+ #+clj (:require [clojure.core :as lang])
+ #+clj (:import java.util.Random)
+ (:refer-clojure :exclude (double float int long boolean)))]]></script>
+</div></div></td></tr><tr><td class="confluenceTd"><p>Exception handling, catching &quot;all&quot; - see issue below on why this is not a complete solution in either case.</p></td><td class="confluenceTd"><p>In .cljx file which is preprocessed into .clj and .cljs files:</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[(try
+ (&gt;! c msg)
+ (catch #+clj Exception
+        #+cljs js/Object 
+        e)
+    .... ))]]></script>
+</div></div></td><td class="confluenceTd"><p><span>In .clj file </span><span>loadable in both Clojure and ClojureScript</span><span>:</span></p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[(try
+ (&gt;! c msg)
+ (catch #+clj Exception
+        #+cljs js/Object 
+        e)
+ .... ))]]></script>
+</div></div></td></tr><tr><td class="confluenceTd"><p> </p><p>Platform-specific calls for &quot;hosty&quot; library things (strings, math, dates, random numbers, uris, reflection warnings)</p></td><td class="confluenceTd"><p><span>In .cljx file which is preprocessed into .clj and .cljs files:</span></p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[;; dates
+ (.getTime 
+  #+clj (java.util.Date.)
+  #+cljs (js/Date.))
+
+;; uris 
+#+clj
+(defn url-encode
+ [string]
+ (some-&gt; string str (URLEncoder/encode &quot;UTF-8&quot;) (.replace &quot;+&quot; &quot;%20&quot;)))
+#+cljs
+(defn url-encode
+ [string]
+ (some-&gt; string str (js/encodeURIComponent) (.replace &quot;+&quot; &quot;%20&quot;)))
+
+;; reflection warnings
+#+clj (set! *warn-on-reflection* true)]]></script>
+</div></div><p> </p><p> </p></td><td class="confluenceTd"><p><span>In .clj file </span><span>loadable in both Clojure and ClojureScript</span><span>:</span></p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[;; dates
+ (.getTime 
+ #+clj (java.util.Date.)
+ #+cljs (js/Date.))
+
+;; uris   
+#+clj
+(defn url-encode
+ [string]
+ (some-&gt; string str (URLEncoder/encode &quot;UTF-8&quot;) (.replace &quot;+&quot; &quot;%20&quot;)))
+#+cljs
+(defn url-encode
+ [string]
+ (some-&gt; string str (js/encodeURIComponent) (.replace &quot;+&quot; &quot;%20&quot;))) 
+
+;; reflection warnings
+#+clj (set! *warn-on-reflection* true)]]></script>
+</div></div><p> </p><p> </p><p> </p></td></tr><tr><td class="confluenceTd">Protocol invocation (CLJS internal protocol names start with -, CLJ interfaces do not)</td><td class="confluenceTd"><p><span>In .cljx file which is preprocessed into .clj and .cljs files:</span></p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[#+cljs
+(deftype With [name unique-name body value bang]
+ SpecComponent
+ (install [this description]
+ (swap! (.-withs description) conj this))
+ cljs.core/IDeref
+ (-deref [this]
+ (when (= ::none @value)
+ (reset! value (body)))
+ @value))]]></script>
+</div></div><p> (See &quot;-deref&quot; in CLJS vs &quot;deref&quot; in CLJ.)</p><p> </p></td><td class="confluenceTd"><p>In .clj file loadable in both Clojure and ClojureScript:</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[#+cljs
+(deftype With [name unique-name body value bang]
+ SpecComponent
+ (install [this description]
+ (swap! (.-withs description) conj this))
+ cljs.core/IDeref
+ (-deref [this]
+ (when (= ::none @value)
+ (reset! value (body)))
+ @value))]]></script>
+</div></div></td></tr><tr><td class="confluenceTd">Extending protocols to implementation-specific classes</td><td class="confluenceTd"><p><span>In .cljx file which is preprocessed into .clj and .cljs files:</span></p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[#+clj
+(extend-protocol SpecComponent
+ java.lang.Object
+ (install [this description] ...))]]></script>
+</div></div></td><td class="confluenceTd"><p><span>In .clj file </span><span>loadable in both Clojure and ClojureScript</span><span>:</span></p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[#+clj
+(extend-protocol SpecComponent
+ java.lang.Object
+ (install [this description] ...))]]></script>
+</div></div></td></tr></tbody></table></div><h2 id="FeatureExpressions-Proposalsummary">Proposal summary</h2><p>The feature expression proposal includes the following items:</p><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th colspan="1" class="confluenceTh">Where</th><th class="confluenceTh">Item</th><th class="confluenceTh">Description</th><th class="confluenceTh">Example</th></tr><tr><td colspan="1" class="confluenceTd">all</td><td class="confluenceTd">Adds <code>*features*</code> dynamic variable</td><td class="confluenceTd"><p>Set of keywords indicating supported features. Can be changed in a <code>binding</code> around reading. The feature set is open and can be dynamically modified in binding or modified on startup. Non-namespaced features are reserved by the platform. User features should be namespaced.</p></td></tr><tr><td colspan="1" class="confluenceTd">all</td><td class="confluenceTd">Defines well-known platform feature names</td><td class="confluenceTd">Each platform guarantees that <code>*features*</code> includes the platform feature.</td><td class="confluenceTd"><code>clj</code>, <code>cljs</code>, <code>clr</code></td></tr><tr><td colspan="1" class="confluenceTd">CLJ</td><td colspan="1" class="confluenceTd">Adds system property to set custom features at startup</td><td colspan="1" class="confluenceTd">Use system property clojure.features on JVM startup to specify additional custom features. The platform feature will always be included, regardless of this setting.</td><td colspan="1" class="confluenceTd"><code><span>-Dclojure.features=arch/osx</span> <a href="http://my.app/prod,my.app/strictmath" class="external-link" rel="nofollow" /></code></td></tr><tr><td colspan="1" class="confluenceTd">CLJS</td><td colspan="1" class="confluenceTd">Adds build option to set custom features at build time</td><td colspan="1" class="confluenceTd">Use build option <code>:features</code> which should be a set of keywords. The platform feature will always be included, regardless of this setting.</td><td colspan="1" class="confluenceTd"><code>:build #{:js/node}</code></td></tr><tr><td colspan="1" class="confluenceTd">all</td><td class="confluenceTd">New reader syntax for feature include or exclude</td><td class="confluenceTd"><p>Both feature include (#+) and exclude (#-) include a conditional expression and a form. <span style="font-size: 10.0pt;line-height: 13.0pt;">The conditional expression is made from features (boolean value based on membership in feature set), and, or, and not. This is the same syntax used in CL feature expressions and cljx.</span></p></td><td class="confluenceTd"><pre>(defn my-trim [s]
+  #+clj (.. s toString trim)
+  #+cljs (gstring/trim s))</pre></td></tr><tr><td colspan="1" class="confluenceTd">all</td><td colspan="1" class="confluenceTd">Excluded tagged literals do not need to have a data reader</td><td colspan="1" class="confluenceTd">It is allowed for an excluded feature to use an undefined tagged literal. For example, the #js tagged literal is not defined in Clojure but may used in a #+cljs feature expression.</td><td colspan="1" class="confluenceTd"><pre>(def init
+  #+cljs #js {}
+  #+clj nil)</pre></td></tr><tr><td colspan="1" class="confluenceTd">all</td><td colspan="1" class="confluenceTd">New .cljc extension indicating a portable source file</td><td colspan="1" class="confluenceTd">Clojure, ClojureScript, and ClojureCLR should load both .cljc (which may have feature expressions) and their own platform-specific files as source files.</td><td colspan="1" class="confluenceTd"> </td></tr></tbody></table></div><h2 id="FeatureExpressions-Issues"><span style="color: rgb(0,0,0);">Issues</span></h2><p><span style="color: rgb(0,0,0);">Below are important issues considered and current status.</span></p><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh">Name</th><th class="confluenceTh">Description</th><th class="confluenceTh">Proposed</th><th colspan="1" class="confluenceTh">Status</th></tr><tr><td colspan="1" class="confluenceTd">Version checks</td><td colspan="1" class="confluenceTd">Should feature expressions support broader kinds of expressions (JDK or Clojure version ranges, etc)?</td><td colspan="1" class="confluenceTd"> </td><td colspan="1" class="confluenceTd">Not included</td></tr><tr><td class="confluenceTd">ClojureCLR delimited symbols</td><td class="confluenceTd">ClojureCLR supports a wider set of symbols via a |-delimited extension which cannot be read if in feature expressions from the CLJ or CLJS readers.</td><td class="confluenceTd">Add support for |-delimited symbols in CLJ, CLJS. Issues involved relate to</td><td colspan="1" class="confluenceTd">Not included (reconsider in future)</td></tr><tr><td colspan="1" class="confluenceTd">Portable &quot;catch all&quot; errors</td><td colspan="1" class="confluenceTd"><p>It is currently difficult even with feature expressions to easily &quot;catch all&quot; in CLJS (like catch Throwable).</p><p><em>Note: This is orthogonal to feature expressions but important to the greater goal of portable code.</em></p></td><td colspan="1" class="confluenceTd">Proposal exists at <a href="Platform+Errors.html">Platform Errors</a> with related tickets <a href="../../jira/browse/CLJS-661.html" class="external-link" rel="nofollow">CLJS-661</a> and <a href="../../jira/browse/CLJ-1293.html" class="external-link" rel="nofollow">CLJ-1293</a>.</td><td colspan="1" class="confluenceTd"><strong>OPEN</strong></td></tr><tr><td colspan="1" class="confluenceTd">CLJS namespace collisions</td><td colspan="1" class="confluenceTd">Existing code that uses a particular ns for macros (.clj file) may have conflicts if they use the same .clj for Clojure code in the same library.</td><td colspan="1" class="confluenceTd">This scenario is not too common and must be resolved by using non-overlapping namespaces for macros and ClojureScript code in a namespace.</td><td colspan="1" class="confluenceTd">No change needed</td></tr><tr><td colspan="1" class="confluenceTd">Tooling on raw source of portable files is more complicated.</td><td colspan="1" class="confluenceTd">Editors and other tools that work on the raw source files cannot determine a specific dialect of Clojure based on the file extensions. This makes it more complicated to enable advanced editor features that require analyzing code. See <a href="Feature+Expressions-focusedCommentId=9928713.html#comment-9928713" class="external-link" rel="nofollow">Colin Fleming's</a> comments (re Cursive).</td><td colspan="1" class="confluenceTd">???</td><td colspan="1" class="confluenceTd"><strong>OPEN</strong></td></tr></tbody></table></div><h3 id="FeatureExpressions-CLJSFileLoadingIssue"><span style="color: rgb(0,0,0);">CLJS File Loading Issue</span></h3><p><span style="color: rgb(0,0,0);">Adding .clj files as valid file extensions means that parts of ClojureScript that currently specify a directory of .cljs files will include any .clj macro files already in that source tree and interpret them as .clj source files.</span></p><p><span style="color: rgb(0,0,0);">Some alternatives and their impact to existing file types or code:</span></p><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh">Alternative</th><th class="confluenceTh">Description</th><th colspan="1" class="confluenceTh">CLJS .cljs</th><th colspan="1" class="confluenceTh">Macro .clj</th><th colspan="1" class="confluenceTh">CLJS .clj</th><th colspan="1" class="confluenceTh">CLJS build</th><th colspan="1" class="confluenceTh">CLJS Tools</th><th colspan="1" class="confluenceTh">CLJ Tools</th></tr><tr><td class="confluenceTd">Separate macro path</td><td class="confluenceTd"><span>Specify separate paths for ClojureScript code and macros. The .clj files in the code path are then unambiguously CLJS code.</span></td><td colspan="1" class="confluenceTd">-</td><td colspan="1" class="confluenceTd">Move to new macro dir</td><td colspan="1" class="confluenceTd">-</td><td colspan="1" class="confluenceTd">Pass macro path through stack</td><td colspan="1" class="confluenceTd"><span style="color: rgb(255,0,0);">Need additional macro path</span></td><td colspan="1" class="confluenceTd">-</td></tr><tr><td class="confluenceTd">Exclude namespaces</td><td class="confluenceTd">Specify a build option to exclude a set of namespaces from compilation. Macros would be explicitly specified there and could then be intermingled but ignored when pulling CLJS source from a directory.</td><td colspan="1" class="confluenceTd">-</td><td colspan="1" class="confluenceTd">-</td><td colspan="1" class="confluenceTd">-</td><td colspan="1" class="confluenceTd">Pass excluded ns list through stack</td><td colspan="1" class="confluenceTd"><span style="color: rgb(255,153,0);">Need list of excluded macro ns'es</span></td><td colspan="1" class="confluenceTd">-</td></tr><tr><td colspan="1" class="confluenceTd">Mark macro namespaces</td><td colspan="1" class="confluenceTd">Specify ns meta or other marker in .clj macro files so that they can be excluded based on file inspection.</td><td colspan="1" class="confluenceTd">-</td><td colspan="1" class="confluenceTd"><span style="color: rgb(255,0,0);">Mark as macro ns</span></td><td colspan="1" class="confluenceTd">-</td><td colspan="1" class="confluenceTd"><span style="color: rgb(255,0,0);">Needs to parse all .clj files to check if macro ns</span></td><td colspan="1" class="confluenceTd">-</td><td colspan="1" class="confluenceTd">-</td></tr><tr><td colspan="1" class="confluenceTd">Mark regular portable namespaces</td><td colspan="1" class="confluenceTd">Specify ns meta or other marker in .clj source files so that they can be included based on file inspection.</td><td colspan="1" class="confluenceTd">-</td><td colspan="1" class="confluenceTd">-</td><td colspan="1" class="confluenceTd"><span style="color: rgb(255,0,0);">Mark as portable</span></td><td colspan="1" class="confluenceTd"><span style="color: rgb(255,0,0);">Needs to parse all .clj file to check if portable ns</span></td><td colspan="1" class="confluenceTd">-</td><td colspan="1" class="confluenceTd">?</td></tr><tr><td colspan="1" class="confluenceTd">Specify a portable file extension</td><td colspan="1" class="confluenceTd">Define a new unambiguous file extension (.cljc) to indicate a portable source file to be read in multiple host envs. (The .cljx extension is somewhat analogous although it only exists during preprocessing.) Explored in more detail in next table.</td><td colspan="1" class="confluenceTd"><p>-</p></td><td colspan="1" class="confluenceTd">-</td><td colspan="1" class="confluenceTd">New file extension .cljc</td><td colspan="1" class="confluenceTd">Pull in .cljc files as CLJS source</td><td colspan="1" class="confluenceTd">Look for .cljc files</td><td colspan="1" class="confluenceTd">Look for .cljc files</td></tr></tbody></table></div><p><span style="color: rgb(0,0,0);"> </span><span style="color: rgb(0,0,0);font-size: 1.4em;font-weight: bold;line-height: normal;">Portable file extension consequences</span></p><p>This table explores the consequences and changes required if we added a new portable file extension across Clojure and ClojureScript (a proposed solution for the prior issue CLJS File Loading).</p><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh">Where</th><th class="confluenceTh">Description of Impact</th><th class="confluenceTh">Change</th></tr><tr><td class="confluenceTd">CLJS</td><td class="confluenceTd">ClojureScript finds CLJS source files in a dir by .cljs extension</td><td class="confluenceTd">Look for both .cljs and .cljc as source</td></tr><tr><td class="confluenceTd">CLJ</td><td class="confluenceTd">Clojure looks for CLJ source files by .clj extension</td><td class="confluenceTd">Look for both .clj and .cljc as source</td></tr><tr><td class="confluenceTd">CLJS and CLJ</td><td class="confluenceTd">If both .cljc and either .cljs or .clj exist, which will be loaded?</td><td class="confluenceTd">Should prefer platform-specific file to common file (.clj or .cljs over .cljc). This enables the open extension case described below in Portable Libraries</td></tr><tr><td colspan="1" class="confluenceTd">lein, mvn, other build tools</td><td colspan="1" class="confluenceTd">Find CLJ source files by .clj extension</td><td colspan="1" class="confluenceTd">Look for both .clj and .cljc as source</td></tr><tr><td class="confluenceTd">lein cljsbuild and other CLJS tools</td><td class="confluenceTd">Find CLJS source files in a dir by .cljs extension</td><td class="confluenceTd">Look for both .cljs and .cljc as source</td></tr><tr><td colspan="1" class="confluenceTd">CLJ or CLJS IDEs (CIDER, Fireplace, Light Table, Cursive, CCW, etc)</td><td colspan="1" class="confluenceTd">Need to recognize .cljc as potentially both .clj and .cljs files</td><td colspan="1" class="confluenceTd">Update editors and IDEs to be aware of portable Clojure files</td></tr><tr><td colspan="1" class="confluenceTd">CLJS repls (Austin, Weasel, etc)</td><td colspan="1" class="confluenceTd">Need to recognize .cljc as CLJS file</td><td colspan="1" class="confluenceTd">Update each REPL tool</td></tr></tbody></table></div><p> </p><h2 id="FeatureExpressions-Detailedproposal"><span style="color: rgb(0,0,0);">Detailed proposal</span></h2><h3 id="FeatureExpressions-FeatureSets"><span style="color: rgb(0,0,0);">Feature Sets</span></h3><p>The platform feature will be one of: <code>clj</code>, <code>cljs</code>, or <code>clr</code>.  Users may supply their own features, which should, by convention, use namespaces. Platform-specified features will not be namespaced.</p><p>In Clojure, the initial feature set may be specified at start time with the system property <code>clojure.features</code>, which is a comma-delimited list of symbols to add as features. The platform feature will always be added, regardless of whether it is set in the system property. </p><p>For example:</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[-Dclojure.features=arch/osx,my.app/prod,my.app/strictmath]]></script>
+</div></div><p>will yield the runtime feature set: <code>#{:clj :arch/osx :my.app/prod :my.app/strictmath}</code></p><p>In ClojureScript, there is a new build option with key <code>:features</code> that takes a set of keywords defining the features. The platform feature <code>:cljs</code> is always added to this set, as in Clojure.</p><p>In addition to setting the features initially, users may bind <code>*features*</code> around explicit calls to the reader.</p><h3 id="FeatureExpressions-FeatureExpressionSyntax">Feature Expression Syntax</h3><p>Common Lisp approaches this problem using feature expressions.</p><p>Each platform has a variable called *features* that is a set of keywords to indicate supported features. </p><p>The Reader understands a new kind of &quot;feature expression&quot;. <span style="font-size: 10.0pt;line-height: 13.0pt;">The reader macros #+ and #- are used to include or skip a form based on a feature expression:</span></p><ul><li><em>#+feature-expr form</em> - include next form if feature-expr evaluates to true</li><li><em>#-feature-expr form</em> - skip next form if feature-expr evaluates to true</li></ul><p><span style="font-size: 10.0pt;line-height: 13.0pt;">Feature expressions evaluate as booleans and are defined as follows:</span></p><ul><li><p><em>feature</em> - a symbol, evaluated as if:</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[(contains? *features* (keyword feature))]]></script>
+</div></div></li><li><em>(not feature-expr)</em> - returns logical not of <em>feature-expr</em></li><li><em>(and feature-expr*)</em> - returns true if all <em>feature-expr</em> are true, otherwise false.</li><li><em>(or feature-expr*)</em> - returns true if any of its <em>feature-expr</em> are true, otherwise false.</li></ul><p>Skipping in the reader is performed by binding *read-suppressed* to true for the next form.</p><p><span style="font-size: 10.0pt;line-height: 13.0pt;">Example:</span></p><div class="preformatted panel" style="border-width: 1px;"><div class="preformattedContent panelContent">
+<pre>(ns feature.expressions
+  #+cljs (:require [goog.string :as gstring]))
+
+(defn my-trim [s]
+  #+clj (.. s toString trim)
+  #+cljs (gstring/trim s))
+
+(my-trim &quot; Hello CL? &quot;)</pre>
+</div></div><p> </p><p><span style="color: rgb(0,0,0);font-size: 1.4em;font-weight: bold;line-height: normal;">Reading <span style="color: rgb(0,0,0);">Unknown </span>Tagged Literals</span></p><p>There may be tagged literals or classes that are not known or available on all platforms. The reader must be able to read but avoid constructing these entities when they are in excluded feature expressions.</p><p>Example:</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[(def init #+cljs #js {} 
+          #-cljs nil)]]></script>
+</div></div><p>The #js tagged literal is not known on the Clojure platform, but the reader should read and avoid trying to instantiate it.</p><p><span style="color: rgb(0,0,0);font-size: 1.4em;font-weight: bold;line-height: normal;">ClojureScript File Loading</span></p><p>When code needs to be loaded based on a namespace, <span style="font-size: 10.0pt;line-height: 13.0pt;">ClojureScript will first look for .cljs files, then for .clj files. </span></p><div>ClojureScript currently expects source files to end (only) in .cljs. Changes must be made in several places to allow reading .clj files:</div><div><ul><li>cljs.compiler/rename-to-js - renames .cljs file name to .js file name. <ul><li>regex must cover both .clj and .cljs</li></ul></li><li><strong>cljs.compiler/cljs-files-in - given a directory, finds all .cljs files to compile</strong><ul><li><strong>can grab .clj too, but may include macro files not previously included -</strong> <span style="color: rgb(255,0,0);"><strong>how do we distinguish here??</strong></span></li><li>called-by backtraces:<ul><li>cljs.repl/analyze-source<ul><li>cljs.repl.browser/-setup - to support code reflection in the browser repl</li><li>cljs.repl/repl - to support code reflection in the repl, populates :cljs.analyzer/namespaces in compiler-env</li></ul></li><li>cljs.compiler/compile-root<ul><li>cljs.closure/compile-dir</li><li>cljs.closure/-compile (protocol Compilable on File)<ul><li>cljs.closure/build<ul><li>cljsc - main tooling entry point (often used to compile a directory of cljs)</li></ul></li></ul></li></ul></li></ul></li></ul></li><li>cljs.analyzer/ns-&gt;relpath - given a namespace, find the resource path<ul><li>check first for .cljs path, then .clj path (adds resource check where prior was simple string manipulation)</li></ul></li><li>cljs.closure/cljs-source-for-namespace - given a ns, find path and url of ns<br /><ul><li>check first for .cljs resource, then .clj resource</li></ul></li><li>cljs.repl.rhino/goog-require - given ns, makes cljs resource path<br /><ul><li>check first for .cljs resource, then .clj resource</li></ul></li><li>cljs.repl.browser/send-static - serves static resources<br /><ul><li>add support for serving .clj as well as .cljs</li></ul></li></ul></div><div> </div><div><span style="color: rgb(0,0,0);font-size: 1.4em;font-weight: bold;line-height: normal;">ClojureScript Tooling Support</span></div><div><p>ClojureScript tooling needs to be aware of t<span style="font-size: 10.0pt;line-height: 13.0pt;">he change in supported file extension names and possibly new build options. Need to ensure tools are able to support the new mixed-language projects well:</span></p><ul><li>lein-cljsbuild - most ClojureScript projects today are built with the lein-cljsbuild plugin. <ul><li><a href="https://github.com/emezeske/lein-cljsbuild/blob/62fef7a006d005bb7aa7548857d378d4f12d93ca/support/src/cljsbuild/compiler.clj#L117" class="external-link" rel="nofollow">compiler.clj</a> - needs to properly account for ClojureScript .clj files</li><li>features - might need to add support for specifying non-default feature set when testing</li></ul></li><li><strong>austin?</strong></li><li><strong>what else?</strong></li></ul><p> </p><p><span style="color: rgb(0,0,0);font-size: 1.4em;font-weight: bold;line-height: normal;">Patches</span></p><p>JIRA Tickets and patches:</p><ul><li><a href="../../jira/browse/CLJS-27.html" class="external-link" rel="nofollow">http://dev.clojure.org/jira/browse/CLJS-27</a> - ClojureScript</li><li><a href="../../jira/browse/CLJ-1424.html" class="external-link" rel="nofollow">http://dev.clojure.org/jira/browse/CLJ-1424</a> - Clojure</li><li><a href="../../jira/browse/TRDR-14.html" class="external-link" rel="nofollow">http://dev.clojure.org/jira/browse/TRDR-14</a> - tools.reader, used by ClojureScript</li></ul><p> </p><h2 id="FeatureExpressions-BuildingPortableLibraries">Building Portable Libraries</h2><div>Case 1: Independent CLJS and CLJ files packaged in the same jar</div><div> </div><div>Some libraries may provide independent implementations of a library for both CLJ and CLJS and be packaged in the same jar. In this case, namespaces should not overlap between CLJ and CLJS:</div><div> </div><div><p> </p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[myproj/clj/mylib.clj
+myproj/cljs/mylib.cljs]]></script>
+</div></div><p> </p></div><div><span style="font-size: 10.0pt;line-height: 13.0pt;">Case 2: Mixed portable and non-portable CLJS and CLJ packaged in the same jar</span></div><div> </div><div><p> </p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[myproj/mylib.clj - portable code with feature expressions - both CLJ and CLJS load myproj.mylib
+myproj/foo.clj - helper clojure ns
+myproj/bar.cljs - helper clojure ns]]></script>
+</div></div><p> </p></div><div>Case 3: Library designed for open extension</div><div> </div><div>A library designed for open extension isolates platform-specific code in one or more namespaces. The library code may compile against (but not include) a stub namespace or use a .clj mixed mode file to contain a default library implementation. The non-isolated code should all be .clj files that are portable across platforms.</div><div><p> </p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[myproj/mylib.clj 
+myproj/open.clj - a ns used by mylib but designed to be overridden or replaced by a platform-specific version of the ns]]></script>
+</div></div><p> </p></div><div>A separate jar would supply the platform-specific version of the ns:</div><div><p> </p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[myproj/open.cljs]]></script>
+</div></div><p> </p></div><div>Other additional jars would be used to supply other platform-specific versions of the ns. A consumer would use the first jar + the selected extension jar.</div></div><h2 id="FeatureExpressions-AlternateApproaches">Alternate Approaches</h2><h5 id="FeatureExpressions-Copypaste">Copy / paste</h5><p>One approach is to maintain two versions of the same file that are largely the same but modify the platform-specific parts in each copy. This obviously works but is gross.</p><h5 id="FeatureExpressions-cljx">cljx</h5><p><a href="https://github.com/lynaghk/cljx" class="external-link" rel="nofollow">cljx</a> is an implementation of feature expressions that:</p><ul><li>rewrites <code>.cljx </code>files containing feature expression-annotated code into external files based on well-known tags<ul><li>The most common use is to use clj and cljs tags and write <code>.clj</code> and <code>.cljs</code> files for consumption by other tools/compilers/etc</li></ul></li><li>optionally applies the same transformation interactively via installation of a REPL extension</li></ul><p>It has been used successfully by a number of projects (see the cljx README for a partial list).  cljx's limitations include:</p><ul><li>It does not address portability of macros at all; it is strictly a source-to-source transformation.  Macros continue to be written in Clojure, and must be rewritten or implemented conditionally on the contents of <code>&amp;env</code>.</li><li>It does not provide any runtime customization of the &quot;features&quot; you can use; these are set either within build configuration (via cljx' Leiningen integration), or via the configuration of the cljx REPL extension.  The latter technically is available for modification, but is not in practical use.</li><li>The set of provided &quot;features&quot; is limited to one for Clojure (<code>#+clj</code>) and one for ClojureScript (<code>#+cljs</code>).  Further discrimination based on target runtime (e.g. rhino vs. node vs. v8 vs. CLR) would be trivial, but has not been implemented to date. </li></ul><p><span style="color: rgb(51,51,51);">cljx expressions are typically applied:</span></p><ul><li>Inside ns macro</li><li>Top-level forms</li><li>Occasionally internal forms where it's concise<ul><li>(.getTime #+clj (java.util.Date.) #+cljs (js/Date.))</li></ul></li></ul><h5 id="FeatureExpressions-lein-cljsbuildcrossovers">lein-cljsbuild &quot;crossovers&quot;</h5><p><a href="https://github.com/emezeske/lein-cljsbuild" class="external-link" rel="nofollow">lein-cljsbuild</a> provides a (<em>deprecated, to be removed</em>) feature called <a href="https://github.com/emezeske/lein-cljsbuild/blob/master/doc/CROSSOVERS.md" class="external-link" rel="nofollow">&quot;crossovers&quot;</a> that provides a very limited preprocessing of certain files during the cljsbuild build process; a special comment string is removed, allowing one to work around the <code>-macros</code> declarations required in ClojureScript <code>ns</code> forms.  Crossover files must otherwise be fully portable.  Language/runtime-specific code must be maintained in separate files.  However, (my) experience shows that this can quickly lead to the situation where one has to think a lot about in which file to put a specific function, in order to go though the whole preprocessing machinery. Functions are split into namespaces because of conditional compilation, and not because they belong to the same part or module of the program.</p><h5 id="FeatureExpressions-TaggedLiteral">Tagged Literal</h5><p><span style="font-size: 10.0pt;line-height: 13.0pt;">Define a custom tagged literal that implements conditional read-time expressions:</span></p><pre><code>#feature/condf [ (and jdk-1.6+ clj-1.5.*) </code></pre><pre><code> (call-my-fast-reducer-code) </code></pre><pre><code> else (some-old-fashioned-code) ]</code></pre><p><span style="font-size: 10.0pt;line-height: 13.0pt;">Proof of concept here:  </span><a href="https://github.com/miner/wilkins" style="text-decoration: none;" class="external-link" rel="nofollow">https://github.com/miner/wilkins</a></p><h2 id="FeatureExpressions-References">References</h2><p>The Common Lisp Hyperspec about the Sharp Sign macros:</p><ul style="list-style-type: square;"><li><a href="http://www.lispworks.com/documentation/lw50/CLHS/Body/02_dhq.htm" class="external-link" rel="nofollow">http://www.lispworks.com/documentation/lw50/CLHS/Body/02_dhq.htm</a></li></ul><p>Examples of Common Lisp's Feature Expresions:</p><ul><li><a href="http://www.lispworks.com/documentation/lw50/CLHS/Body/24_abaa.htm" class="external-link" rel="nofollow">http://www.lispworks.com/documentation/lw50/CLHS/Body/24_abaa.htm</a></li><li><a href="http://www.gigamonkeys.com/book/practical-a-portable-pathname-library.html" class="external-link" rel="nofollow">http://www.gigamonkeys.com/book/practical-a-portable-pathname-library.html</a></li><li><a href="http://cliki.net/features" class="external-link" rel="nofollow">http://cliki.net/features</a> - list of Common Lisp &quot;features&quot; and what they mean</li></ul><p>Maintaining Portable Lisp Programs:</p><ul><li><a href="http://jcsu.jesus.cam.ac.uk/~csr21/papers/features.pdf" class="external-link" rel="nofollow">http://jcsu.jesus.cam.ac.uk/~csr21/papers/features.pdf</a></li></ul><p>Crossover files in lein-cljsbuild:</p><ul><li><a href="https://github.com/emezeske/lein-cljsbuild/blob/master/doc/CROSSOVERS.md" class="external-link" rel="nofollow">https://github.com/emezeske/lein-cljsbuild/blob/master/doc/CROSSOVERS.md</a></li></ul>
+    
+        </div>
+
+        <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="https://dev.clojure.org/display/design/Feature+Expressions"
+    dc:identifier="https://dev.clojure.org/display/design/Feature+Expressions"
+    dc:title="Feature Expressions"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/5243060"/>
+</rdf:RDF>
+-->
+
+        <script type="text/x-template" title="labels-dialog-div">
+
+    
+    <div id="labels-dialog">
+        <div class="labels-editor">
+            <span class="errorMessage error" id="errorSpan"></span>
+            <form method="GET" action="" id="add-labels-form">
+                <div id="labelOperationErrorContainer">
+                    <span class="error"><span class="errorMessage" id="labelOperationErrorMessage"></span></span>
+                </div>
+    
+                <div class="caption">Enter labels to add to this page:</div>
+                <div id="label-input-fields">
+                    <input autocomplete="off" id="labelsString" name="labelsString" value="">
+                    <input id="add-labels-editor-button" type="submit" class="add-labels" value="Add">
+                </div>
+                <div id="labelsAutocompleteList" class="aui-dd-parent resize-to-input" style="width: 417px"></div>
+                <div id="dialog-label-list">
+                    <span id="labels-section-title-none" class="no-labels-message" >
+None
+</span>
+<ul class="label-list">
+</ul>
+                </div>
+                <div id="waitImageAndStatus">
+                    <img class="waiting" alt="Please wait" src="/s/en_GB/3047/3/_/images/icons/wait.gif">&nbsp;
+                    <span id="labelOperationStatus" class="smalltext"></span>
+                </div>
+                <div class="labels-tip"></div>
+            </form>
+        </div>
+    </div>
+</script>
+            
+    
+
+
+<div id="labels-section" class="pageSection group">
+    <div class="labels-editor">
+        <span id="labels-section-title" class="label-title">Labels:</span>
+        <div id="labels-section-content" class="content-column">
+            <span id="labels-section-title-none" class="no-labels-message" >
+None
+</span>
+<ul class="label-list">
+</ul>
+
+                            <a id="labels-edit" href="#" class="show-labels-editor editor-icon" title="Edit Labels">
+                    <span class="icon icon-edit">Edit Labels</span>
+                </a>
+                    </div>
+    </div>
+</div>
+
+            
+            
+
+
+
+
+            
+    
+
+
+
+
+
+
+
+<div id="comments-section" class="pageSection group">
+    
+            <div class="section-header ">
+            <h2 id="comments-section-title" class="section-title">
+                <a href="#" class="comments-show-hide comments-showing" name="comments">
+                                            29 Comments
+                                    </a>
+            </h2>
+            <a title="Hide/Show Comments" href="#" 
+               class="comments-show-hide icon comments-showing icon-section-opened">
+                Hide/Show Comments
+            </a>
+        </div>
+    
+    
+                            <ol class="comment-threads top-level " id="page-comments">
+                        <li id="comment-thread-5243065" class="comment-thread">
+                                <div class="comment  " id="comment-5243065">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: hiredman" title="hiredman">                </p>
+                <p class="date" title="Jul 22, 2012 03:28">
+                    Jul 22, 2012
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~hiredman.html"
+                          class="url fn"
+                   >Kevin Downey</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>I am not wild about the conditional stuff happening at read time, it means the conditionals have no data representation and cannot be manipulated as such</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Feature+Expressions-focusedCommentId=5243065.html#comment-5243065"
+                id="comment-permalink-5243065"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Feature+Expressions-focusedCommentId=5243065.html#comment-5243065"
+    dc:identifier="Feature+Expressions-focusedCommentId=5243065.html#comment-5243065"
+    dc:title="Feature Expressions"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/5243065"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-5243067" class="comment-thread">
+                                <div class="comment  " id="comment-5243067">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: stu" title="stu">                </p>
+                <p class="date" title="Jul 22, 2012 07:31">
+                    Jul 22, 2012
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~stu.html"
+                          class="url fn"
+                   >Stuart Halloway</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>Kevin,</p><p>Can you elaborate with an example?</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Feature+Expressions-focusedCommentId=5243067.html#comment-5243067"
+                id="comment-permalink-5243067"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Feature+Expressions-focusedCommentId=5243067.html#comment-5243067"
+    dc:identifier="Feature+Expressions-focusedCommentId=5243067.html#comment-5243067"
+    dc:title="Feature Expressions"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/5243067"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-5243068" class="comment-thread">
+                                <div class="comment  " id="comment-5243068">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: hiredman" title="hiredman">                </p>
+                <p class="date" title="Jul 27, 2012 17:32">
+                    Jul 27, 2012
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~hiredman.html"
+                          class="url fn"
+                   >Kevin Downey</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>with this design if you read</p><pre>#+clojure (+ 1 2)<br />#+clojurescript (+ 2 3)</pre><p>on clojure you get the list (+ 1 2) and on clojurescript the list (+ 2 3) and there is no indication that a compile time conditional was read. this means the conditionals will not be visible to anything that operates on datastructures rather than text.</p><p>how will macros be shared? I guess they would check<strong> </strong>`*features*` directly to decide if they want to emit something different for clojure or clojurescript</p><p>another thing is there is no indication that the above is basically a cond, besides the forms being written next to each other. compare to something like:</p><pre>(feature-cond<br />  clojure (+ 1 2)<br />  clojurescript (+ 2 3))</pre><p>it is possible that we have to have conditionals at read time because some forms are readable on one host but another (vars? syntax quote in the reader does some class lookups I think, on the otherhand, syntax quote should be rewritten as a macro)</p><p>if issues with readable/unreadable forms are addressed between hosts, feature-cond above could be a macro that checks `*features*` so no change to the compiler or reader</p><p> </p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Feature+Expressions-focusedCommentId=5243068.html#comment-5243068"
+                id="comment-permalink-5243068"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Feature+Expressions-focusedCommentId=5243068.html#comment-5243068"
+    dc:identifier="Feature+Expressions-focusedCommentId=5243068.html#comment-5243068"
+    dc:title="Feature Expressions"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/5243068"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-6390065" class="comment-thread">
+                                <div class="comment  " id="comment-6390065">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: brandon@brandonbloom.name" title="brandon@brandonbloom.name">                </p>
+                <p class="date" title="Mar 05, 2013 12:18">
+                    Mar 05, 2013
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~brandon@brandonbloom.name.html"
+                          class="url fn"
+                   >Brandon Bloom</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p><span style="font-size: 10.0pt;line-height: 13.0pt;">At first, I wanted to agree with you that it would be nicer to just have a Macro rather than introducing a new feature into the reader. However, after more thought, I think that this absolutely needs to occur at read time. The main reason is that, if it's a macro, then it will be visible to outer macro forms when it shouldn't be. Consider some macro which expects a symbol, but instead gets a (feature-cond ...) form. It will (assert (symbol? ...)) and fail, even though the feature-cond form might expand to a symbol, the outer macro has no way of knowing.</span></p><p>It seems like the expected thing is for this to happen almost equivalent to the C preprocessor, so the reader is the right place to do that.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Feature+Expressions-focusedCommentId=6390065.html#comment-6390065"
+                id="comment-permalink-6390065"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Feature+Expressions-focusedCommentId=6390065.html#comment-6390065"
+    dc:identifier="Feature+Expressions-focusedCommentId=6390065.html#comment-6390065"
+    dc:title="Feature Expressions"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/6390065"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                                </ol>
+                        </li>
+                                        <li id="comment-thread-5243088" class="comment-thread">
+                                <div class="comment  " id="comment-5243088">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: halgari" title="halgari">                </p>
+                <p class="date" title="Jul 27, 2012 15:49">
+                    Jul 27, 2012
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~halgari.html"
+                          class="url fn"
+                   >Timothy Baldridge</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>The complaint I have with this feature is that now all the separate implementations of a given expression are housed in a single file. This closes off the system, disallowing future expansion (without getting a patch submitted upstream to the library provider). This gets to be a bigger issue when we start porting libraries to other platforms. <br /><br />What I'd like to see is some sort of &quot;patch&quot; based system. I'd like to see some way where we can put JVM specific code into a single source file, and then allow users of the library to replace those JVM versions with CLJS versions, CLR, Python, or C versions as needed.</p><p>The common lisp method shown here is simple, but I have to say, it feels like a hack.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Feature+Expressions-focusedCommentId=5243088.html#comment-5243088"
+                id="comment-permalink-5243088"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Feature+Expressions-focusedCommentId=5243088.html#comment-5243088"
+    dc:identifier="Feature+Expressions-focusedCommentId=5243088.html#comment-5243088"
+    dc:title="Feature Expressions"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/5243088"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-5243091" class="comment-thread">
+                                <div class="comment  " id="comment-5243091">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: hiredman" title="hiredman">                </p>
+                <p class="date" title="Jul 27, 2012 17:31">
+                    Jul 27, 2012
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~hiredman.html"
+                          class="url fn"
+                   >Kevin Downey</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>load-file is an expression, so any kind of feature expressions would allow for providing implementations in different files</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Feature+Expressions-focusedCommentId=5243091.html#comment-5243091"
+                id="comment-permalink-5243091"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Feature+Expressions-focusedCommentId=5243091.html#comment-5243091"
+    dc:identifier="Feature+Expressions-focusedCommentId=5243091.html#comment-5243091"
+    dc:title="Feature Expressions"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/5243091"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-6390064" class="comment-thread">
+                                <div class="comment  " id="comment-6390064">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: brandon@brandonbloom.name" title="brandon@brandonbloom.name">                </p>
+                <p class="date" title="Mar 05, 2013 11:41">
+                    Mar 05, 2013
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~brandon@brandonbloom.name.html"
+                          class="url fn"
+                   >Brandon Bloom</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>That assumes you have a runtime compiler, which ClojureScript does not. You'd need to run load-file in the context of the compiler, but ClojureScript (currently) emits top-level forms as JavaScript, rather than running them in the compiler's environment.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Feature+Expressions-focusedCommentId=6390064.html#comment-6390064"
+                id="comment-permalink-6390064"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Feature+Expressions-focusedCommentId=6390064.html#comment-6390064"
+    dc:identifier="Feature+Expressions-focusedCommentId=6390064.html#comment-6390064"
+    dc:title="Feature Expressions"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/6390064"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                                </ol>
+                        </li>
+                                </ol>
+                        </li>
+                                </ol>
+                        </li>
+                                </ol>
+                        </li>
+                        <li id="comment-thread-5243075" class="comment-thread">
+                                <div class="comment  " id="comment-5243075">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: r0man" title="r0man">                </p>
+                <p class="date" title="Jul 23, 2012 10:16">
+                    Jul 23, 2012
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~r0man.html"
+                          class="url fn"
+                   >Roman Scherer</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>I received an email from Kevin <span style="color: rgb(34,34,34);">Lynagh. He could not write to the wiki, so I post it here:</span></p><p><span style="color: rgb(34,34,34);">Hi Roman,</span></p><div style=""> </div><div style="">I can't figure out how to leave a comment on the JIRA page, but I hope an email is okay.</div><div style=""> </div><div style="">Your potential solution looks a lot like my cljx leiningen plugin: <a href="https://github.com/lynaghk/cljx" class="external-link" rel="nofollow">https://github.com/lynaghk/cljx</a></div><div style="">You write platform-sharable code in .cljx files, optionally annotating toplevel forms with metadata to mark them as platform specific.</div><div style="">Running the plugin copies code into .clj or .cljs files as appropriate, stripping out forms that are specific to other platforms.</div><div style="">It also rewrites references to clojure/core functionality; e.g., clojure.lang.Atom becomes cljs.core.Atom.</div><div style=""> </div><div style="">The plugin is based on kibit (which is based on core.logic), and it's simple to add new rules.</div><div style="">I'm using it for my C2 library, but outside of that I have no idea if anyone else has used it or run into issues.</div>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Feature+Expressions-focusedCommentId=5243075.html#comment-5243075"
+                id="comment-permalink-5243075"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Feature+Expressions-focusedCommentId=5243075.html#comment-5243075"
+    dc:identifier="Feature+Expressions-focusedCommentId=5243075.html#comment-5243075"
+    dc:title="Feature Expressions"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/5243075"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-8781870" class="comment-thread">
+                                <div class="comment  " id="comment-8781870">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: cemerick" title="cemerick">                </p>
+                <p class="date" title="Jan 30, 2014 06:51">
+                    Jan 30, 2014
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~cemerick.html"
+                          class="url fn"
+                   >Chas Emerick</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>Just an update re: cljx, which I've been maintaining for some months now.  It was rewritten for the <code>0.3.0</code> release to perform all of its transformations statically, i.e. it does not use runtime metadata and does not use the Clojure reader (or tools.reader for that matter).  (The previous usage of runtime metadata and Clojure reader necessitated some compromises in the quality of the transformed output and in preventing the use of some language features tied to the compiler state/runtime, e.g. alias-namespaced symbols and keywords.)</p><p>I've also added some REPL integration, so that namespaces defined in <code>.cljx</code> files are transformed and loaded/compiled as appropriate for the current REPL session (either Clojure or ClojureScript).</p><p>These enhancements have made cljx a workable (and pleasant, IMO) solution to the problem of targeting multiple languages/runtimes from a single Clojure codebase.</p><p>I'll update this wiki page to include a link to <a href="https://github.com/lynaghk/cljx" class="external-link" rel="nofollow">cljx</a> under &quot;current solutions&quot;.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Feature+Expressions-focusedCommentId=8781870.html#comment-8781870"
+                id="comment-permalink-8781870"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Feature+Expressions-focusedCommentId=8781870.html#comment-8781870"
+    dc:identifier="Feature+Expressions-focusedCommentId=8781870.html#comment-8781870"
+    dc:title="Feature Expressions"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/8781870"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                                </ol>
+                        </li>
+                        <li id="comment-thread-5243083" class="comment-thread">
+                                <div class="comment  " id="comment-5243083">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: stu" title="stu">                </p>
+                <p class="date" title="Jul 27, 2012 13:54">
+                    Jul 27, 2012
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~stu.html"
+                          class="url fn"
+                   >Stuart Halloway</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <ul><li>I like the keywords :clojure and :clojurescript, that is how the dialects are known.</li><li>I don't think it makes sense to add e.g. :rhino until/unless there is something that can be read only there.</li><li>AFAIAC namespace support means just &quot;allow namespaced names&quot;, which the attached patch handles just fine.</li><li>I think compilation process and naming questions can be considered separately.</li></ul>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Feature+Expressions-focusedCommentId=5243083.html#comment-5243083"
+                id="comment-permalink-5243083"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Feature+Expressions-focusedCommentId=5243083.html#comment-5243083"
+    dc:identifier="Feature+Expressions-focusedCommentId=5243083.html#comment-5243083"
+    dc:title="Feature Expressions"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/5243083"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                        <li id="comment-thread-5243100" class="comment-thread">
+                                <div class="comment  " id="comment-5243100">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: brandon@brandonbloom.name" title="brandon@brandonbloom.name">                </p>
+                <p class="date" title="Jul 28, 2012 11:16">
+                    Jul 28, 2012
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~brandon@brandonbloom.name.html"
+                          class="url fn"
+                   >Brandon Bloom</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>&gt; Are those keywords ok? Is :jvm for Clojure and :js for ClojureScript better? </p><p>&gt; Should ClojureScript add something like :rhino, :v8 or :browser as well?</p><p>:jvm isn't a good idea for Clojure, since :rhino is also on the JVM. If you were writing some ClojureScript code, and wanted to test for a Java package, you'd want to check for :jvm. Similarly, you'd want a :gclosure member as well, if there was ever an implementation that targeted JS without it.</p><p> </p><p>I'd imagine the Clojure set could look like #{:clojure :java :jvm}</p><p>And the ClojureScript one could be #{:clojurescript :js :gclosure} potentially conj :jvm for Rhino</p><p>Because it will soon be possible to have #{:clojurescript :lua}</p><p> </p><p>This raises an interesting point: Why a set? Why not a map? Here's an example Clojure map:</p><p>{:dialect :clojure, :clojure {:version &quot;1.2.3&quot;}, :target :java, :runtime :jvm, :jvm {}}</p><p>And one for ClojureScript:</p><p>{:dialect :clojurescript, :clojurescript {:version &quot;2.3.4&quot;}, :target :js, :js {}, :runtime :browser} ; maybe something for :gclosure version</p><p>This way the #+clojurescript and #-js things will still work like set memberships. We could come up with some way to include an arbitrary predicate against map values, or we could leave that to be feature not available to the reader, only to macros against *features*.</p><p> </p><p>A few issues: Since this happens at read time, it may be too late to decide :v8 vs :rhino, etc. Although, some JavaScript shops/frameworks/teams/whatever do multi-compile sources for different browsers. ie. Do conditional logic by browser version, server side, rather than client side, serve up the browser-specific javascript. In that case, you even could support a :browser key with the various information there.</p><p> </p><p>I feel like this needs some kind of cond macro. I should be able to check for &quot;do I have a runtime that optimizes foo? if so, do this, otherwise, do it the slow way like this&quot; I realize that I could use #+foo, then #-foo, but what if I had <strong>two</strong> possible optimizations? I'd need #+foo(x) #+bar(y) #-foo(#-bar(y)) ;; seems like I need some kind of &quot;else&quot; expression.</p><p> </p><p>RE: read-time vs macro-expansion-time. Seems like the right thing for this is read-time because of symbol resolution, but we should also consider some compile-time macro support against the same dynamic var. In theory, it should be workable with all the standard macros and stuff, since it's just a set or map, but we should still explore it a bit, so we know we're not missing something.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Feature+Expressions-focusedCommentId=5243100.html#comment-5243100"
+                id="comment-permalink-5243100"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Feature+Expressions-focusedCommentId=5243100.html#comment-5243100"
+    dc:identifier="Feature+Expressions-focusedCommentId=5243100.html#comment-5243100"
+    dc:title="Feature Expressions"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/5243100"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                        <li id="comment-thread-5243114" class="comment-thread">
+                                <div class="comment  " id="comment-5243114">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: r0man" title="r0man">                </p>
+                <p class="date" title="Aug 01, 2012 08:40">
+                    Aug 01, 2012
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~r0man.html"
+                          class="url fn"
+                   >Roman Scherer</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>I asked the Common Lisper's for some input over here:</p><p><a href="https://groups.google.com/forum/?hl=en&amp;fromgroups#!topic/comp.lang.lisp/x2k3XbW3LmA" class="external-link" rel="nofollow">https://groups.google.com/forum/?hl=en&amp;fromgroups#!topic/comp.lang.lisp/x2k3XbW3LmA</a></p><p>Elias Mårtenson responded to one of my questions on<br />comp.alt.lisp. Here's what he wrote:</p><p style="margin-left: 30.0px;">I can address one of the quest, whether they are better<br /> implemented as a macro. The answer to this is clearly no. In<br /> fact, it couldn't be implemented as a macro, because at the time<br /> the macro is evaluated, the symbols making up the expression has<br /> already been interned by the reader. Thus, if the form references<br /> any packages that does not exist in your environment, you would<br /> get an error in the reader, before your conditional expression<br /> has had the chance to run.</p><p>A somehow related thread I found on this topic is here:</p><p><a href="https://groups.google.com/forum/?hl=en&amp;fromgroups#!topic/comp.lang.lisp/CBB4hzqRCS8" class="external-link" rel="nofollow">https://groups.google.com/forum/?hl=en&amp;fromgroups#!topic/comp.lang.lisp/CBB4hzqRCS8</a></p><p>What are the next steps?</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Feature+Expressions-focusedCommentId=5243114.html#comment-5243114"
+                id="comment-permalink-5243114"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Feature+Expressions-focusedCommentId=5243114.html#comment-5243114"
+    dc:identifier="Feature+Expressions-focusedCommentId=5243114.html#comment-5243114"
+    dc:title="Feature Expressions"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/5243114"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-5243115" class="comment-thread">
+                                <div class="comment  " id="comment-5243115">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: hiredman" title="hiredman">                </p>
+                <p class="date" title="Aug 01, 2012 11:03">
+                    Aug 01, 2012
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~hiredman.html"
+                          class="url fn"
+                   >Kevin Downey</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>I would be careful conflating those issues with common lisp with clojure. clojure's reader is not the same as common lisp's and clojure's symbols are not the same as common lisp's. I think the only part of the clojure reader that has those kind of issues in syntax quote, which tries to resolve classes.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Feature+Expressions-focusedCommentId=5243115.html#comment-5243115"
+                id="comment-permalink-5243115"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Feature+Expressions-focusedCommentId=5243115.html#comment-5243115"
+    dc:identifier="Feature+Expressions-focusedCommentId=5243115.html#comment-5243115"
+    dc:title="Feature Expressions"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/5243115"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-5767188" class="comment-thread">
+                                <div class="comment  " id="comment-5767188">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: brandon@brandonbloom.name" title="brandon@brandonbloom.name">                </p>
+                <p class="date" title="Aug 25, 2012 20:41">
+                    Aug 25, 2012
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~brandon@brandonbloom.name.html"
+                          class="url fn"
+                   >Brandon Bloom</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>Kevin is right. Try this out, it works:</p><p> </p><p>(def ^:dynamic *features* #{'clojure})</p><p>(defmacro feature-cond [&amp; exprs]<br /> `~(-&gt; (filter (fn [[feature expr]]<br /> (contains? *features* feature))<br /> (partition 2 exprs))<br /> first<br /> second))</p><p>(feature-cond<br /> clojure (def x 1)<br /> clojurescript (def y 2))</p><p>(feature-cond<br /> clojurescript (* y 3)<br /> clojure (* x 3))</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Feature+Expressions-focusedCommentId=5767188.html#comment-5767188"
+                id="comment-permalink-5767188"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Feature+Expressions-focusedCommentId=5767188.html#comment-5767188"
+    dc:identifier="Feature+Expressions-focusedCommentId=5767188.html#comment-5767188"
+    dc:title="Feature Expressions"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/5767188"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                                </ol>
+                        </li>
+                                </ol>
+                        </li>
+                        <li id="comment-thread-5243116" class="comment-thread">
+                                <div class="comment  " id="comment-5243116">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: hugoduncan" title="hugoduncan">                </p>
+                <p class="date" title="Aug 02, 2012 10:44">
+                    Aug 02, 2012
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~hugoduncan.html"
+                          class="url fn"
+                   >Hugo Duncan</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>I would like to see the feature system being open to use by libraries. In pallet, we recently introduced features to be able to write providers that work with multiple versions of pallet, and I think it would make sense to replace this with whatever feature system ends up in clojure.</p><p>The current proposal seems to support this, but it would be good to clarify this as a requirement of the feature system.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Feature+Expressions-focusedCommentId=5243116.html#comment-5243116"
+                id="comment-permalink-5243116"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Feature+Expressions-focusedCommentId=5243116.html#comment-5243116"
+    dc:identifier="Feature+Expressions-focusedCommentId=5243116.html#comment-5243116"
+    dc:title="Feature Expressions"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/5243116"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-5243118" class="comment-thread">
+                                <div class="comment  " id="comment-5243118">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: brandon@brandonbloom.name" title="brandon@brandonbloom.name">                </p>
+                <p class="date" title="Aug 05, 2012 00:08">
+                    Aug 05, 2012
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~brandon@brandonbloom.name.html"
+                          class="url fn"
+                   >Brandon Bloom</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>Again, if 'features (or whatever it is called) is a map, then you might be able to do something like (load-file (str &quot;foo/&quot; (:dialect features) &quot;.clj&quot;)) or something like that... That wouldn't be possible as a bit-flag set.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Feature+Expressions-focusedCommentId=5243118.html#comment-5243118"
+                id="comment-permalink-5243118"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Feature+Expressions-focusedCommentId=5243118.html#comment-5243118"
+    dc:identifier="Feature+Expressions-focusedCommentId=5243118.html#comment-5243118"
+    dc:title="Feature Expressions"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/5243118"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                                </ol>
+                        </li>
+                        <li id="comment-thread-5767183" class="comment-thread">
+                                <div class="comment  " id="comment-5767183">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: stu" title="stu">                </p>
+                <p class="date" title="Aug 23, 2012 07:34">
+                    Aug 23, 2012
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~stu.html"
+                          class="url fn"
+                   >Stuart Halloway</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>What problems, if any, could this change cause for existing code? Obviously pre-feature-expression code will be unable to read the forms. In particular:</p><ul><li>1.4 Clojure and ClojureScript fail to read feature expressions, thinking they are tagged literals with no handler</li><li>pre-1.4 Clojure fails with a ClassNotFoundException</li></ul>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Feature+Expressions-focusedCommentId=5767183.html#comment-5767183"
+                id="comment-permalink-5767183"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Feature+Expressions-focusedCommentId=5767183.html#comment-5767183"
+    dc:identifier="Feature+Expressions-focusedCommentId=5767183.html#comment-5767183"
+    dc:title="Feature Expressions"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/5767183"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-5767194" class="comment-thread">
+                                <div class="comment  " id="comment-5767194">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: hiredman" title="hiredman">                </p>
+                <p class="date" title="Aug 26, 2012 02:55">
+                    Aug 26, 2012
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~hiredman.html"
+                          class="url fn"
+                   >Kevin Downey</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>feature-cond above would be readable in previous versions of clojure, and even other lisps for whatever that is worth.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Feature+Expressions-focusedCommentId=5767194.html#comment-5767194"
+                id="comment-permalink-5767194"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Feature+Expressions-focusedCommentId=5767194.html#comment-5767194"
+    dc:identifier="Feature+Expressions-focusedCommentId=5767194.html#comment-5767194"
+    dc:title="Feature Expressions"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/5767194"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                                </ol>
+                        </li>
+                        <li id="comment-thread-6390066" class="comment-thread">
+                                <div class="comment  " id="comment-6390066">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: brandon@brandonbloom.name" title="brandon@brandonbloom.name">                </p>
+                <p class="date" title="Mar 06, 2013 09:34">
+                    Mar 06, 2013
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~brandon@brandonbloom.name.html"
+                          class="url fn"
+                   >Brandon Bloom</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>What if we provided read-time variants of unquote and unquote-splicing?</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[(defn my-trim [s]
+  #~(case (:dialect *clojure-version*)
+       :clojure '(.. s toString trim)
+       :clojurescript '(gstring/trim s)))]]></script>
+</div></div><p>Here's a splicing example:</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[#~@(when (= (:dialect *clojure-version*) :clojurescript)
+     '[(defn a-cljs-only-fn [] ...)])]]></script>
+</div></div><p>The code inside the #~ and #~@ forms would be run at read-time and subject to *read-eval*. This gives you the full power of Clojure for conditional compilation at read time. We could provide some standard function and macro utilities for conditional compilation that are available both at read and macro expansion time. Allowing for something like:</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[(some-macro-that-expects-a-symbol
+  #~(feature-cond
+      :clojure 'foo 
+      :clojurescript 'bar))
+
+(some-other-macro-that-will-just-recursively-expand
+  (feature-cond
+    :clojure 'foo
+    :clojurescript 'bar))]]></script>
+</div></div><p>This proposal gives you the full power of Clojure for controlling conditional reading and compilation without adding dramatically new ideas (it's basically just syntax-quote at read-time).</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Feature+Expressions-focusedCommentId=6390066.html#comment-6390066"
+                id="comment-permalink-6390066"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Feature+Expressions-focusedCommentId=6390066.html#comment-6390066"
+    dc:identifier="Feature+Expressions-focusedCommentId=6390066.html#comment-6390066"
+    dc:title="Feature Expressions"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/6390066"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-8192077" class="comment-thread">
+                                <div class="comment  " id="comment-8192077">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: bendlas" title="bendlas">                </p>
+                <p class="date" title="May 06, 2013 14:37">
+                    May 06, 2013
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~bendlas.html"
+                          class="url fn"
+                   >Herwig Hochleitner</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>I love the consistency and minimalism of this approach.</p><p>One Issue however: It probably won't be possible to read-splice on the toplevel. Consider: What should (read-str &quot;#~@(range 5)&quot;) yield?</p><p>I'm still +1 on this one and just forbid toplevel splices.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Feature+Expressions-focusedCommentId=8192077.html#comment-8192077"
+                id="comment-permalink-8192077"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Feature+Expressions-focusedCommentId=8192077.html#comment-8192077"
+    dc:identifier="Feature+Expressions-focusedCommentId=8192077.html#comment-8192077"
+    dc:title="Feature Expressions"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/8192077"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                                        <li id="comment-thread-8192085" class="comment-thread">
+                                <div class="comment  " id="comment-8192085">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: hiredman" title="hiredman">                </p>
+                <p class="date" title="May 08, 2013 14:04">
+                    May 08, 2013
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~hiredman.html"
+                          class="url fn"
+                   >Kevin Downey</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>have you looked at what it would take to allow the reader to splice in forms at any point? with syntax quote it is a little easier because the expression has to be synax quoted to begin with before you can splice in to it.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Feature+Expressions-focusedCommentId=8192085.html#comment-8192085"
+                id="comment-permalink-8192085"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Feature+Expressions-focusedCommentId=8192085.html#comment-8192085"
+    dc:identifier="Feature+Expressions-focusedCommentId=8192085.html#comment-8192085"
+    dc:title="Feature Expressions"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/8192085"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-8192090" class="comment-thread">
+                                <div class="comment  " id="comment-8192090">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: bbloom" title="bbloom">                </p>
+                <p class="date" title="May 09, 2013 15:32">
+                    May 09, 2013
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~bbloom.html"
+                          class="url fn"
+                   >Brandon Bloom</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>I guess at the top level, a splice would just assume an implicit &quot;do&quot;.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Feature+Expressions-focusedCommentId=8192090.html#comment-8192090"
+                id="comment-permalink-8192090"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Feature+Expressions-focusedCommentId=8192090.html#comment-8192090"
+    dc:identifier="Feature+Expressions-focusedCommentId=8192090.html#comment-8192090"
+    dc:title="Feature Expressions"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/8192090"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-8192091" class="comment-thread">
+                                <div class="comment  " id="comment-8192091">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: hiredman" title="hiredman">                </p>
+                <p class="date" title="May 09, 2013 17:07">
+                    May 09, 2013
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~hiredman.html"
+                          class="url fn"
+                   >Kevin Downey</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>the top level is the easiest case though, the gnarly cases are splicing in to nested data structures, that may be spliced together themselves.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Feature+Expressions-focusedCommentId=8192091.html#comment-8192091"
+                id="comment-permalink-8192091"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Feature+Expressions-focusedCommentId=8192091.html#comment-8192091"
+    dc:identifier="Feature+Expressions-focusedCommentId=8192091.html#comment-8192091"
+    dc:title="Feature Expressions"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/8192091"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-8192093" class="comment-thread">
+                                <div class="comment  " id="comment-8192093">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: bbloom" title="bbloom">                </p>
+                <p class="date" title="May 09, 2013 17:11">
+                    May 09, 2013
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~bbloom.html"
+                          class="url fn"
+                   >Brandon Bloom</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>Oh, I though you were asking with respect to Herwig's comment.</p><p>Doesn't syntax quote already have this problem? Try `{1 ~@(list 2 3 4)} for example. You can do that, but you can't do `{1 2 ~@(list 3 4)}</p><p>Seems like a separate issue all together.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Feature+Expressions-focusedCommentId=8192093.html#comment-8192093"
+                id="comment-permalink-8192093"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Feature+Expressions-focusedCommentId=8192093.html#comment-8192093"
+    dc:identifier="Feature+Expressions-focusedCommentId=8192093.html#comment-8192093"
+    dc:title="Feature Expressions"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/8192093"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-8192094" class="comment-thread">
+                                <div class="comment  " id="comment-8192094">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: hiredman" title="hiredman">                </p>
+                <p class="date" title="May 09, 2013 17:20">
+                    May 09, 2013
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~hiredman.html"
+                          class="url fn"
+                   >Kevin Downey</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>syntax quote at least can limit the scope of splicing and unsplicing to syntax quoted forms. if any recursive call to read can (some how?) returning multiple values I think the entire reader would be much more complex. I have no evidence of that, which is what I asked if you had looked in to what it would take.</p><p>I have no doubt it is possible to do, I just don't thing I'd care for the result</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Feature+Expressions-focusedCommentId=8192094.html#comment-8192094"
+                id="comment-permalink-8192094"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Feature+Expressions-focusedCommentId=8192094.html#comment-8192094"
+    dc:identifier="Feature+Expressions-focusedCommentId=8192094.html#comment-8192094"
+    dc:title="Feature Expressions"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/8192094"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-8192331" class="comment-thread">
+                                <div class="comment  " id="comment-8192331">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: bbloom" title="bbloom">                </p>
+                <p class="date" title="Jun 22, 2013 14:45">
+                    Jun 22, 2013
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~bbloom.html"
+                          class="url fn"
+                   >Brandon Bloom</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>Syntax quote also has this same problem:</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[user=&gt; `~@[1 2 3]
+IllegalStateException splice not in list clojure.lang.LispReader$SyntaxQuoteReader.syntaxQuote (LispReader.java:825)]]></script>
+</div></div><p><span style="font-size: 10.0pt;line-height: 13.0pt;">It would be trivial to mimic that behavior with reader-level syntax quoting.</span></p><p><span style="font-size: 10.0pt;line-height: 13.0pt;">Alternatively, you could just return the splice form unmodified, as if quoted. Consider the Sequence form in Mathematica, which is basically clojure.core/unquote-splicing:</span></p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[In[1]:= Sequence[5, 10]
+Out[1]= Sequence[5, 10]
+
+In[2]:= f[Sequence[5, 10]]
+Out[2]= f[5, 10]]]></script>
+</div></div><p>Since expansion is resolved from the inside out, returning a splice form would be a sensible thing to do in a nested quoting scenario.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Feature+Expressions-focusedCommentId=8192331.html#comment-8192331"
+                id="comment-permalink-8192331"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Feature+Expressions-focusedCommentId=8192331.html#comment-8192331"
+    dc:identifier="Feature+Expressions-focusedCommentId=8192331.html#comment-8192331"
+    dc:title="Feature Expressions"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/8192331"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                                </ol>
+                        </li>
+                                </ol>
+                        </li>
+                                </ol>
+                        </li>
+                                </ol>
+                        </li>
+                                </ol>
+                        </li>
+                                </ol>
+                        </li>
+                        <li id="comment-thread-8192092" class="comment-thread">
+                                <div class="comment  " id="comment-8192092">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: hiredman" title="hiredman">                </p>
+                <p class="date" title="May 09, 2013 17:10">
+                    May 09, 2013
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~hiredman.html"
+                          class="url fn"
+                   >Kevin Downey</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>pushing conditionals in to the reader does not save us from requiring the code to be readable on all platforms. it has to be readable for the reader to even recognize it as a form to throw away</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Feature+Expressions-focusedCommentId=8192092.html#comment-8192092"
+                id="comment-permalink-8192092"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Feature+Expressions-focusedCommentId=8192092.html#comment-8192092"
+    dc:identifier="Feature+Expressions-focusedCommentId=8192092.html#comment-8192092"
+    dc:title="Feature Expressions"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/8192092"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                        <li id="comment-thread-8192107" class="comment-thread">
+                                <div class="comment  " id="comment-8192107">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: bendlas" title="bendlas">                </p>
+                <p class="date" title="May 11, 2013 21:36">
+                    May 11, 2013
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~bendlas.html"
+                          class="url fn"
+                   >Herwig Hochleitner</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <blockquote><p>if any recursive call to read can (some how?) returning multiple values I think the entire reader would be much more complex.</p></blockquote><p>I guess recursive invokations of read could be replaced with read-seq-of-forms + concat et al.</p><p>That would buy us read-splice, but: Is it worth the performance cost? If yes, should read-seq-of-forms be made public?</p><blockquote><p>I guess at the top level, a splice would just assume an implicit &quot;do&quot;.</p></blockquote><p>I'm kind of meh on (= (read-str &quot;#~@(range 5)&quot;) '(do 1 2 3 4 5))</p><p>If I want a do, I'll write (a regular form generating) it. `~@ sets a nice precedent.</p><p>Those complications make me wonder if #~@ serves any conceivable purpose, that #~ together `(~@) can't (or shouldn't) serve.</p><blockquote><p><span>pushing conditionals in to the reader does not save us from requiring the code to be readable on all platforms. it has to be readable for the reader to even recognize it as a form to throw away</span></p></blockquote><p><span>True, this should be an intended design constraint. We want to have the same basic clojure syntax on every platform, i.e. a very small superset of edn, right?</span></p><p>The reason we even need conditionals in the reader is that the reader already does some possibly platform-dependent side-effects, i.e. reader tags, defrecord instances and friends.</p><h6 id="FeatureExpressions-SoletsjustKISSthesyntacticconsiderationsgoodbyeforamoment">So let's just KISS the syntactic considerations goodbye for a moment:</h6><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[(ns foo
+  #platform ^:clojurescript ^:jvm (:require ....)
+  ...)
+
+(defn performance-sensitive [x y z]
+  #platform ^{:jit false} (emit-unrolled-loops ...)
+  #platform ^:jit (emit-small-code size)
+
+;; flags recognized by #platform would ANDed implicitly, e.g.]]></script>
+</div></div><p>That gets us to the real meat of the problem:</p><p>Say we have:</p><div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<script type="syntaxhighlighter" class="theme: Confluence; brush: java; gutter: false"><![CDATA[#platform ^:raspberry (do some #asm ^:arm [[ins f o o] [add 1 2]])]]></script>
+</div></div><h6 id="FeatureExpressions-Undercurrentreaderruleswouldtheplatformtaghaveachancetoremovetheformbeforethereadertriedtoapplytheasmtag">Under current reader rules, would the #platform tag have a chance to remove the form before the reader tried to apply the #asm tag?</h6><p>I suspect that's not the case, which makes me wonder if it's worth changing the reader to allow reader tags to omit reader tags from their child form. This would imply the ability to generate new reader tags (and other reader side effects) in code a reader tag emits.</p><p>I also suspect that if we try to just allocate a couple of new reader table characters  and work downwards from there, we will end up with pretty much the same code it would take to apply reader tags in a second pass, except it would be less general purpose.</p><p>We still might not want to expose it through reader tags, since it would alter their semantics on the input side. Opinions on this one?</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Feature+Expressions-focusedCommentId=8192107.html#comment-8192107"
+                id="comment-permalink-8192107"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Feature+Expressions-focusedCommentId=8192107.html#comment-8192107"
+    dc:identifier="Feature+Expressions-focusedCommentId=8192107.html#comment-8192107"
+    dc:title="Feature Expressions"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/8192107"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                        <li id="comment-thread-9928713" class="comment-thread">
+                                <div class="comment  " id="comment-9928713">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: colinfleming" title="colinfleming">                </p>
+                <p class="date" title="Oct 07, 2014 20:53">
+                    Oct 07, 2014
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~colinfleming.html"
+                          class="url fn"
+                   >Colin Fleming</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>This proposal additionally adds a lot of complexity to tools which work on unexpanded source, such as Cursive. In particular, with complicated conditional feature expressions it may no longer be possible to accurately identify which language a particular form is written in. Admittedly this is already a problem with CLJS macros, the only way to tell if the body of a syntax-quote block in a macro is Clojure or CLJS is to look at where the macro is actually used - I'd definitely welcome any steps to make that easier to test.</p><p>This isn't just applicable to Cursive, any tool which interacts with a debugger and allows breakpoints to be set will need to know the language of a particular line, since Javascript breakpoints will almost certainly be managed differently to JVM ones.</p><p>The lack of an explicit extension for mixed-mode files means that all tooling will have to assume that all Clojure files might potentially be treated as CLJS or code for any other platform - this hugely complicates things like completion and documentation lookup since docstrings may differ for a particular form across platforms. Currently things like numeric operators are functions in Clojure, and both functions and macros in CLJS. Identifying which the user is referring to is already complicated but with this change will be considerably more difficult. I much prefer the patch style system proposed by <span class="url fn confluence-userlink userlink-5">Timothy Baldridge</span> where code is contained in platform specific files and combined somehow - this does sound like it would create a lot more code duplication, though.</p><p>I'd also like to ensure that the implementation will still maintain line/column information accurately, as CLJX currently does. I assume that's fairly easy, at least with the read time proposal.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="Feature+Expressions-focusedCommentId=9928713.html#comment-9928713"
+                id="comment-permalink-9928713"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="Feature+Expressions-focusedCommentId=9928713.html#comment-9928713"
+    dc:identifier="Feature+Expressions-focusedCommentId=9928713.html#comment-9928713"
+    dc:title="Feature Expressions"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/9928713"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                </ol>
+    
+    </div>
+
+
+            
+</div>
+
+
+    
+
+
+
+    
+    
+
+    
+    
+    
+
+
+    
+
+
+
+    <br class="clear">
+</div>
+  
+    </div>
+</div>
+
+<div id="footer">
+                                                <p class="license license-opensource">
+                  Powered by a free <b>Atlassian Confluence Open Source Project License</b> granted to Clojure. <a href="http://www.atlassian.com/c/conf/11461">Evaluate Confluence today</a>.<br>
+                </p>
+                        
+    <ul id="poweredby">
+        <li class="noprint">Powered by <a href="http://www.atlassian.com/software/confluence" class="hover-footer-link">Atlassian Confluence</a> <span id='footer-build-information'>4.0</span>, the <a href="http://www.atlassian.com/software/confluence/tour/enterprise-wiki.jsp" class="hover-footer-link">Enterprise Wiki</a></li>
+        <li class="print-only">Printed by Atlassian Confluence 4.0, the Enterprise Wiki.</li>        
+        <li class="noprint"> &nbsp; |&nbsp; <a href="http://jira.atlassian.com/secure/BrowseProject.jspa?id=10470" class="hover-footer-link">Report a bug</a></li>
+        <li class="noprint"> &nbsp;|&nbsp; <a href="http://www.atlassian.com/about/connected.jsp?s_kwcid=Confluence-stayintouch" class="hover-footer-link">Atlassian News</a></li>
+    </ul>
+
+    
+
+            <div><span style="">Site support by</span><a href="http://contegix.com"> <img style="vertical-align:middle" src="../../download/attachments/459015/contegix.jpg.html"/></a></div>
+    </div></div>
+</body>
+</html>

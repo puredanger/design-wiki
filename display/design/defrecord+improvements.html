@@ -1,0 +1,2100 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>defrecord improvements - Clojure Design - Clojure Development</title>
+
+        
+
+                        
+    
+
+            <meta http-equiv="X-UA-Compatible" content="IE=EDGE">
+<meta charset="UTF-8">
+<!-- Deprecated since 3.4. To be removed in a future version of Confluence; use AJS.Confluence.getContextPath() -->
+<meta id="confluence-context-path" name="confluence-context-path" content="">
+<meta id="confluence-base-url" name="confluence-base-url" content="https://dev.clojure.org">
+
+<meta id="atlassian-token" name="atlassian-token" content="30041c830a95ce9c95d0b58cb377def6b96aa6d2">
+
+<meta id="confluence-space-key" name="confluence-space-key" content="design">
+<script type="text/javascript">
+    // Deprecated global variables. To be removed in a future version of Confluence.
+    var contextPath = '';
+</script>
+
+    
+
+<!-- include system css resources -->
+
+
+    <link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/55/_/download/superbatch/css/batch.css" media="all">
+<!--[if lt IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/_/download/superbatch/css/batch.css?conditionalComment=lt+IE+9" media="all">
+<![endif]-->
+<!--[if IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/_/download/superbatch/css/batch.css?conditionalComment=IE+9" media="all">
+<![endif]-->
+<!--[if lte IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/_/download/superbatch/css/batch.css?conditionalComment=lte+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/55/_/download/superbatch/css/batch-media=print.css" media="print">
+<!--[if lt IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/_/download/contextbatch/css/page/batch.css?conditionalComment=lt+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/_/download/contextbatch/css/page/batch.css" media="all">
+<!--[if lt IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/_/download/contextbatch/css/viewcontent,main/batch.css?conditionalComment=lt+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/_/download/contextbatch/css/viewcontent,main/batch.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.1/_/download/batch/com.atlassian.confluence.plugins.pagetree-pagetree-resources/com.atlassian.confluence.plugins.pagetree-pagetree-resources.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/3/_/styles/colors-spaceKey=design.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.5/_/download/resources/com.atlassian.confluence.plugins.doctheme-documentation/default-theme.css" media="all">
+<link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.5/_/download/resources/com.atlassian.confluence.plugins.doctheme-documentation/splitter.css" media="all">
+
+<!-- end system css resources -->
+
+    <meta name="confluence-request-time" content="1556129431075">
+            <meta name="ajs-page-id" content="950804">
+            <meta name="ajs-parent-page-id" content="8192232">
+            <meta name="ajs-space-key" content="design">
+            <meta name="ajs-space-name" content="Clojure Design">
+            <meta name="ajs-page-title" content="defrecord improvements">
+            <meta name="ajs-parent-page-title" content="Release 1.3">
+            <meta name="ajs-from-page-title" content="">
+            <meta name="ajs-context-path" content="">
+            <meta name="ajs-version-number" content="4.0">
+            <meta name="ajs-build-number" content="3047">
+            <meta name="ajs-remote-user" content="">
+            <meta name="ajs-static-resource-url-prefix" content="/s/en_GB/3047/3/_">
+            <meta name="ajs-global-settings-attachment-max-size" content="10485760">
+            <meta name="ajs-user-locale" content="en_GB">
+            <meta name="ajs-enabled-dark-features" content="">
+            <meta name="ajs-atl-token" content="30041c830a95ce9c95d0b58cb377def6b96aa6d2">
+            
+            <meta name="ajs-keyboardshortcut-hash" content="7b95af54c6deada096af1f28fdd0f413">
+            <meta name="ajs-use-keyboard-shortcuts" content="true">
+    <!-- Deprecated since 3.4. To be removed in a future version of Confluence; use atl.header -->
+        
+            <script type="text/x-template" title="share-content-popup">
+    <form action="#" method="post" class="aui share-content-popup">
+        <fieldset>
+            <label for="users">User name or email</label>
+            <div class="autocomplete-user-target">
+                <input class="text autocomplete-sharepage" id="users" data-max="10" data-dropdown-target=".autocomplete-user-target" data-none-message="No matching user or email found"/>
+            </div>
+            <ol class="recipients">
+            </ol>
+            <div><label for="note">Note</label></div>
+            <textarea class="textarea" id="note" placeholder="Add an optional note"/>
+        </fieldset>
+        <div class="button-panel">
+            <div class="progress-messages-icon"></div>
+            <div class="progress-messages">
+            </div>
+            <input class="button submit" type="submit" value="Share" disabled/>
+            <a class="close-dialog" href="#">Cancel</a>
+        </div>
+    </form>
+</script>
+
+<script type="text/x-template" title="share-content-popup-recipient-username">
+    <li data-username="{username}" style="display: none">
+        <span>
+            <img src="{thumbnailLink.href}" title="{title}">
+            <span>{title}</span>
+            <span class="remove-recipient"/>
+        </span>
+    </li>
+</script>
+
+<script type="text/x-template" title="share-content-popup-recipient-email">
+    <li data-email="{email}" style="display: none">
+        <span>
+            <img src="{icon}" title="{email}">
+            <span>{email}</span>
+            <span class="remove-recipient"/>
+        </span>
+    </li>
+</script>
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="icon" type="image/png" href="../../s/en_GB/3047/3/_/images/logo/confluence_16.png">
+
+<link rel="search" type="application/opensearchdescription+xml" href="../../opensearch/osd.action.xml" title="Clojure Development"/>
+
+        <!-- include system javascript resources -->
+                        
+    
+    <script type="text/javascript" src="../../s/en_GB/3047/3/55/_/download/superbatch/js/batch.js" ></script>
+<!--[if lte IE 8]>
+<script type="text/javascript" src="/s/en_GB/3047/3/55/_/download/superbatch/js/batch.js?conditionalComment=lte+IE+8" ></script>
+<![endif]-->
+<script type="text/javascript" src="../../s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/_/download/contextbatch/js/page/batch.js" ></script>
+<script type="text/javascript" src="../../s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/_/download/contextbatch/js/viewcontent,main/batch.js" ></script>
+<script type="text/javascript" src="../../s/en_GB/3047/3/2.0.1/_/download/batch/com.atlassian.confluence.plugins.pagetree-pagetree-resources/com.atlassian.confluence.plugins.pagetree-pagetree-resources.js" ></script>
+
+    
+    <!-- end system javascript resources -->
+
+    
+
+    
+    <link rel="canonical" href="defrecord+improvements.html">
+    <link rel="shortlink" href="defrecord+improvements.html">
+    <meta name="wikilink" content="[design:defrecord improvements]">
+    <meta name="page-version" content="22">
+
+</head>
+
+<body             onload="placeFocus()"
+     id="com-atlassian-confluence" class="theme-documentation ">
+<div id="full-height-container">
+    <div id="header-precursor">
+        
+        
+                </div>
+
+<div id="header" class="sectionbottom ">
+        <form id="quick-search" class="quick-search" method="get" action="../../dosearchsite.action.html">
+                <fieldset>
+            <input type="hidden" name="spaceSearch" value="false"/>
+        </fieldset>
+        <fieldset>
+            <legend>Quick Search</legend>
+            <input class="quick-search-query" id="quick-search-query" type="text" accessKey="search-pages-action.accesskey" autocomplete="off" name="queryString" size="25"/>
+            <input class="quick-search-submit" id="quick-search-submit" type="submit"  value="Search Confluence" />
+            <div class="aui-dd-parent quick-nav-drop-down"><!-- Quick nav appears here --></div>
+        </fieldset>
+        <fieldset class="hidden parameters">
+            <input type="hidden" id="quickNavEnabled" value="true" />
+                    </fieldset>
+    </form>
+
+    <ul id="header-menu-bar" class="ajs-menu-bar">
+                    
+        
+            <li class="normal ajs-menu-item">
+        <a id="browse-menu-link" class="browse trigger ajs-menu-title" href="#"><span><span>Browse</span></span></a>         <div class="assistive ajs-drop-down">
+                        <ul  id="browse-menu-link-leading"                 class="section-leading first">
+                                        <li>
+    
+        
+    
+    <a  id="space-pages-link" href="../../pages/recentlyupdated.action-key=design.html"  class=""   title="Browse pages in the Clojure Design space">
+                   <span>Pages</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-blogposts-link" href="../../pages/viewrecentblogposts.action-key=design.html"  class=""   title="Browse blogs in the Clojure Design space">
+                   <span>Blog</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-labels-link" href="../../labels/listlabels-heatmap.action-key=design.html"  class=""   title="Browse labels in the Clojure Design space">
+                   <span>Labels</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-attachments-link" href="../../spaces/listattachmentsforspace.action-key=design.html"  class=""   title="Browse attachments in the Clojure Design space">
+                   <span>Attachments</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-mail-link" href="../../spaces/viewmailarchive.action-key=design.html"  class=""   title="Browse mail in the Clojure Design space">
+                   <span>Mail</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-advanced-link" href="../../spaces/viewspacesummary.action-key=design.html"  class=""   title="Browse additional space functions in the Clojure Design space">
+                   <span>Advanced</span></a>        </li>
+                            </ul>
+                        <ul  id="browse-menu-link-global"                 class="section-global">
+                                        <li>
+    
+        
+    
+    <a  id="whats-new-menu-link" href="http://docs.atlassian.com/confluence/docs-40/whatsnew/iframe"  class=""   title="">
+                   <span>What’s New</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-directory-link" href="../../spacedirectory/view.action.html"  class=""   title="Browse the Confluence space directory">
+                   <span>Space Directory</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="feed-builder-link" href="../../dashboard/configurerssfeed.action.html"  class=""   title="Create your custom RSS feed.">
+                   <span>Feed Builder</span></a>        </li>
+                                        <li>
+    
+            
+    
+    <a  id="keyboard-shortcuts-link" href="#"  class=""   title="View available keyboard shortcuts">
+                   <span>Keyboard Shortcuts</span></a>        </li>
+                                        <li>
+    
+            
+    
+    <a  id="gadget-directory-link" href="#"  class="user-item administration-link"   title="Browse gadgets provided by Confluence">
+                   <span>Confluence Gadgets</span></a>        </li>
+                            </ul>
+                    </div>
+    </li>
+        
+                                                         <li class="ajs-menu-item normal">
+        
+        
+    
+    <a  id="login-link" href="https://dev.clojure.org/login.action?os_destination=%2Fdisplay%2Fdesign%2Fdefrecord%2Bimprovements"  class="user-item login-link"   title="">
+                   <span>Log In</span></a>        </li>
+                            <li class="ajs-menu-item normal">
+    
+        
+    
+    <a  id="signup-link" href="../../signup.action.html"  class="user-item signup-link"   title="">
+                   <span>Sign Up</span></a>        </li>
+                                <li class="normal ajs-menu-item">
+            <div id="splitter-button" class="hidden" title="Show or hide sidebar"></div>
+        </li>
+
+    </ul>
+    
+    
+    <ol id="breadcrumbs">
+                    
+                        
+        <li class="first" >
+                                    <span><a href="../../dashboard.action.html" title="Go to Dashboard">Dashboard</a></span>
+                </li>
+                    
+                
+        <li>
+                                    <span><a href="Home-jsessionid=3A56E29DA520B75101350BA4484B9990.html">Clojure Design</a></span>
+                </li>
+                                        <li id="ellipsis" title="Show all breadcrumbs"><span><strong>&#8230;</strong></span></li>
+                                    
+                
+        <li class="hidden-crumb" >
+                                    <span><a href="Home.html">Home</a></span>
+                </li>
+                                
+                
+        <li class="hidden-crumb" >
+                                    <span><a href="Release+Planning.html">Release Planning</a></span>
+                </li>
+                                
+                
+        <li class="hidden-crumb" >
+                                    <span><a href="Release+1.3.html">Release 1.3</a></span>
+                </li>
+                    
+                
+        <li>
+                                    <span><a href="defrecord+improvements.html">defrecord improvements</a></span>
+                </li>
+        </ol>
+
+</div>
+
+    <div id="splitter">
+    <div id="splitter-sidebar" >
+        
+
+                    
+        
+    
+
+<div class="plugin_pagetree">
+
+                <div id="pagetreesearch">
+            <form method="POST" action="../../dosearchsite.action-searchQuery.queryString=&amp;searchQuery.spaceKey=conf_all.html" name="pagetreesearchform">
+                                    <input type="hidden" name="ancestorId" value="458775">
+                                <input type="hidden" name="spaceKey" value="design">
+                <input type="text"  size="20" name="queryString">
+                <input type="submit" value="Search">
+            </form>
+        </div>
+    
+        
+    <ul class="plugin_pagetree_children_list plugin_pagetree_children_list_noleftspace">
+        <div class="plugin_pagetree_children">
+        </div>
+    </ul>
+
+    <fieldset class="hidden">
+        <input type="hidden" name="treeId" value="">
+        <input type="hidden" name="treeRequestId" value="/plugins/pagetree/naturalchildren.action?decorator=none&amp;excerpt=false&amp;sort=position&amp;reverse=false&amp;disableLinks=false">
+        <input type="hidden" name="treePageId" value="950804">
+
+        <input type="hidden" name="noRoot" value="false">
+        <input type="hidden" name="rootPageId" value="458775">
+
+        <input type="hidden" name="rootPage" value="">
+        <input type="hidden" name="startDepth" value="0">
+        <input type="hidden" name="spaceKey" value="design" >
+
+        <input type="hidden" name="i18n-pagetree.loading" value="Loading...">
+        <input type="hidden" name="i18n-pagetree.error.permission" value="Unable to load page tree. It seems that you do not have permission to view the root page.">
+        <input type="hidden" name="i18n-pagetree.eeror.general" value="There was a problem retrieving the page tree. Please check the server log file for more information.">
+        <input type="hidden" name="loginUrl" value="/login.action?os_destination=%2Fdisplay%2Fdesign%2Fdefrecord%2Bimprovements">
+
+                <fieldset class="hidden">
+                                                <input type="hidden" name="ancestorId" value="8192232">
+                                    <input type="hidden" name="ancestorId" value="5767475">
+                                    <input type="hidden" name="ancestorId" value="458775">
+                                    </fieldset>
+    </fieldset>
+</div>
+
+
+
+            </div>
+    <div id="splitter-content">
+
+                    <script type="text/javascript" src="../../s/en_GB/3047/3/2.0.5/_/download/resources/com.atlassian.confluence.plugins.doctheme-resources/doc-theme.js"></script>
+    
+            
+    
+<div id="main" >
+    <div id="main-header">
+	    
+	    
+    <div id="navigation" class="content-navigation view">
+                    <ul class="ajs-menu-bar">
+                                
+                        
+            <li class="normal ajs-menu-item">
+        <a id="action-menu-link" class="action trigger ajs-menu-title" href="#"><span><span>Tools</span></span></a>         <div class="assistive ajs-drop-down">
+                        <ul  id="action-menu-link-primary"                 class="section-primary first">
+                                        <li>
+    
+        
+    
+    <a  id="view-attachments-link" href="https://dev.clojure.org/pages/viewpageattachments.action?pageId=950804"  class="action-view-attachments"  accessKey="a"  title="View Attachments">
+                   <span><u>A</u>ttachments (0)</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="action-view-history-link" href="https://dev.clojure.org/pages/viewpreviousversions.action?pageId=950804"  class="action-view-history"   title="">
+                   <span>Page History</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="action-page-permissions-link" href="https://dev.clojure.org/pages/viewinfo.action?pageId=950804"  class="action-page-permissions"   title="Edit restrictions">
+                   <span>Restrictions</span></a>        </li>
+                            </ul>
+                        <ul  id="action-menu-link-secondary"                 class="section-secondary">
+                                        <li>
+    
+        
+    
+    <a  id="view-page-info-link" href="https://dev.clojure.org/pages/viewinfo.action?pageId=950804"  class="action-view-info"   title="">
+                   <span>Info</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="link-to-page-link" href="https://dev.clojure.org/pages/viewinfo.action?pageId=950804"  class=""   title="Link to this Page">
+                   <span>Link to this Page&hellip;</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="view-in-hierarchy-link" href="../../pages/listpages-dirview.action-key=design&amp;openId=950804.html#selectedPageInHierarchy"  class=""   title="">
+                   <span>View in Hierarchy</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="action-view-source-link" href="https://dev.clojure.org/plugins/viewsource/viewpagesrc.action?pageId=950804"  class="action-view-source popup-link"   title="">
+                   <span>View Source</span></a>        </li>
+                            </ul>
+                    </div>
+    </li>
+            </ul>
+    </div>
+
+	    
+	    <h1 id="title-heading" class="pagetitle">
+	        	            <a href="Home-jsessionid=3A56E29DA520B75101350BA4484B9990.html"><img class="logo global custom" src="../../download/attachments/131074/global.logo.png" alt=""></a>	        	
+			<span id="title-text">
+							            <a href="defrecord+improvements.html">defrecord improvements</a>
+    						</span>
+	    </h1>
+	</div>
+
+    
+
+    
+    
+    
+    
+    
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+        
+    
+    
+                    
+    
+
+    
+
+
+<div id="content" class="page view">
+    
+
+
+
+                
+<script type="text/x-template" title="movePageDialog">
+    <div class="row information">
+        <div class="inner">
+            <div class="element">
+                Specify the new parent page for this page and its children by space and title.
+            </div>
+        </div>
+    </div>
+    <div class="form">
+        <fieldset>
+                
+
+    <legend class="assistive"><span>Change the Parent Page to a Known Page</span></legend>
+            <div class="row">
+                <label for="new-space">New space:</label>
+                <div class="value new-space-value">
+                    <input id="new-space-key" name="new-space-key" type="hidden" value="design">
+                                            <span class="space-input">
+                            <input id="new-space" name="new-space" value="Clojure Design" disabled="disabled">
+                        </span>
+                        <span class="description warning">You cannot move this page to another space because you do not have permission to remove it from this space.</span>
+                                        <div class="new-space-dropdown aui-dd-parent autocomplete"></div>
+                </div>
+            </div>
+            <div class="row">
+                <label for="new-parent-page">New parent page:</label>
+                <div class="value new-parent-page-value">
+                    <span class="page-input">
+                        <input id="new-parent-page" name="new-parent-page" value="Release 1.3">
+                    </span>
+                    <span class="description">Start typing a page title to see a list of suggestions.</span>
+                    <div class="new-parent-page-dropdown aui-dd-parent autocomplete"></div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <div class="location-info">
+        <div class="row">
+            <label>Current location:</label>
+            <div class="value breadcrumbs-container">
+                <div class="breadcrumbs-line">
+                    <ul id="current-parent-breadcrumbs" class="breadcrumbs">
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <label>New location:</label>
+            <div class="value breadcrumbs-container">
+                <div class="breadcrumbs-line">
+                    <ul id="new-parent-breadcrumbs" class="breadcrumbs">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/x-template" title="movePageSearchPanel">
+    <div class="row information">
+        <div class="inner">
+            <div class="element">
+                Search for and select the new parent page for this page and its children.
+            </div>
+        </div>
+    </div>
+    <div id="move-page-search-container" class="row">
+        <div class="search-form">
+            <fieldset>
+                    
+
+    <legend class="assistive"><span>Search for a New Parent Page</span></legend>
+                    
+
+    <label  for="move-page-search-query" class="assistive">Search keywords</label>
+                <input class="search-query" id="move-page-search-query">
+                    
+
+    <label  for="move-page-search-space" class="assistive">Search in space</label>
+                                    <select id="move-page-search-space" class="search-space" disabled="disabled">
+                        <option value="design" selected="selected">Clojure Design</option>
+                    </select>
+                                <input type="button" value="Search">
+                                    <div class="description warning">You cannot move this page to another space because you do not have permission to remove it from this space.</div>
+                            </fieldset>
+        </div>
+        <div class="search-results">
+        </div>
+    </div>
+</script>
+<script type="text/x-template" title="searchResultsGrid">
+    <table>
+        <thead>
+            <tr class="header">
+                <th class="search-result-title">Page Title</th>
+                <th class="search-result-space">Space</th>
+                <th class="search-result-date">Updated</th>
+            </tr>
+        </thead>
+    </table>
+</script>
+<script type="text/x-template" title="searchResultsGridCount">
+    <p class="search-result-count">{0}</p>
+</script>
+<script type="text/x-template" title="searchResultsGridRow">
+    <tr class="search-result">
+        <th class="search-result-title"><a href="{1}" class="content-type-{2}"><span>{0}</span></a></th>
+        <td class="search-result-space"><a class="space" href="/display/{4}/" title="{3}">{3}</a></td>
+        <td class="search-result-date"><span class="date" title="{6}">{5}</span></td>
+    </tr>
+</script><!-- Start restrictions section -->
+<script type="text/x-template" title="page-permissions-div">
+<div id="page-permissions-div">
+    <div id="page-permissions-editor-form">
+
+                <div id="page-permissions-error-div" class="hidden">
+            <a href="#" id="permissions-error-div-close">Ok</a>
+            <div></div>
+        </div>
+
+                <div id="page-permissions-type-radios" class="page-permissions-label-rows">
+            <div>
+                <input id="restrictViewRadio" type="radio" checked="checked" name="pagePermissionTypeRadio" value="view"/>
+                <label for="restrictViewRadio">Restrict viewing of this page</label>
+                <input id="restrictEditRadio" type="radio" name="pagePermissionTypeRadio" value="edit"/>
+                <label for="restrictEditRadio">Restrict editing of this page</label>
+            </div>
+        </div>
+        <div id="page-permissions-input" class="page-permissions-label-rows">
+            <div class="page-permissions-label">To:</div>
+            <div id="page-permissions-chooser-box">
+                                <span id="page-permissions-choose-user" class="ajs-button">
+                    
+
+
+
+    
+
+
+
+<a href="#" id='userpicker-popup-link-image' onClick="var picker = window.open('/spaces/openuserpicker.action?key=design&amp;startIndex=0&amp;onPopupSubmit=AJS.PagePermissions.addUserPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=700,height=680,scrollbars=yes'); picker.focus(); return false;"><img src="/s/en_GB/3047/3/_/images/icons/user_16.gif" height=16 width=16 border=0 align="absmiddle"  title="Choose users" /></a>
+<a href="#" id='userpicker-popup-link-text' onClick="var picker = window.open('/spaces/openuserpicker.action?key=design&amp;startIndex=0&amp;onPopupSubmit=AJS.PagePermissions.addUserPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=700,height=680,scrollbars=yes'); picker.focus(); return false;">Person...</a>
+
+
+                </span>
+                <span id="page-permissions-choose-group" class="ajs-button">
+                    
+
+
+
+    
+
+ 
+
+<a href="#" id='grouppicker-popup-link-image' onClick="var picker = window.open('/spaces/opengrouppicker.action?key=design&amp;startIndex=0&amp;actionName=dosearchgroups.action&amp;onPopupSubmit=AJS.PagePermissions.addGroupPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=580,height=550,scrollbars=yes'); picker.focus(); return false;"><img src="/s/en_GB/3047/3/_/images/icons/group_16.gif" height=16 width=16 border=0 align="absmiddle"  title="Choose groups" /></a>
+<a href="#" id='grouppicker-popup-link-text' onClick="var picker = window.open('/spaces/opengrouppicker.action?key=design&amp;startIndex=0&amp;actionName=dosearchgroups.action&amp;onPopupSubmit=AJS.PagePermissions.addGroupPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=580,height=550,scrollbars=yes'); picker.focus(); return false;">Group...</a>
+
+
+                </span>
+            </div>
+            <div id="page-permissions-input-box">
+                <input type="text" id="page-permissions-names-input" name="permissionNames"
+                    placeholder="Enter user or group name" class="autocomplete-user"
+                    data-max="10" data-none-message="No matches"
+                    data-target="#page-permissions-names-hidden" data-template="{username}"
+                    data-dropdown-target="#page-perms-name-dropdown-wrapper" data-resize-to-input="true"
+                    size="30"/>
+                <input
+    type="hidden"
+                            id="page-permissions-names-hidden"           />                <img height="16px" width="1px" src="/s/en_GB/3047/3/_/images/border/spacer.gif"/>
+                <input type="button" id="add-typed-names" value="Restrict">
+                <div id="page-perms-name-dropdown-wrapper" class="aui-dd-parent autocomplete"></div>
+            </div>
+        </div>
+    </div>
+    <div id="page-permissions-tables">
+        <div id="page-permissions-table-div">
+                        <table id="page-permissions-table" class="page-permissions-table">
+                <tr id="page-permissions-no-views" class="marker-row">
+                    <td colspan="3" class="page-permissions-marker-cell"><span>No view restrictions are defined for this page</span></td>
+                </tr>
+                <tr id="page-permissions-no-edits" class="marker-row">
+                    <td colspan="3" class="page-permissions-marker-cell"><span>No edit restrictions are defined for this page</span></td>
+                </tr>
+            </table>
+        </div>
+        <div id="page-inherited-permissions-table-div" class="hidden">
+            <span id="page-inherited-permissions-table-desc">
+                <a class="icon twisty-closed">Show/Hide</a>
+                <a id="toggle-inherited-permissions" title="Click to see inherited restrictions">This page has restricted parent pages. It can only be seen by users who can see those parent pages.</a>
+            </span>
+            <div id="page-inherited-permissions-tables" class="hidden page-inheritance-togglable"></div>
+        </div>
+    </div>
+</div>
+</script>
+
+<!-- End restrictions section -->
+
+        
+    
+    
+        <fieldset class="hidden parameters">
+            <input type="hidden" title="parentPageId" value="8192232">
+        </fieldset>
+
+        
+                            
+    
+
+                    
+
+        
+        <a href="#page-metadata-end" class="assistive">Skip to end of metadata</a>
+<div id="page-metadata-start" class="assistive"></div>
+
+    <div class="page-metadata">
+        <ul>
+                            <li class="page-metadata-item noprint">
+    
+            
+    
+    <a  id="content-metadata-page-restrictions" href="#"  class="page-metadata-icon page-restrictions hidden"   title="Page restrictions apply. Click the lock icon to view or edit the restriction.">
+                   <span>Page restrictions apply</span></a>        </li>
+                        <li class="page-metadata-modification-info">
+                                    Added by <a href="../../login.action-os_destination=-display-~stu.html"
+                          class="url fn"
+                   >Stuart Halloway</a>, last edited by <a href="../../login.action-os_destination=-display-~fogus.html"
+                          class="url fn"
+                   >Fogus</a> on Oct 04, 2011
+                                                                <span class="noprint">&nbsp;(<a id="view-change-link" href="https://dev.clojure.org/pages/diffpages.action?pageId=950804&amp;originalId=3309633">view change</a>)</span>
+                                                </li>
+                            <li class="show-hide-comment-link">
+                    <a id="show-version-comment" class="inline-control-link" href="#">show comment</a>
+                    <a id="hide-version-comment" class="inline-control-link" style="display:none;" href="#">hide comment</a>
+                </li>
+                    </ul>
+                <div id="version-comment" class="noteMacro">
+        <strong>Comment:</strong>
+        Migrated to Confluence 4.0<br />
+    </div>
+        </div>
+
+
+<a href="#page-metadata-start" class="assistive">Go to start of metadata</a>
+<div id="page-metadata-end" class="assistive"></div>
+        
+        <fieldset class="hidden parameters">
+                        <input type="hidden" title="browsePageTreeMode" value="view">
+        </fieldset>
+
+        <div class="wiki-content">
+                           <h2 id="defrecordimprovements-defrecordanddeftypeimprovementsforClojure13"><code>defrecord</code> and <code>deftype</code> improvements for Clojure 1.3</h2>
+
+<h3 id="defrecordimprovements-Motivation">Motivation</h3>
+
+<p>The Java unification of records prevents them from being first class, in either the data or fn sense:</p>
+
+<ul>
+	<li>record data is not first class
+	<ul>
+		<li>can't read/write them
+		<ul>
+			<li>crummy choice: maps are good as data, need records for protocol polymorphism</li>
+		</ul>
+		</li>
+		<li>user code cannot fix this
+		<ul>
+			<li>anything that requires EvalRead is not a fix</li>
+		</ul>
+		</li>
+	</ul>
+	</li>
+	<li>record creation is not first class
+	<ul>
+		<li>no per-record factory fn (or access to any associated fn plumbing, e.g. apply)</li>
+		<li>Clojure level use/require doesn't get you access to records</li>
+		<li>user code can mostly fix this (defrecord+factory macro)</li>
+	</ul>
+	</li>
+	<li>Symmetrically, PO Java classes are also not first class
+	<ul>
+		<li>A unified reader form would be ideal</li>
+	</ul>
+	</li>
+	<li>Reduced import complexities</li>
+</ul>
+
+
+<h3 id="defrecordimprovements-Solutions">Solutions</h3>
+
+<p><strong>For the sake of discussion, focus will revolve around example defrecords and deftypes defined as</strong></p>
+
+<div class="preformatted panel" style="border-width: 1px;"><div class="preformattedContent panelContent">
+<pre>(ns myns)
+
+(defrecord MyRecord [a b])
+(deftype MyType [a b])
+</pre>
+</div></div>
+
+<h4 id="defrecordimprovements-Semanticsofrecordsasfirstclassdata">Semantics of records as first class data</h4>
+
+<p>The semantics of record reader forms and record factory functions are defined as follows:</p>
+
+<div class="preformatted panel" style="border-width: 1px;"><div class="preformattedContent panelContent">
+<pre>(-&gt; (MyRecord. &lt;initialization value&gt; &lt;initialization value&gt;)
+    (into {:a 1, :b 2})
+    &lt;validation&gt;)
+</pre>
+</div></div>
+
+<p><em>note: The semantics illustrated above should not be taken as implementation detail. at the moment &lt;validation&gt; is undefined and should be considered a no-op.</em></p>
+
+<p>The <code>&lt;initialization value&gt;</code> refers to the same default default values for Java primitive types (as defined by type hinting on the record fields) or <code>nil</code> for instances.  For record reader forms, the keys and values must remain as constants as their semantics require that the readable form coincide with the evalable form.</p>
+
+<h4 id="defrecordimprovements-RecordandTypereaderforms">Record and Type reader forms</h4>
+
+<p>There would be two additional reader forms added to Clojure.</p>
+
+<h5 id="defrecordimprovements-Labelledrecordreaderform">Labelled record reader form</h5>
+
+<div class="preformatted panel" style="border-width: 1px;"><div class="preformattedContent panelContent">
+<pre>#myns.MyRecord{:a 1, :b 2}
+</pre>
+</div></div>
+
+<h5 id="defrecordimprovements-Positionalrecordandtypereaderforms">Positional record and type reader forms</h5>
+
+<div class="preformatted panel" style="border-width: 1px;"><div class="preformattedContent panelContent">
+<pre>#myns.MyRecord[1 2]
+</pre>
+</div></div>
+
+<p>and</p>
+
+<div class="preformatted panel" style="border-width: 1px;"><div class="preformattedContent panelContent">
+<pre>#myns.MyType[1 2]
+</pre>
+</div></div>
+
+<p>This syntax satisfies the need for a general-purpose Java class construction reader form.  However, not all Java classes are considered fully constructed after the use of their constructors.  Therefore, serialization support is not provided for any Java classes by default.  For instances such as these, Clojure will continue to provide facilities via <code>print-dup</code> in the known ways.</p>
+
+<h4 id="defrecordimprovements-Generatedfactoryfunctions">Generated factory functions</h4>
+
+<p>When defining a new defrecord, two functions will also be defined in the same namespace as the record itself.  For new deftypes, only the positional constructor outlined below is generated.</p>
+
+<h5 id="defrecordimprovements-Factoryfunctiontakingamapdefrecordonly">Factory function taking a map (<code>defrecord</code> only)</h5>
+
+<p>A factory function named <code>map-&gt;MyRecord</code> taking a map is defined by <code>defrecord</code>.</p>
+
+<div class="preformatted panel" style="border-width: 1px;"><div class="preformattedContent panelContent">
+<pre>(myns/map-&gt;MyRecord {:a 1, :b 2})
+
+;=&gt; #myns.MyRecord{:a 1, :b 2}
+</pre>
+</div></div>
+
+<h5 id="defrecordimprovements-Factoryfunctiontakingpositionalvaluesdefrecordanddeftype">Factory function taking positional values (<code>defrecord</code> and <code>deftype</code>)</h5>
+
+<p>A factory function named <code>-&gt;MyRecord</code> taking positional values (as defined by the record ctor) is also defined by <code>defrecord</code>.</p>
+
+<div class="preformatted panel" style="border-width: 1px;"><div class="preformattedContent panelContent">
+<pre>(myns/-&gt;MyRecord 1 2)
+
+;=&gt; #myns.MyRecord{:a 1, :b 2}
+</pre>
+</div></div>
+
+<p>and</p>
+
+<div class="preformatted panel" style="border-width: 1px;"><div class="preformattedContent panelContent">
+<pre>(myns/-&gt;MyType 1 2)
+
+;=&gt; #&lt;MyType myns.MyType@2ed277f2&gt;
+</pre>
+</div></div>
+
+<h4 id="defrecordimprovements-Writingrecords">Writing records</h4>
+
+<p>When writing record data for the purposes of serialization, the positional reader form is used by default:</p>
+
+<div class="preformatted panel" style="border-width: 1px;"><div class="preformattedContent panelContent">
+<pre>(binding [*print-dup* true]
+  (pr-str (MyRecord. 1 2)))
+
+;=&gt; &quot;#myns.MyRecord[1, 2]&quot;
+</pre>
+</div></div>
+
+<p>However, if you wish to use the map reader form instead, then the following would work:</p>
+
+<div class="preformatted panel" style="border-width: 1px;"><div class="preformattedContent panelContent">
+<pre>(binding [*print-dup* true
+          *verbose-defrecords* true]
+  (pr-str (MyRecord. 1 2)))
+
+;=&gt; &quot;#myns.MyRecord{:a 1, :b 2}&quot;
+</pre>
+</div></div>
+
+<p><em>note: printing forms for types are not provided by default</em></p>
+
+<h4 id="defrecordimprovements-Toolsupport">Tool support</h4>
+
+<p>Defining Clojure defrecords will also expose static class methods useable at the Java API level.  These methods are not documented with the intention of public consumption and are considered implementation details.</p>
+
+<h5 id="defrecordimprovements-Staticfactoryfordefrecords">Static factory for defrecords</h5>
+
+<p>The static factory exposed will mirror the <code>map-&gt;MyRecord</code> function:</p>
+
+<div class="preformatted panel" style="border-width: 1px;"><div class="preformattedContent panelContent">
+<pre>(MyRecord/create aMap)
+</pre>
+</div></div>
+
+<h5 id="defrecordimprovements-Basisaccess">Basis access</h5>
+
+<p>A static factory allowing access to the basis keys will also be provided:</p>
+
+<div class="preformatted panel" style="border-width: 1px;"><div class="preformattedContent panelContent">
+<pre>(MyRecord/getBasis)
+;=&gt; [a b]
+</pre>
+</div></div>
+
+<p>and</p>
+
+<div class="preformatted panel" style="border-width: 1px;"><div class="preformattedContent panelContent">
+<pre>(MyType/getBasis)
+;=&gt; [a b]
+</pre>
+</div></div>
+
+<p>The <code>getBasis</code> method will return a <code>PersistentVector</code> of <code>Symbols</code> with (potentially) attached metadata for each field.</p>
+
+
+<h2 id="defrecordimprovements-OldIdeas">Old Ideas</h2>
+
+<h3 id="defrecordimprovements-LesserProblems">Lesser Problems:</h3>
+
+<ul>
+	<li>generic factory fn
+	<ul>
+		<li>like factory fn, but generic with name</li>
+		<li>introduces weak-referencing, modularity issues, etc.</li>
+		<li>don't have a good problem statement, so ignoring this for now</li>
+		<li>which comes first: generic or specific?</li>
+	</ul>
+	</li>
+	<li>support for common creation patterns
+	<ul>
+		<li>named arguments
+		<ul>
+			<li>with more than a few slots, record construction is difficult to read</li>
+		</ul>
+		</li>
+		<li>default values
+		<ul>
+			<li>maybe needs to be a property of factory fn, not record</li>
+			<li>different factory fns can have different defaults</li>
+		</ul>
+		</li>
+		<li>validations</li>
+		<li>are the patterns truly common?</li>
+		<li>very solvable in user space, esp. if per-record factory fn available</li>
+	</ul>
+	</li>
+	<li>application code needing to know record fields
+	<ul>
+		<li>synthesizing data</li>
+		<li>creating factory fns if we don't provide them</li>
+	</ul>
+	</li>
+</ul>
+
+
+<h3 id="defrecordimprovements-Challenges">Challenges:</h3>
+
+<ul>
+	<li>how evaluative should record read/write be?
+	<ul>
+		<li>option 1: records are data++: no EvalReader needed, no non-data semantics</li>
+		<li>option 2: records are more:
+		<ul>
+			<li>maybe EvalReader required?</li>
+			<li>maybe special eval loopholes for constructor fns?</li>
+		</ul>
+		</li>
+		<li>option 1 wins</li>
+	</ul>
+	</li>
+	<li>what happens when readers and writers disagree about a record's fields?
+	<ul>
+		<li>positional approach would either fail or silently do the wrong thing</li>
+		<li>k/v approach lets you get back to the data
+		<ul>
+			<li>still on you to fix it</li>
+		</ul>
+		</li>
+	</ul>
+	</li>
+	<li>does this have be a breaking change?
+	<ul>
+		<li>data print/read: no</li>
+		<li>constructor fn: yes
+		<ul>
+			<li>any good generated name likely to collide with what people are using</li>
+		</ul>
+		</li>
+	</ul>
+	</li>
+	<li>what if defrecord is not present on the read side?
+	<ul>
+		<li>fail?</li>
+		<li>create a plan map instead
+		<ul>
+			<li>plus tag in data?</li>
+			<li>plus tag in metadata?</li>
+			<li>reify in a tagging interface</li>
+		</ul>
+		</li>
+		<li>attempt to load
+		<ul>
+			<li>no – could lead to arbitrary code injection during read</li>
+		</ul>
+		</li>
+	</ul>
+	</li>
+</ul>
+
+
+<h3 id="defrecordimprovements-SomeOptions">Some Options:</h3>
+
+<ul>
+	<li>create reader/writer positional syntax, no constructor fn
+	<ul>
+		<li>pros
+		<ul>
+			<li>easy to deliver efficiently</li>
+			<li>non-breaking</li>
+			<li>introduces no logic (user or clojure) into print/read</li>
+		</ul>
+		</li>
+		<li>cons
+		<ul>
+			<li>what happens if defrecord field count changes?</li>
+			<li>what happens if field names change?
+			<ul>
+				<li>no way to know</li>
+			</ul>
+			</li>
+		</ul>
+		</li>
+		<li>feels like a non-starter</li>
+	</ul>
+	</li>
+	<li>create reader/writer kv syntax, no constructor fn
+	<ul>
+		<li>pros
+		<ul>
+			<li>non-breaking</li>
+			<li>introduces no logic (user or Clojure) into print read</li>
+			<li>can still recover data if defrecord structure has changed</li>
+		</ul>
+		</li>
+		<li>cons
+		<ul>
+			<li>how to deliver read efficiently?
+			<ul>
+				<li>create empty object + merge
+				<ul>
+					<li>cache the empty object we merge against?</li>
+				</ul>
+				</li>
+				<li>reflect against object and manufacture reader fn
+				<ul>
+					<li>who keeps track of this?</li>
+					<li>how would this interact with constructor, if we add that separately?</li>
+				</ul>
+				</li>
+				<li>add a map-based constructor to defrecord classes
+				<ul>
+					<li>what would its signature be?</li>
+				</ul>
+				</li>
+				<li>add a static map based factory fn to defrecord classes</li>
+			</ul>
+			</li>
+		</ul>
+		</li>
+	</ul>
+	</li>
+	<li>reader/writer syntax that depends on a new factory fn
+	<ul>
+		<li>pros
+		<ul>
+			<li>can be efficient</li>
+			<li>can implement any policy in handling defrecord changes</li>
+		</ul>
+		</li>
+		<li>cons
+		<ul>
+			<li>likely breaking (what will the fn names be?)</li>
+			<li>read/write now depends on fns</li>
+		</ul>
+		</li>
+	</ul>
+	</li>
+	<li>positional constructor fn
+	<ul>
+		<li>no</li>
+		<li>replicates the weakness of existing constructors</li>
+	</ul>
+	</li>
+	<li>kv constructor fn
+	<ul>
+		<li>open questions
+		<ul>
+			<li>autogenerated for all defrecords?</li>
+			<li>optional?</li>
+			<li>conveniences (defaults, etc.)
+			<ul>
+				<li>no</li>
+			</ul>
+			</li>
+		</ul>
+		</li>
+	</ul>
+	</li>
+</ul>
+
+
+<h3 id="defrecordimprovements-TentativeProposal1">Tentative Proposal 1:</h3>
+
+<p>Define a k/v syntax for read and write that does not require a factory fn.</p>
+
+<ul>
+	<li>adopt the existing print syntax as legal read syntax?
+	<ul>
+		<li><code>&quot;#:user.P{:x 1, :y 2}&quot;</code></li>
+	</ul>
+	</li>
+	<li>get Rich's input on efficient reader approach (4 possibilities listed above)</li>
+	<li>if reader defrecord fields are different, merge and move on</li>
+	<li>Undecided: if record class not loaded:
+	<ul>
+		<li>TBD: error or make a plain ol map?</li>
+		<li>hm, could fix on writer side: option to dumb records down to maps?</li>
+	</ul>
+	</li>
+</ul>
+
+
+<h3 id="defrecordimprovements-TentativeProposal2">Tentative Proposal 2:</h3>
+
+<p>Autogenerate a k/v factory fn for all defrecords.</p>
+
+<ul>
+	<li><code>(new-foo :x 1 :y 2)</code></li>
+	<li>class constructor is an interop detail</li>
+	<li>factory fn is the Clojure way</li>
+	<li>people can build their own defaults, validation, etc. easily with macros, given this</li>
+</ul>
+
+
+<h3 id="defrecordimprovements-Somehistory">Some history:</h3>
+
+<p>The <a href="http://dev.clojure.org/jira/browse/CLJ-370" class="external-link" rel="nofollow">record multimethod</a> was almost ready to go when Rich raised the GC issue. What happens when somebody creates a ton of record classes over time? GC can collect records that are not longer in use, but doesn't clean up the old multimethod functions.</p>
+
+<h3 id="defrecordimprovements-AdditionalReading">Additional Reading</h3>
+
+<p>Some (non-contributed) code that demonstrates people's need for this:</p>
+
+<ul>
+	<li><a href="http://cemerick.com/2010/08/02/defrecord-slot-defaults/" class="external-link" rel="nofollow">cemerick's defrecord slot defaults</a></li>
+	<li>David McNeil's <a href="http://david-mcneil.com/post/765563763/enhanced-clojure-records" class="external-link" rel="nofollow">enhanced clojure records</a> </li>
+</ul>
+    
+        </div>
+
+        <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="https://dev.clojure.org/display/design/defrecord+improvements"
+    dc:identifier="https://dev.clojure.org/display/design/defrecord+improvements"
+    dc:title="defrecord improvements"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/950804"/>
+</rdf:RDF>
+-->
+
+        <script type="text/x-template" title="labels-dialog-div">
+
+    
+    <div id="labels-dialog">
+        <div class="labels-editor">
+            <span class="errorMessage error" id="errorSpan"></span>
+            <form method="GET" action="" id="add-labels-form">
+                <div id="labelOperationErrorContainer">
+                    <span class="error"><span class="errorMessage" id="labelOperationErrorMessage"></span></span>
+                </div>
+    
+                <div class="caption">Enter labels to add to this page:</div>
+                <div id="label-input-fields">
+                    <input autocomplete="off" id="labelsString" name="labelsString" value="">
+                    <input id="add-labels-editor-button" type="submit" class="add-labels" value="Add">
+                </div>
+                <div id="labelsAutocompleteList" class="aui-dd-parent resize-to-input" style="width: 417px"></div>
+                <div id="dialog-label-list">
+                    <span id="labels-section-title-none" class="no-labels-message" >
+None
+</span>
+<ul class="label-list">
+</ul>
+                </div>
+                <div id="waitImageAndStatus">
+                    <img class="waiting" alt="Please wait" src="/s/en_GB/3047/3/_/images/icons/wait.gif">&nbsp;
+                    <span id="labelOperationStatus" class="smalltext"></span>
+                </div>
+                <div class="labels-tip"></div>
+            </form>
+        </div>
+    </div>
+</script>
+            
+    
+
+
+<div id="labels-section" class="pageSection group">
+    <div class="labels-editor">
+        <span id="labels-section-title" class="label-title">Labels:</span>
+        <div id="labels-section-content" class="content-column">
+            <span id="labels-section-title-none" class="no-labels-message" >
+None
+</span>
+<ul class="label-list">
+</ul>
+
+                            <a id="labels-edit" href="#" class="show-labels-editor editor-icon" title="Edit Labels">
+                    <span class="icon icon-edit">Edit Labels</span>
+                </a>
+                    </div>
+    </div>
+</div>
+
+            
+            
+
+
+
+
+            
+    
+
+
+
+
+
+
+
+<div id="comments-section" class="pageSection group">
+    
+            <div class="section-header ">
+            <h2 id="comments-section-title" class="section-title">
+                <a href="#" class="comments-show-hide comments-showing" name="comments">
+                                            14 Comments
+                                    </a>
+            </h2>
+            <a title="Hide/Show Comments" href="#" 
+               class="comments-show-hide icon comments-showing icon-section-opened">
+                Hide/Show Comments
+            </a>
+        </div>
+    
+    
+                            <ol class="comment-threads top-level " id="page-comments">
+                        <li id="comment-thread-950813" class="comment-thread">
+                                <div class="comment  " id="comment-950813">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: richhickey" title="richhickey">                </p>
+                <p class="date" title="Jan 04, 2011 19:51">
+                    Jan 04, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~richhickey.html"
+                          class="url fn"
+                   >Rich Hickey</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>I have no idea what is being proposed from this, nor what else was considered, nor what the tradeoffs are.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="defrecord+improvements-focusedCommentId=950813.html#comment-950813"
+                id="comment-permalink-950813"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="defrecord+improvements-focusedCommentId=950813.html#comment-950813"
+    dc:identifier="defrecord+improvements-focusedCommentId=950813.html#comment-950813"
+    dc:title="defrecord improvements"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/950813"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-950817" class="comment-thread">
+                                <div class="comment  " id="comment-950817">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: stu" title="stu">                </p>
+                <p class="date" title="Jan 05, 2011 07:42">
+                    Jan 05, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~stu.html"
+                          class="url fn"
+                   >Stuart Halloway</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>Worse than that, the proposal wouldn't work even if we had made it readable. Sleeping mind thinks this updated proposal would work. There are two questions waiting your input:</p>
+
+<ol>
+	<li>Is the double-weak-map approach the simplest thing that can work? It is the simplest thing I have thought of.</li>
+	<li>Do we need to worry about the code-execution loophole of requiring <code>#=</code> for print/readable records? I would rather have something that kept serialization more separate from arbitrary execution of code.</li>
+</ol>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="defrecord+improvements-focusedCommentId=950817.html#comment-950817"
+                id="comment-permalink-950817"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="defrecord+improvements-focusedCommentId=950817.html#comment-950817"
+    dc:identifier="defrecord+improvements-focusedCommentId=950817.html#comment-950817"
+    dc:title="defrecord improvements"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/950817"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                                </ol>
+                        </li>
+                        <li id="comment-thread-1572886" class="comment-thread">
+                                <div class="comment  " id="comment-1572886">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: alex@puredanger.com" title="alex@puredanger.com">                </p>
+                <p class="date" title="Jan 19, 2011 21:35">
+                    Jan 19, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="https://dev.clojure.org/display/~alex@puredanger.com"
+                          class="url fn"
+                   >Alex Miller</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>It's hard for me to tell what the state of this doc is but we have used records extensively and added support for a number of features.  Consider this an experience report from the field and take from it what you find interesting / useful.  </p>
+
+<ol>
+	<li>Record printing
+	<ol>
+		<li>Records that print to a form that can eval back to the original record.  One small example where this comes up is a test that prints expected results which you expect to copy and paste back in as the actual results. </li>
+		<li>Support for records in pprint. </li>
+		<li>We have found it useful to omit nil fields when printing records. We tried this as an experiment and have been happy with it but I can understand why that would be undesirable in core.</li>
+	</ol>
+	</li>
+	<li>Constructor/factory functions
+	<ol>
+		<li>We have found that it is difficult to write and maintain code that constructs records with the current positional constructor for records with more than 2-3 fields.  </li>
+		<li>An automatically created and named constructor function built into defrecord would be very useful.  Our solution to this takes records like FooBar and creates new-foo-bar.</li>
+		<li>Support for default values would be handy but we have not found it to be essential and have not implemented it.  It seems from examples on the web that this is a popular feature people have implemented.</li>
+		<li>Because factory functions that take maps of fields introduces the possibility of using almost-right keys, our factory functions only allow you to use the record field names; extra fields are not allowed in that factory function.  You must use assoc to add non-specified fields.  This was an experiment.  After a year of use, we have found that it regularly catches typos and has been inconvenient only a handful of times.  YMMV.</li>
+		<li>While assoc is the standard way to create a record based on another record instance, we have found it useful to create a constructor that takes a prototype record and then applies the field validation check in 2d.</li>
+		<li>Having a map factory function has been helpful simplifying ns's as you do not need to both require and import from an external ns.  </li>
+	</ol>
+	</li>
+	<li>Generic record support - we have largely run into these in generic macros and library code that deals frequently with records of many types
+	<ol>
+		<li>Checking whether something is a record with a record? function (maybe using an IRecord marker)</li>
+		<li>Universal factory function that takes a record class and an initialization map to create any record.</li>
+	</ol>
+	</li>
+	<li>Integration with libraries across the land
+	<ol>
+		<li>clojure.walk - we added this during construction but are not using it much</li>
+		<li>clojure.zip - we added this and are using it a lot. I'd have to go back and check but I'm pretty sure we used the universal factory function in this impl.</li>
+		<li>many other external libs that are not of importance here :)</li>
+	</ol>
+	</li>
+</ol>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="defrecord+improvements-focusedCommentId=1572886.html#comment-1572886"
+                id="comment-permalink-1572886"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="defrecord+improvements-focusedCommentId=1572886.html#comment-1572886"
+    dc:identifier="defrecord+improvements-focusedCommentId=1572886.html#comment-1572886"
+    dc:title="defrecord improvements"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/1572886"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                        <li id="comment-thread-1573186" class="comment-thread">
+                                <div class="comment  " id="comment-1573186">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: david-mcneil" title="david-mcneil">                </p>
+                <p class="date" title="Apr 06, 2011 20:15">
+                    Apr 06, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="https://dev.clojure.org/display/~david-mcneil"
+                          class="url fn"
+                   >David McNeil</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>I wrote up my thoughts and questions on the proposal here: <a class="external-link" href="http://david-mcneil.com/post/4403345585/defrecord-improvements-feedback" rel="nofollow">http://david-mcneil.com/post/4403345585/defrecord-improvements-feedback</a> It echoes much of what Alex said above.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="defrecord+improvements-focusedCommentId=1573186.html#comment-1573186"
+                id="comment-permalink-1573186"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="defrecord+improvements-focusedCommentId=1573186.html#comment-1573186"
+    dc:identifier="defrecord+improvements-focusedCommentId=1573186.html#comment-1573186"
+    dc:title="defrecord improvements"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/1573186"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-1573187" class="comment-thread">
+                                <div class="comment  " id="comment-1573187">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: stu" title="stu">                </p>
+                <p class="date" title="Apr 06, 2011 20:41">
+                    Apr 06, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~stu.html"
+                          class="url fn"
+                   >Stuart Halloway</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>Thanks for writing this up. Responses to a few of your items:</p>
+
+<p>4. We are worrying about a print form that will be readable, so omitting the namespace is not an option. There can be other print formats, of course.</p>
+
+<p>5. The universal constructor may happen later, but not in the scope of the smallest shippable improvement.</p>
+
+<p>6. Agreed, we should have a record? predicate.</p>
+
+<p>8, 9. Automatic multimethod participation is tricky to do generally in a way that is performant but also class-loader and modularity friendly. Do you have working code that covers this?</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="defrecord+improvements-focusedCommentId=1573187.html#comment-1573187"
+                id="comment-permalink-1573187"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="defrecord+improvements-focusedCommentId=1573187.html#comment-1573187"
+    dc:identifier="defrecord+improvements-focusedCommentId=1573187.html#comment-1573187"
+    dc:title="defrecord improvements"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/1573187"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-1573354" class="comment-thread">
+                                <div class="comment  " id="comment-1573354">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: david-mcneil" title="david-mcneil">                </p>
+                <p class="date" title="May 07, 2011 19:26">
+                    May 07, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="https://dev.clojure.org/display/~david-mcneil"
+                          class="url fn"
+                   >David McNeil</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>&gt; We are worrying about a print form that will be readable, so omitting  the namespace is not an option. There can be other print formats, of  course.</p>
+
+<p>Hmm... &quot;not an option&quot;, but &quot;there can be other print formats&quot;... I wasn't asking for this to be the default, but rather I was asking for an option to exclude the namespace. Seems like maybe this could be another print format? From my experience using records intensively on real code this is quite valuable when debugging and writing test code that uses trees of records.</p>
+
+<p>&gt; Automatic multimethod participation is tricky to do generally in a way  that is performant but also class-loader and modularity friendly. Do you  have working code that covers this?</p>
+
+<p>Yes, <a class="external-link" href="https://github.com/david-mcneil/defrecord2" rel="nofollow">https://github.com/david-mcneil/defrecord2</a></p>
+
+<p>Thanks for the response (sorry for my delayed response).</p>
+
+<p>-David</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="defrecord+improvements-focusedCommentId=1573354.html#comment-1573354"
+                id="comment-permalink-1573354"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="defrecord+improvements-focusedCommentId=1573354.html#comment-1573354"
+    dc:identifier="defrecord+improvements-focusedCommentId=1573354.html#comment-1573354"
+    dc:title="defrecord improvements"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/1573354"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-1573365" class="comment-thread">
+                                <div class="comment  " id="comment-1573365">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: fogus" title="fogus">                </p>
+                <p class="date" title="May 12, 2011 09:33">
+                    May 12, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~fogus.html"
+                          class="url fn"
+                   >Fogus</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <blockquote><p>quite valuable when debugging and writing test code that uses trees of records.</p></blockquote>
+
+<p>You might find the <code>(-&gt;R ...)</code> to be more succinct and likewise more flexible in those cases.</p>
+
+<blockquote><p>Yes, <a class="external-link" href="https://github.com/david-mcneil/defrecord2" rel="nofollow">https://github.com/david-mcneil/defrecord2</a></p></blockquote>
+
+<p>Sweet!  I can't wait to look at your code more deeply.</p>
+
+<p>Thanks<br />
+:F</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="defrecord+improvements-focusedCommentId=1573365.html#comment-1573365"
+                id="comment-permalink-1573365"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="defrecord+improvements-focusedCommentId=1573365.html#comment-1573365"
+    dc:identifier="defrecord+improvements-focusedCommentId=1573365.html#comment-1573365"
+    dc:title="defrecord improvements"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/1573365"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-2097163" class="comment-thread">
+                                <div class="comment  " id="comment-2097163">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: david-mcneil" title="david-mcneil">                </p>
+                <p class="date" title="May 16, 2011 09:18">
+                    May 16, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="https://dev.clojure.org/display/~david-mcneil"
+                          class="url fn"
+                   >David McNeil</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>&gt; You might find the <code>(-&gt;R ...)</code> to be more succinct and likewise more flexible</p>
+
+<p>I don't know what &quot;-&gt;R&quot; is and google was not able to help. Or was that a typo?</p>
+
+<p>-David</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="defrecord+improvements-focusedCommentId=2097163.html#comment-2097163"
+                id="comment-permalink-2097163"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="defrecord+improvements-focusedCommentId=2097163.html#comment-2097163"
+    dc:identifier="defrecord+improvements-focusedCommentId=2097163.html#comment-2097163"
+    dc:title="defrecord improvements"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/2097163"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                                </ol>
+                        </li>
+                                </ol>
+                        </li>
+                                </ol>
+                        </li>
+                                </ol>
+                        </li>
+                        <li id="comment-thread-1573353" class="comment-thread">
+                                <div class="comment  " id="comment-1573353">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: ataggart" title="ataggart">                </p>
+                <p class="date" title="May 07, 2011 00:20">
+                    May 07, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~ataggart.html"
+                          class="url fn"
+                   >Alexander Taggart</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>A few questions relating to the current patch on <a href="http://dev.clojure.org/jira/browse/CLJ-374" class="external-link" rel="nofollow">CLJ-374</a>:</p>
+
+<p>Why does <code>CtorReader</code> eval its arguments? The implementation of <code>CtorReader.resolve</code> parallels the implementation of <code>EvalReader.invoke</code>, except it (understandably) doesn't perform a <code>*read-eval*</code> check.  Is there a reason non-literal arguments to a record constructor should not need to use the eval reader macro?</p>
+
+<p>Records can be safely instantiated in the reader since we control their constructor implementation, but that's not necessarily true of other classes.  Currently the <code>CtorReader</code> will, using the <code>#myns.MyRecord[arg]</code> positional format, instantiate any class, e.g., <code>#java.util.Date[0]</code>.  Is that openness of the reader intentional, given that it is not guarded by <code>*read-eval*</code>?</p>
+
+<p>Assuming the above is acceptable, once the data structure from the reader is passed to the compiler, any class it doesn't recognize is emitted as a <code>ConstantExpr</code>.  Is that always appropriate?</p>
+
+<hr />
+<p>My sense is that <code>CtorReader</code> should be restricted to instantiating instances of the <code>IRecord</code> marker interface, and that it should, like all other non-<code>EvalReader</code> readers, treat its arguments as literal clojure data structures, leaving the work of evaluating arguments to the eval reader macro as needed.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="defrecord+improvements-focusedCommentId=1573353.html#comment-1573353"
+                id="comment-permalink-1573353"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="defrecord+improvements-focusedCommentId=1573353.html#comment-1573353"
+    dc:identifier="defrecord+improvements-focusedCommentId=1573353.html#comment-1573353"
+    dc:title="defrecord improvements"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/1573353"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-1573364" class="comment-thread">
+                                <div class="comment  " id="comment-1573364">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: fogus" title="fogus">                </p>
+                <p class="date" title="May 12, 2011 09:30">
+                    May 12, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~fogus.html"
+                          class="url fn"
+                   >Fogus</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>Hi Alex,</p>
+
+<p>Thanks for the questions.  They were mostly targeted at a previous version of the patch, but I will try to address them the best that I can.</p>
+
+<blockquote><p>Why does CtorReader eval its arguments?</p></blockquote>
+
+<p>Currently it does not:</p>
+
+<div class="preformatted panel" style="border-width: 1px;"><div class="preformattedContent panelContent">
+<pre>(defrecord R [a])
+#user.R[(+ 1 2 3)]
+; IllegalArgumentException Constructor literal can only contain constants or statics.
+
+#user.R[{:foo (str :bar)}]
+;=&gt; #user.R{:a {:foo (str :bar)}}
+</pre>
+</div></div>
+
+<blockquote><p>Currently the CtorReader will, using the #myns.MyRecord<a class="unresolved" href="#">arg</a> positional format, instantiate any class...</p></blockquote>
+
+<p>Yes it will, but that's not the end of the story.  First, the <code>#foo.bar.Klass<a class="unresolved" href="#">...</a></code> reader form will attempt to call a ctor for the class <code>Klass</code> but it will only get you so far.</p>
+
+<div class="preformatted panel" style="border-width: 1px;"><div class="preformattedContent panelContent">
+<pre>#java.lang.String[&quot;foo&quot;]
+;=&gt; &quot;foo&quot;
+
+(keyword #java.lang.String[&quot;foo&quot;])
+;=&gt; :foo
+
+(import &#39;java.util.Date)
+#java.util.Date[10101001]
+#&lt;Date Wed Dec 31 21:48:21 EST 1969&gt;
+
+(bean #java.util.Date[10101001])
+; CompilerException java.lang.RuntimeException: Can&#39;t embed object in code, maybe print-dup not defined
+</pre>
+</div></div>
+
+<p>For objects that have <code>print-dup</code> definitions we can embed them in other Clojure forms – the compiler is happy.  For those that do not we either need to define print-dup for them, or use some other method.  For arbitrary Java classes we can not assume that a call to its constructor results in a fully constructed object.  For records and types we, as you say, have control over their construction and can make different assumptions.</p>
+
+<blockquote><p>any class it doesn't recognize is emitted as a ConstantExpr. Is that always appropriate?</p></blockquote>
+
+<p>I'm not sure what you mean.  Do you mind rephrasing?</p>
+
+<p>Thanks again.<br />
+:F</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="defrecord+improvements-focusedCommentId=1573364.html#comment-1573364"
+                id="comment-permalink-1573364"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="defrecord+improvements-focusedCommentId=1573364.html#comment-1573364"
+    dc:identifier="defrecord+improvements-focusedCommentId=1573364.html#comment-1573364"
+    dc:title="defrecord improvements"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/1573364"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-2097153" class="comment-thread">
+                                <div class="comment  " id="comment-2097153">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: ataggart" title="ataggart">                </p>
+                <p class="date" title="May 14, 2011 14:53">
+                    May 14, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~ataggart.html"
+                          class="url fn"
+                   >Alexander Taggart</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>Note that some of this might be better directed at Stu, assuming he was the one driving these changes.</p>
+
+
+
+<blockquote><p>Currently it does not [eval its arguments]</p></blockquote>
+<p>Most of the eval'ing was removed, but it does try to eval symbol args as classes, and <em>only</em> as classes:</p>
+
+<div class="preformatted panel" style="border-width: 1px;"><div class="preformattedContent panelContent">
+<pre>user=&gt; (defrecord R [x])
+user.R
+user=&gt; (print-dup-string (R. &#39;a))
+&quot;#user.R[a]&quot;
+user=&gt; (read-string *1)
+IllegalArgumentException Constructor literal can only contain constants or statics. a does not name a known class.  clojure.lang.LispReader$CtorReader.resolve (LispReader.java:1206)
+</pre>
+</div></div>
+
+<p>This is interesting behaviour considering classes are print-dup'd with the eval reader macro:</p>
+
+<div class="preformatted panel" style="border-width: 1px;"><div class="preformattedContent panelContent">
+<pre>user=&gt; (print-dup-string (R. String))
+&quot;#user.R[#=java.lang.String]&quot;
+</pre>
+</div></div>
+
+<p>Which raises the question of what would be sending something like <code>#user.R[java.lang.String]</code> to the reader.  Is this (now committed to master) functionality intended to enable reading of print-dup'd records or allow humans an alternate way to type record instances?</p>
+
+
+
+
+
+
+
+
+
+
+<blockquote><p>For objects that have print-dup definitions we can embed them in other Clojure forms – the compiler is happy.</p></blockquote>
+<p>If the literal notation is intended to be emitted by <code>print-dup</code> for non-records, then that's not true, as the <code>(bean #java.util.Date[10101001])</code> example shows.  The preceding assumes someone wrote a <code>print-dup</code> method for <code>Date</code>, emitting that notation.  If that is not correct, then what is the purpose of the constructor literal for non-records?</p>
+
+<hr />
+<p>Finally, it's not clear to me whether the &quot;EvalRead is not a fix&quot; requirement is meant to apply just to the record or to its arguments as well. The latter seems unlikely as the set of readable-without-eval types is outside the scope of this change (records excepted). If the former, then this all seems to be sugar for calling the record constructor while avoiding <code>#=</code>.  If that's the case, then why not allow the reader to read the literal notation and emit a form that the compiler can then process? E.g., reading a string <code>&quot;#myns.ARec[#myns.BRec[5]]&quot;</code> and return a clojure data structure of <code>(new myns.ARec (new myns.BRec 5))</code> which will then be passed to the compiler.</p>
+
+<p>Though perhaps there is a desire for record values to be emitted as constants rather than as a call to a constructor. If so, then the process would need to parallel that for maps, namely that the reader creates some data structure (<em>not an instance of the specific record class</em>) which is passed to the compiler, which in turn checks if the arguments are all <code>LiteralExpr</code> before emitting as a <code>ConstantExpr</code>, otherwise a runtime call is made.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="defrecord+improvements-focusedCommentId=2097153.html#comment-2097153"
+                id="comment-permalink-2097153"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="defrecord+improvements-focusedCommentId=2097153.html#comment-2097153"
+    dc:identifier="defrecord+improvements-focusedCommentId=2097153.html#comment-2097153"
+    dc:title="defrecord improvements"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/2097153"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-2097162" class="comment-thread">
+                                <div class="comment  " id="comment-2097162">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: fogus" title="fogus">                </p>
+                <p class="date" title="May 16, 2011 08:21">
+                    May 16, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~fogus.html"
+                          class="url fn"
+                   >Fogus</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <blockquote><p>IllegalArgumentException Constructor literal...</p></blockquote>
+
+<p>Hi Alex,</p>
+
+<p>This was a result of my attempting to be too clever with the Reader and will be fixed in the next release.</p>
+
+<p>I'll read your other questions more closely and respond post-haste.<br />
+:F</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="defrecord+improvements-focusedCommentId=2097162.html#comment-2097162"
+                id="comment-permalink-2097162"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="defrecord+improvements-focusedCommentId=2097162.html#comment-2097162"
+    dc:identifier="defrecord+improvements-focusedCommentId=2097162.html#comment-2097162"
+    dc:title="defrecord improvements"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/2097162"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                                </ol>
+                        </li>
+                                </ol>
+                        </li>
+                                </ol>
+                        </li>
+                        <li id="comment-thread-2097164" class="comment-thread">
+                                <div class="comment  " id="comment-2097164">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: richhickey" title="richhickey">                </p>
+                <p class="date" title="May 16, 2011 10:04">
+                    May 16, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~richhickey.html"
+                          class="url fn"
+                   >Rich Hickey</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>The <strong>Writing records</strong> section seems wrong. We should never be printing something that can't be read. Printing factory fn calls would require evaluation to restore. I.e. these should always print #something...</p>
+
+<p>Also, deftype behavior needs to be spelled out in all cases.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="defrecord+improvements-focusedCommentId=2097164.html#comment-2097164"
+                id="comment-permalink-2097164"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="defrecord+improvements-focusedCommentId=2097164.html#comment-2097164"
+    dc:identifier="defrecord+improvements-focusedCommentId=2097164.html#comment-2097164"
+    dc:title="defrecord improvements"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/2097164"/>
+</rdf:RDF>
+-->
+
+                    
+                                    <ol class="comment-threads">
+                                        <li id="comment-thread-2097165" class="comment-thread">
+                                <div class="comment  " id="comment-2097165">
+                <p class="comment-user-logo">
+                    <img class="userLogo logo anonymous" src="../../s/en_GB/3047/3/_/images/icons/profilepics/anonymous.png"
+           alt="User icon: fogus" title="fogus">                </p>
+                <p class="date" title="May 16, 2011 21:43">
+                    May 16, 2011
+                </p>
+                <div class="comment-header">
+                    <h4 class="author"><a href="../../login.action-os_destination=-display-~fogus.html"
+                          class="url fn"
+                   >Fogus</a></h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>Indeed you're right and <code>#something</code> is what the implementation does currently.  I will bring the text up to date regarding the Writing and the deftype behavior.</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                          <li class="first comment-permalink">
+            <a title="Permanent link to this comment" href="defrecord+improvements-focusedCommentId=2097165.html#comment-2097165"
+                id="comment-permalink-2097165"                ><span>Permalink</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="defrecord+improvements-focusedCommentId=2097165.html#comment-2097165"
+    dc:identifier="defrecord+improvements-focusedCommentId=2097165.html#comment-2097165"
+    dc:title="defrecord improvements"
+    trackback:ping="https://dev.clojure.org/rpc/trackback/2097165"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                                </ol>
+                        </li>
+                </ol>
+    
+    </div>
+
+
+            
+</div>
+
+
+    
+
+
+
+    
+    
+
+    
+    
+    
+
+
+    
+
+
+
+    <br class="clear">
+</div>
+  
+    </div>
+</div>
+
+<div id="footer">
+                                                <p class="license license-opensource">
+                  Powered by a free <b>Atlassian Confluence Open Source Project License</b> granted to Clojure. <a href="http://www.atlassian.com/c/conf/11461">Evaluate Confluence today</a>.<br>
+                </p>
+                        
+    <ul id="poweredby">
+        <li class="noprint">Powered by <a href="http://www.atlassian.com/software/confluence" class="hover-footer-link">Atlassian Confluence</a> <span id='footer-build-information'>4.0</span>, the <a href="http://www.atlassian.com/software/confluence/tour/enterprise-wiki.jsp" class="hover-footer-link">Enterprise Wiki</a></li>
+        <li class="print-only">Printed by Atlassian Confluence 4.0, the Enterprise Wiki.</li>        
+        <li class="noprint"> &nbsp; |&nbsp; <a href="http://jira.atlassian.com/secure/BrowseProject.jspa?id=10470" class="hover-footer-link">Report a bug</a></li>
+        <li class="noprint"> &nbsp;|&nbsp; <a href="http://www.atlassian.com/about/connected.jsp?s_kwcid=Confluence-stayintouch" class="hover-footer-link">Atlassian News</a></li>
+    </ul>
+
+    
+
+            <div><span style="">Site support by</span><a href="http://contegix.com"> <img style="vertical-align:middle" src="../../download/attachments/459015/contegix.jpg.html"/></a></div>
+    </div></div>
+</body>
+</html>
