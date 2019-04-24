@@ -38,7 +38,7 @@ AJS.toInit( function() {
 	try {
 		if (window.SyntaxHighlighter && window.SyntaxHighlighter.config) {
 			var contextRoot = (document.getElementById("confluence-context-path").content || "");
-			var clipboardUrl =  contextRoot + '/s/2.0.6/_/download/resources/com.atlassian.confluence.ext.newcode-macro-plugin:clipboard/clipboard.swf';
+			var clipboardUrl =  contextRoot + '/s/2.0.6/u/download/resources/com.atlassian.confluence.ext.newcode-macro-plugin:clipboard/clipboard.swf';
 		    window.SyntaxHighlighter.config.clipboardSwf = clipboardUrl;
 		}
 		window.SyntaxHighlighter.highlight();
