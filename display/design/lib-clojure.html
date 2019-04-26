@@ -30,21 +30,21 @@
 
     <link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/55/u/download/superbatch/css/batch.css" media="all">
 <!--[if lt IE 9]>
-<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/u/download/superbatch/css/batch.css?conditionalComment=lt+IE+9" media="all">
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/u/download/superbatch/css/batch.css?conditionalComment=lt%2BIE%2B9" media="all">
 <![endif]-->
 <!--[if IE 9]>
-<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/u/download/superbatch/css/batch.css?conditionalComment=IE+9" media="all">
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/u/download/superbatch/css/batch.css?conditionalComment=IE%2B9" media="all">
 <![endif]-->
 <!--[if lte IE 9]>
-<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/u/download/superbatch/css/batch.css?conditionalComment=lte+IE+9" media="all">
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/u/download/superbatch/css/batch.css?conditionalComment=lte%2BIE%2B9" media="all">
 <![endif]-->
 <link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/55/u/download/superbatch/css/batch-media=print.css" media="print">
 <!--[if lt IE 9]>
-<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/u/download/contextbatch/css/page/batch.css?conditionalComment=lt+IE+9" media="all">
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/u/download/contextbatch/css/page/batch.css?conditionalComment=lt%2BIE%2B9" media="all">
 <![endif]-->
 <link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/u/download/contextbatch/css/page/batch.css" media="all">
 <!--[if lt IE 9]>
-<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/u/download/contextbatch/css/viewcontent,main/batch.css?conditionalComment=lt+IE+9" media="all">
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/u/download/contextbatch/css/viewcontent,main/batch.css?conditionalComment=lt%2BIE%2B9" media="all">
 <![endif]-->
 <link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/u/download/contextbatch/css/viewcontent,main/batch.css" media="all">
 <link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.1/u/download/batch/com.atlassian.confluence.plugins.pagetree-pagetree-resources/com.atlassian.confluence.plugins.pagetree-pagetree-resources.css" media="all">
@@ -288,7 +288,7 @@
                                 
                 
         <li class="hidden-crumb" >
-                                    <span><a href="Idea+Hammock.html">Idea Hammock</a></span>
+                                    <span><a href="Idea%2BHammock.html">Idea Hammock</a></span>
                 </li>
                                 
                 
@@ -720,7 +720,7 @@
         </fieldset>
 
         <div class="wiki-content">
-                           <h2 id="lib-clojure-Problemstatement">Problem statement</h2><p style="margin-left: 30.0px;">Given the current implementation of clojure.lang.RT which uses &lt;cinit&gt; behavior to compile clojure/core.clj with clojure.lang.Compiler it is impossible for <a href="'Lean&apos;+Runtime.html'">'Lean' Runtimes</a> to escape the size and load time penalties associated with booting clojure.core from source. As clojure/core.clj will be compiled by the &quot;official&quot; dynamic compiler it's also impossible for lean applications to reap the full size and performance benifits of tree shaking and static linking as clojure/core.clj and the rest of the standard library will always be recompiled by the existing naive dynamic linking compiler.</p><p style="margin-left: 30.0px;">Simply introducing lazy var initialization is insufficient as this still leaves a real overhead in terms of distributed application size and load time due to having to distribute and load all libraries and source code whether or not it will be used at runtime.</p><h2 id="lib-clojure-Proposedsolution">Proposed solution</h2><p style="margin-left: 30.0px;">Ideally, what is now the monolitic Clojure.core project would be partitioned into two or more artifacts representing abstractly the set of Java datastructures and interfaces in terms of Clojure's core is implemented, and another representing the Clojure reader, compiler and bootstrapping infrastructure. This partition would allow lean runtimes to statically compile an entire application including the Clojure core down to a set of Java classes which use no (or very very little) dynamic linking and to reap the full performance and size benifits of such linking by depending only on the Java classes and interfaces needed to implement the now statically compiled Clojure core.</p><p style="margin-left: 30.0px;">This also has the side benifit of making it easier to experiment with Clojure derived languages and environments on the JVM by making the standard datastructures generally available in an official form rather than as a difficult to maintain userland fork such as <a href="https://github.com/krukow/clj-ds" class="external-link" rel="nofollow">krukow/clj-ds</a>.</p>
+                           <h2 id="lib-clojure-Problemstatement">Problem statement</h2><p style="margin-left: 30.0px;">Given the current implementation of clojure.lang.RT which uses &lt;cinit&gt; behavior to compile clojure/core.clj with clojure.lang.Compiler it is impossible for <a href="'Lean&apos;%2BRuntime.html'">'Lean' Runtimes</a> to escape the size and load time penalties associated with booting clojure.core from source. As clojure/core.clj will be compiled by the &quot;official&quot; dynamic compiler it's also impossible for lean applications to reap the full size and performance benifits of tree shaking and static linking as clojure/core.clj and the rest of the standard library will always be recompiled by the existing naive dynamic linking compiler.</p><p style="margin-left: 30.0px;">Simply introducing lazy var initialization is insufficient as this still leaves a real overhead in terms of distributed application size and load time due to having to distribute and load all libraries and source code whether or not it will be used at runtime.</p><h2 id="lib-clojure-Proposedsolution">Proposed solution</h2><p style="margin-left: 30.0px;">Ideally, what is now the monolitic Clojure.core project would be partitioned into two or more artifacts representing abstractly the set of Java datastructures and interfaces in terms of Clojure's core is implemented, and another representing the Clojure reader, compiler and bootstrapping infrastructure. This partition would allow lean runtimes to statically compile an entire application including the Clojure core down to a set of Java classes which use no (or very very little) dynamic linking and to reap the full performance and size benifits of such linking by depending only on the Java classes and interfaces needed to implement the now statically compiled Clojure core.</p><p style="margin-left: 30.0px;">This also has the side benifit of making it easier to experiment with Clojure derived languages and environments on the JVM by making the standard datastructures generally available in an official form rather than as a difficult to maintain userland fork such as <a href="https://github.com/krukow/clj-ds" class="external-link" rel="nofollow">krukow/clj-ds</a>.</p>
     
         </div>
 

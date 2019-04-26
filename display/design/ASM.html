@@ -30,21 +30,21 @@
 
     <link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/55/u/download/superbatch/css/batch.css" media="all">
 <!--[if lt IE 9]>
-<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/u/download/superbatch/css/batch.css?conditionalComment=lt+IE+9" media="all">
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/u/download/superbatch/css/batch.css?conditionalComment=lt%2BIE%2B9" media="all">
 <![endif]-->
 <!--[if IE 9]>
-<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/u/download/superbatch/css/batch.css?conditionalComment=IE+9" media="all">
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/u/download/superbatch/css/batch.css?conditionalComment=IE%2B9" media="all">
 <![endif]-->
 <!--[if lte IE 9]>
-<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/u/download/superbatch/css/batch.css?conditionalComment=lte+IE+9" media="all">
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/u/download/superbatch/css/batch.css?conditionalComment=lte%2BIE%2B9" media="all">
 <![endif]-->
 <link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/55/u/download/superbatch/css/batch-media=print.css" media="print">
 <!--[if lt IE 9]>
-<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/u/download/contextbatch/css/page/batch.css?conditionalComment=lt+IE+9" media="all">
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/u/download/contextbatch/css/page/batch.css?conditionalComment=lt%2BIE%2B9" media="all">
 <![endif]-->
 <link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/u/download/contextbatch/css/page/batch.css" media="all">
 <!--[if lt IE 9]>
-<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/u/download/contextbatch/css/viewcontent,main/batch.css?conditionalComment=lt+IE+9" media="all">
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/u/download/contextbatch/css/viewcontent,main/batch.css?conditionalComment=lt%2BIE%2B9" media="all">
 <![endif]-->
 <link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/u/download/contextbatch/css/viewcontent,main/batch.css" media="all">
 <link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.1/u/download/batch/com.atlassian.confluence.plugins.pagetree-pagetree-resources/com.atlassian.confluence.plugins.pagetree-pagetree-resources.css" media="all">
@@ -288,12 +288,12 @@
                                 
                 
         <li class="hidden-crumb" >
-                                    <span><a href="Release+Planning.html">Release Planning</a></span>
+                                    <span><a href="Release%2BPlanning.html">Release Planning</a></span>
                 </li>
                                 
                 
         <li class="hidden-crumb" >
-                                    <span><a href="Release+1.6.html">Release 1.6</a></span>
+                                    <span><a href="Release%2B1.6.html">Release 1.6</a></span>
                 </li>
                     
                 
@@ -729,7 +729,7 @@
         </fieldset>
 
         <div class="wiki-content">
-                           <p>Currently the version of ASM bundled in Clojure is pretty old (circa 2005).  There are some documented performance improvements in newer versions of ASM that should speed up some things in Clojure. We would like to move to the latest stable version of ASM (4.1); the current Clojure code uses 3.3.1.  </p><p><span style="font-size: 10.0pt;line-height: 13.0pt;">Release notes for ASM <a href="http://forge.ow2.org/forum/forum.php?forum_id=2051" class="external-link" rel="nofollow">4.0</a> and </span><a href="http://forge.ow2.org/forum/forum.php?forum_id=2168" style="font-size: 10.0pt;line-height: 13.0pt;" class="external-link" rel="nofollow">4.1</a><span style="font-size: 10.0pt;line-height: 13.0pt;">.</span></p><p>It may not be the desired approach, but <a href="../../jira/browse/CLJ-713.html" class="external-link" rel="nofollow">CLJ-713</a> has a patch related to this.</p><h2 id="ASM-OpenQuestionstoResolve">Open Questions to Resolve</h2><p>Some open questions:</p><ol><li>Should we use ASM jar as is (make the dependency public) or use re-rooted versions that cannot conflict?<ol><li>Scala: 2.10+ uses ASM 4.1, subsetted, and rerooted to scala.tools.asm</li><li>Groovy: 2.1 (latest stable) uses ASM 4.0 external, 2.2 (next) uses ASM 4.1 external</li><li>JRuby: 1.7.4 (latest stable) uses ASM 4.0, subsetted, and rerooted to org.jruby.org.objectweb.asm. According to Charles Nutter 1.7.x will stay on 4.0. As of Feb. 19, 2014 the version on master has been bumped to 4.2 as 5.0 is currently in beta.</li><li><strong>Recommend:</strong>  re-root to avoid conflicts</li></ol></li><li>What (if anything) needs to be done with computing stack frames to satisfy bytecode verification changes in JDK 7?<ol><li><strong>Recommend:</strong> </li></ol></li><li>If re-rooted, should we subset the jar and only include what we use rather than the whole jar?<ol><li><strong>Recommend:</strong> yes, as long as we're modifying we might as well subset</li></ol></li><li>If using a re-rooted jar, should we provide a split version of the re-rooted asm to allow it to be optional for environments that don't need it?<ol><li><strong>Recommend:</strong></li></ol></li></ol><p> </p><h2 id="ASM-NextSteps">Next Steps</h2><h2 id="ASM-FutureSteps">Future Steps</h2>
+                           <p>Currently the version of ASM bundled in Clojure is pretty old (circa 2005).  There are some documented performance improvements in newer versions of ASM that should speed up some things in Clojure. We would like to move to the latest stable version of ASM (4.1); the current Clojure code uses 3.3.1.  </p><p><span style="font-size: 10.0pt;line-height: 13.0pt;">Release notes for ASM <a href="http://forge.ow2.org/forum/forum.php?forum_id=2051" class="external-link" rel="nofollow">4.0</a> and </span><a href="http://forge.ow2.org/forum/forum.php?forum_id=2168" style="font-size: 10.0pt;line-height: 13.0pt;" class="external-link" rel="nofollow">4.1</a><span style="font-size: 10.0pt;line-height: 13.0pt;">.</span></p><p>It may not be the desired approach, but <a href="../../jira/browse/CLJ-713.html" class="external-link" rel="nofollow">CLJ-713</a> has a patch related to this.</p><h2 id="ASM-OpenQuestionstoResolve">Open Questions to Resolve</h2><p>Some open questions:</p><ol><li>Should we use ASM jar as is (make the dependency public) or use re-rooted versions that cannot conflict?<ol><li>Scala: 2.10%2B uses ASM 4.1, subsetted, and rerooted to scala.tools.asm</li><li>Groovy: 2.1 (latest stable) uses ASM 4.0 external, 2.2 (next) uses ASM 4.1 external</li><li>JRuby: 1.7.4 (latest stable) uses ASM 4.0, subsetted, and rerooted to org.jruby.org.objectweb.asm. According to Charles Nutter 1.7.x will stay on 4.0. As of Feb. 19, 2014 the version on master has been bumped to 4.2 as 5.0 is currently in beta.</li><li><strong>Recommend:</strong>  re-root to avoid conflicts</li></ol></li><li>What (if anything) needs to be done with computing stack frames to satisfy bytecode verification changes in JDK 7?<ol><li><strong>Recommend:</strong> </li></ol></li><li>If re-rooted, should we subset the jar and only include what we use rather than the whole jar?<ol><li><strong>Recommend:</strong> yes, as long as we're modifying we might as well subset</li></ol></li><li>If using a re-rooted jar, should we provide a split version of the re-rooted asm to allow it to be optional for environments that don't need it?<ol><li><strong>Recommend:</strong></li></ol></li></ol><p> </p><h2 id="ASM-NextSteps">Next Steps</h2><h2 id="ASM-FutureSteps">Future Steps</h2>
     
         </div>
 

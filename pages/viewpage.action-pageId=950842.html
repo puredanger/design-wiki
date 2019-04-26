@@ -30,21 +30,21 @@
 
     <link type="text/css" rel="stylesheet" href="../s/en_GB/3047/3/55/u/download/superbatch/css/batch.css" media="all">
 <!--[if lt IE 9]>
-<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/u/download/superbatch/css/batch.css?conditionalComment=lt+IE+9" media="all">
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/u/download/superbatch/css/batch.css?conditionalComment=lt%2BIE%2B9" media="all">
 <![endif]-->
 <!--[if IE 9]>
-<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/u/download/superbatch/css/batch.css?conditionalComment=IE+9" media="all">
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/u/download/superbatch/css/batch.css?conditionalComment=IE%2B9" media="all">
 <![endif]-->
 <!--[if lte IE 9]>
-<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/u/download/superbatch/css/batch.css?conditionalComment=lte+IE+9" media="all">
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/u/download/superbatch/css/batch.css?conditionalComment=lte%2BIE%2B9" media="all">
 <![endif]-->
 <link type="text/css" rel="stylesheet" href="../s/en_GB/3047/3/55/u/download/superbatch/css/batch-media=print.css" media="print">
 <!--[if lt IE 9]>
-<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/u/download/contextbatch/css/page/batch.css?conditionalComment=lt+IE+9" media="all">
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/u/download/contextbatch/css/page/batch.css?conditionalComment=lt%2BIE%2B9" media="all">
 <![endif]-->
 <link type="text/css" rel="stylesheet" href="../s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/u/download/contextbatch/css/page/batch.css" media="all">
 <!--[if lt IE 9]>
-<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/u/download/contextbatch/css/viewcontent,main/batch.css?conditionalComment=lt+IE+9" media="all">
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/u/download/contextbatch/css/viewcontent,main/batch.css?conditionalComment=lt%2BIE%2B9" media="all">
 <![endif]-->
 <link type="text/css" rel="stylesheet" href="../s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/u/download/contextbatch/css/viewcontent,main/batch.css" media="all">
 <link type="text/css" rel="stylesheet" href="../s/en_GB/3047/3/2.0.1/u/download/batch/com.atlassian.confluence.plugins.pagetree-pagetree-resources/com.atlassian.confluence.plugins.pagetree-pagetree-resources.css" media="all">
@@ -288,22 +288,22 @@
                                 
                 
         <li class="hidden-crumb" >
-                                    <span><a href="../display/design/Release+Planning.html">Release Planning</a></span>
+                                    <span><a href="../display/design/Release%2BPlanning.html">Release Planning</a></span>
                 </li>
                                 
                 
         <li class="hidden-crumb" >
-                                    <span><a href="../display/design/Release+1.3.html">Release 1.3</a></span>
+                                    <span><a href="../display/design/Release%2B1.3.html">Release 1.3</a></span>
                 </li>
                                 
                 
         <li class="hidden-crumb" >
-                                    <span><a href="../display/design/Clojure+Contrib.html">Clojure Contrib</a></span>
+                                    <span><a href="../display/design/Clojure%2BContrib.html">Clojure Contrib</a></span>
                 </li>
                                 
                 
         <li class="hidden-crumb" >
-                                    <span><a href="../display/design/Common+Contrib+Build.html">Common Contrib Build</a></span>
+                                    <span><a href="../display/design/Common%2BContrib%2BBuild.html">Common Contrib Build</a></span>
                 </li>
                     
                 
@@ -790,7 +790,7 @@
 
 <p>Like the use of Ant in core, the use of Mark's old plugin in contrib is temporary. It is the shortest route to getting contrib projects building on Hudson and deployed to the Maven central repository. Once we have developed a replacement plugin, we will configure it <strong>once</strong> in the <strong>org.clojure:pom.contrib</strong> parent POM and all contrib projects will start using it without needing further changes.</p>
 
-<p>The <a href="../display/design/Clojure+Maven+Plugin.html" class="external-link" rel="nofollow">design discussion around a new plugin</a>, to be named <strong>org.clojure:clojure-maven-plugin</strong> or similar, is ongoing. The scope of the project remains indeterminate, in part because there is no written specification for how Java programs should interact with the Clojure compiler. (For example, one suggestion is to implement the javax.scripting interfaces defined in JSR-223.) There are likely multiple plugins to be written: at a minimum, one for compilation and one for integration with the <a href="http://maven.apache.org/plugins/maven-surefire-plugin/" class="external-link" rel="nofollow">Surefire testing plugin</a>. Once we have determined the correct approach we will be able to estimate the amount of developer time necessary to implement these plugins. Until then, using <strong>com.theoryinpractise:clojure-maven-plugin</strong> is the only viable solution.</p>
+<p>The <a href="../display/design/Clojure%2BMaven%2BPlugin.html" class="external-link" rel="nofollow">design discussion around a new plugin</a>, to be named <strong>org.clojure:clojure-maven-plugin</strong> or similar, is ongoing. The scope of the project remains indeterminate, in part because there is no written specification for how Java programs should interact with the Clojure compiler. (For example, one suggestion is to implement the javax.scripting interfaces defined in JSR-223.) There are likely multiple plugins to be written: at a minimum, one for compilation and one for integration with the <a href="http://maven.apache.org/plugins/maven-surefire-plugin/" class="external-link" rel="nofollow">Surefire testing plugin</a>. Once we have determined the correct approach we will be able to estimate the amount of developer time necessary to implement these plugins. Until then, using <strong>com.theoryinpractise:clojure-maven-plugin</strong> is the only viable solution.</p>
 
 
 <h4 id="WhyMaven-FurtherReading">Further Reading</h4>

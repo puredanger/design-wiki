@@ -30,21 +30,21 @@
 
     <link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/55/u/download/superbatch/css/batch.css" media="all">
 <!--[if lt IE 9]>
-<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/u/download/superbatch/css/batch.css?conditionalComment=lt+IE+9" media="all">
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/u/download/superbatch/css/batch.css?conditionalComment=lt%2BIE%2B9" media="all">
 <![endif]-->
 <!--[if IE 9]>
-<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/u/download/superbatch/css/batch.css?conditionalComment=IE+9" media="all">
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/u/download/superbatch/css/batch.css?conditionalComment=IE%2B9" media="all">
 <![endif]-->
 <!--[if lte IE 9]>
-<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/u/download/superbatch/css/batch.css?conditionalComment=lte+IE+9" media="all">
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/55/u/download/superbatch/css/batch.css?conditionalComment=lte%2BIE%2B9" media="all">
 <![endif]-->
 <link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/55/u/download/superbatch/css/batch-media=print.css" media="print">
 <!--[if lt IE 9]>
-<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/u/download/contextbatch/css/page/batch.css?conditionalComment=lt+IE+9" media="all">
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/u/download/contextbatch/css/page/batch.css?conditionalComment=lt%2BIE%2B9" media="all">
 <![endif]-->
 <link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/961a0823b948d2f215d5a69c25b0d622/u/download/contextbatch/css/page/batch.css" media="all">
 <!--[if lt IE 9]>
-<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/u/download/contextbatch/css/viewcontent,main/batch.css?conditionalComment=lt+IE+9" media="all">
+<link type="text/css" rel="stylesheet" href="/s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/u/download/contextbatch/css/viewcontent,main/batch.css?conditionalComment=lt%2BIE%2B9" media="all">
 <![endif]-->
 <link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/c80b4ecc4b1853e829650e7c54066b66/u/download/contextbatch/css/viewcontent,main/batch.css" media="all">
 <link type="text/css" rel="stylesheet" href="../../s/en_GB/3047/3/2.0.1/u/download/batch/com.atlassian.confluence.plugins.pagetree-pagetree-resources/com.atlassian.confluence.plugins.pagetree-pagetree-resources.css" media="all">
@@ -140,8 +140,8 @@
     
 
     
-    <link rel="canonical" href="Formalize+AST.html">
-    <link rel="shortlink" href="Formalize+AST.html">
+    <link rel="canonical" href="Formalize%2BAST.html">
+    <link rel="shortlink" href="Formalize%2BAST.html">
     <meta name="wikilink" content="[design:Formalize AST]">
     <meta name="page-version" content="3">
 
@@ -288,7 +288,7 @@
                                 
                 
         <li class="hidden-crumb" >
-                                    <span><a href="Idea+Hammock.html">Idea Hammock</a></span>
+                                    <span><a href="Idea%2BHammock.html">Idea Hammock</a></span>
                 </li>
                                 
                 
@@ -298,7 +298,7 @@
                     
                 
         <li>
-                                    <span><a href="Formalize+AST.html">Formalize AST</a></span>
+                                    <span><a href="Formalize%2BAST.html">Formalize AST</a></span>
                 </li>
         </ol>
 
@@ -428,7 +428,7 @@
 	    <h1 id="title-heading" class="pagetitle">
 	        	            <a href="Home-jsessionid=3A56E29DA520B75101350BA4484B9990.html"><img class="logo global custom" src="../../download/attachments/131074/global.logo.png" alt=""></a>	        	
 			<span id="title-text">
-							            <a href="Formalize+AST.html">Formalize AST</a>
+							            <a href="Formalize%2BAST.html">Formalize AST</a>
     						</span>
 	    </h1>
 	</div>
@@ -721,7 +721,7 @@
         </fieldset>
 
         <div class="wiki-content">
-                           <p>Early (outdated) documentation attempt here:</p><p><a href="https://docs.google.com/document/d/1DRN-tBIqhqVVyoHIDs7CMkduBFk-vqd_958ojeIBLHQ/edit" class="external-link" rel="nofollow">https://docs.google.com/document/d/1DRN-tBIqhqVVyoHIDs7CMkduBFk-vqd_958ojeIBLHQ/edit</a></p><p> </p><p> </p><h1 id="FormalizeAST-NotesfromworkingwithexistingAST">Notes from working with existing AST</h1><ul><li>Blocks<ul><li>Inconsistent treatment of empty blocks<ul><li>(let [x 1]) has four environments of interest: before the let form, at x's initializer, after x is 1, and after the let form. For an empty block, there is no where to get an environment with x in the locals.</li><li>Would be nice to have an explicit nil :constant node for empty blocks</li></ul></li><li>Synthetic blocks<ul><li>Would be a place to hang that :env</li><li>Could disallow special forms other than 'do from having blocks. Change (let* [x 1] 2 3) to (let* [x 1] (do 2 3))</li><li>let and letfn don't expose a :body-env, but try's catch does! would prefer explicit blocks nodes</li></ul></li><li>(conj (vec statements ret)) pattern spills into client code<ul><li>Inconsistent here too. Forcing children to vectors causes heap to fall over for cljs.core on my box</li><li>Should not allow lazy structures to persist between passes</li></ul></li></ul></li><li>:children key duplication<ul><li>Detailed discussion here: <a href="AST+children.html" class="external-link" rel="nofollow">http://dev.clojure.org/display/design/AST+children</a> (fold that into this page?)</li></ul></li><li>No root AST node type<ul><li>Need a place to hang top-level info. File names, source data, etc.</li></ul></li><li>loop yields :let op<ul><li>Shares a lot of implementation details, but are genuinely distinct ops</li><li>Straight forward fix to add another op type and to call parameterized implementations</li><li>Allows more flexibility in representing bindings</li></ul></li></ul>
+                           <p>Early (outdated) documentation attempt here:</p><p><a href="https://docs.google.com/document/d/1DRN-tBIqhqVVyoHIDs7CMkduBFk-vqd_958ojeIBLHQ/edit" class="external-link" rel="nofollow">https://docs.google.com/document/d/1DRN-tBIqhqVVyoHIDs7CMkduBFk-vqd_958ojeIBLHQ/edit</a></p><p> </p><p> </p><h1 id="FormalizeAST-NotesfromworkingwithexistingAST">Notes from working with existing AST</h1><ul><li>Blocks<ul><li>Inconsistent treatment of empty blocks<ul><li>(let [x 1]) has four environments of interest: before the let form, at x's initializer, after x is 1, and after the let form. For an empty block, there is no where to get an environment with x in the locals.</li><li>Would be nice to have an explicit nil :constant node for empty blocks</li></ul></li><li>Synthetic blocks<ul><li>Would be a place to hang that :env</li><li>Could disallow special forms other than 'do from having blocks. Change (let* [x 1] 2 3) to (let* [x 1] (do 2 3))</li><li>let and letfn don't expose a :body-env, but try's catch does! would prefer explicit blocks nodes</li></ul></li><li>(conj (vec statements ret)) pattern spills into client code<ul><li>Inconsistent here too. Forcing children to vectors causes heap to fall over for cljs.core on my box</li><li>Should not allow lazy structures to persist between passes</li></ul></li></ul></li><li>:children key duplication<ul><li>Detailed discussion here: <a href="AST%2Bchildren.html" class="external-link" rel="nofollow">http://dev.clojure.org/display/design/AST%2Bchildren</a> (fold that into this page?)</li></ul></li><li>No root AST node type<ul><li>Need a place to hang top-level info. File names, source data, etc.</li></ul></li><li>loop yields :let op<ul><li>Shares a lot of implementation details, but are genuinely distinct ops</li><li>Straight forward fix to add another op type and to call parameterized implementations</li><li>Allows more flexibility in representing bindings</li></ul></li></ul>
     
         </div>
 
